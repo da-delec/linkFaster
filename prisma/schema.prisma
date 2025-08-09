@@ -1,0 +1,157 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  password      String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  name          String
+  emailVerified Boolean   @default(false)
+  image         String?
+  sessions      Session[]
+  accounts      Account[]
+
+  // Personal Information (Step 1)
+  firstName       String?
+  lastName        String?
+  age             Int?
+  photoUrl        String?
+  backgroundImage String?
+
+  // Professional Details (Step 2)
+  profession      String?
+  portfolioWebsite String?
+  bio             String?
+
+  // GitHub Integration (Step 3)
+  githubProfile   String?
+
+  // Freelance Platforms (Step 4)
+  upworkProfile     String?
+  fiverProfile      String?
+  freelancerProfile String?
+  maltProfile       String?
+  linkedin          String?
+  behance           String?
+  dribbble          String?
+
+  // Design Customization (Step 5)
+  colorTheme      String  @default("default")
+  layoutStyle     String  @default("modern")
+
+  // Profile completion and visibility
+  profileCompleted Boolean @default(false)
+  profilePublic    Boolean @default(false)
+  profileSlug      String? @unique // For public profile URL
+
+  // Relations
+  skills          UserSkill[]
+  repositories    Repository[]
+
+  @@map("user")
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id @default(uuid())
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@unique([providerId, accountId])
+  @@map("account")
+}
+
+model Verification {
+  id         String    @id @default(uuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  @@unique([identifier, value])
+  @@map("verification")
+}
+
+// Skills management
+model Skill {
+  id          String      @id @default(uuid())
+  name        String      @unique
+  category    String?     // e.g., "Frontend", "Backend", "Design", "DevOps"
+  description String?
+  createdAt   DateTime    @default(now())
+  users       UserSkill[]
+
+  @@map("skill")
+}
+
+model UserSkill {
+  id       String @id @default(uuid())
+  userId   String
+  skillId  String
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  skill    Skill  @relation(fields: [skillId], references: [id], onDelete: Cascade)
+  level    String @default("intermediate") // "beginner", "intermediate", "advanced", "expert"
+  
+  createdAt DateTime @default(now())
+
+  @@unique([userId, skillId])
+  @@map("user_skill")
+}
+
+// GitHub repositories
+model Repository {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  name        String
+  url         String
+  description String?
+  imageUrl    String?
+  language    String?
+  stars       Int      @default(0)
+  forks       Int      @default(0)
+  isPublic    Boolean  @default(true)
+  isFeatured  Boolean  @default(false) // To highlight main projects
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([userId, url])
+  @@map("repository")
+}
