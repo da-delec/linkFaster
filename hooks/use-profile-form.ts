@@ -23,6 +23,7 @@ export function useProfileForm() {
       submitFormData.append('age', formData.age.toString())
       submitFormData.append('email', formData.email)
       submitFormData.append('profession', formData.profession)
+      submitFormData.append('bio', formData.bio)
       submitFormData.append('skills', JSON.stringify(formData.skills))
       submitFormData.append('portfolioWebsite', formData.portfolioWebsite)
       submitFormData.append('githubProfile', formData.githubProfile)
@@ -36,6 +37,7 @@ export function useProfileForm() {
       submitFormData.append('dribbble', formData.dribbble)
       submitFormData.append('colorTheme', formData.colorTheme)
       submitFormData.append('layoutStyle', formData.layoutStyle)
+      submitFormData.append('enableReviews', formData.enableReviews.toString())
 
       // Add files
       if (files.photo) {
@@ -49,7 +51,7 @@ export function useProfileForm() {
 
       if (result.success) {
         toast.success(result.message, {
-          description: `Votre profil est maintenant disponible à : craftlink.com/${result.profileSlug}`
+          description: `Votre profil est maintenant disponible à : linkfaster.com/${result.profileSlug}`
         })
         
         // Redirect to profile or dashboard

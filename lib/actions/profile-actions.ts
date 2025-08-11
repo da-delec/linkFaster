@@ -22,6 +22,7 @@ export interface ProfileFormData {
   
   // Professional Details
   profession: string
+  bio: string
   skills: string[]
   portfolioWebsite: string
   
@@ -46,6 +47,7 @@ export interface ProfileFormData {
   // Design Customization
   colorTheme: string
   layoutStyle: string
+  enableReviews: boolean
 }
 
 async function uploadFileToSupabase(
@@ -111,6 +113,7 @@ export async function createOrUpdateProfile(formData: FormData) {
       age: formData.get('age') as string,
       email: formData.get('email') as string,
       profession: formData.get('profession') as string,
+      bio: formData.get('bio') as string,
       skills: JSON.parse(formData.get('skills') as string || '[]'),
       portfolioWebsite: formData.get('portfolioWebsite') as string,
       githubProfile: formData.get('githubProfile') as string,
@@ -124,6 +127,7 @@ export async function createOrUpdateProfile(formData: FormData) {
       dribbble: formData.get('dribbble') as string,
       colorTheme: formData.get('colorTheme') as string,
       layoutStyle: formData.get('layoutStyle') as string,
+      enableReviews: formData.get('enableReviews') === 'true',
     }
 
     // Get files
@@ -199,6 +203,7 @@ export async function createOrUpdateProfile(formData: FormData) {
         photoUrl: photoUrl || existingUser?.photoUrl,
         backgroundImage: backgroundImageUrl || existingUser?.backgroundImage,
         profession: data.profession,
+        bio: data.bio,
         portfolioWebsite: data.portfolioWebsite,
         githubProfile: data.githubProfile,
         upworkProfile: data.upworkProfile,
@@ -210,6 +215,7 @@ export async function createOrUpdateProfile(formData: FormData) {
         dribbble: data.dribbble,
         colorTheme: data.colorTheme,
         layoutStyle: data.layoutStyle,
+        enableReviews: data.enableReviews,
         profileCompleted: true,
         profilePublic: true,
         profileSlug,
@@ -224,6 +230,7 @@ export async function createOrUpdateProfile(formData: FormData) {
         photoUrl,
         backgroundImage: backgroundImageUrl,
         profession: data.profession,
+        bio: data.bio,
         portfolioWebsite: data.portfolioWebsite,
         githubProfile: data.githubProfile,
         upworkProfile: data.upworkProfile,
@@ -235,37 +242,20 @@ export async function createOrUpdateProfile(formData: FormData) {
         dribbble: data.dribbble,
         colorTheme: data.colorTheme,
         layoutStyle: data.layoutStyle,
+        enableReviews: data.enableReviews,
         profileCompleted: true,
         profileSlug,
         profilePublic: true,
       },
     })
 
-    // Handle skills - clear existing and add new ones
-    await prisma.userSkill.deleteMany({
-      where: { userId: user.id }
+    // Handle skills - simple array update
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        skills: data.skills
+      }
     })
-
-    for (const skillName of data.skills) {
-      // Create skill if it doesn't exist
-      const skill = await prisma.skill.upsert({
-        where: { name: skillName },
-        update: {},
-        create: {
-          name: skillName,
-          category: categorizeSkill(skillName)
-        }
-      })
-
-      // Link skill to user
-      await prisma.userSkill.create({
-        data: {
-          userId: user.id,
-          skillId: skill.id,
-          level: 'intermediate'
-        }
-      })
-    }
 
     // Handle repositories - clear existing and add new ones
     await prisma.repository.deleteMany({
@@ -306,21 +296,3 @@ export async function createOrUpdateProfile(formData: FormData) {
   }
 }
 
-// Helper function to categorize skills
-function categorizeSkill(skillName: string): string {
-  const frontendSkills = ['React', 'Vue.js', 'Angular', 'JavaScript', 'TypeScript', 'HTML/CSS', 'Sass/SCSS', 'Tailwind CSS', 'Bootstrap']
-  const backendSkills = ['Node.js', 'Python', 'Django', 'FastAPI', 'Java', 'Spring Boot', 'PHP', 'Laravel', 'C#', '.NET', 'Go', 'Rust']
-  const databaseSkills = ['SQL', 'MongoDB', 'PostgreSQL', 'MySQL', 'Redis']
-  const devopsSkills = ['Docker', 'Kubernetes', 'AWS', 'Azure', 'GCP', 'CI/CD', 'DevOps']
-  const designSkills = ['Figma', 'Adobe Creative Suite', 'UI/UX Design', 'Responsive Design']
-  const mobileSkills = ['Swift', 'Kotlin', 'Flutter', 'React Native']
-
-  if (frontendSkills.includes(skillName)) return 'Frontend'
-  if (backendSkills.includes(skillName)) return 'Backend'
-  if (databaseSkills.includes(skillName)) return 'Database'
-  if (devopsSkills.includes(skillName)) return 'DevOps'
-  if (designSkills.includes(skillName)) return 'Design'
-  if (mobileSkills.includes(skillName)) return 'Mobile'
-  
-  return 'Other'
-}

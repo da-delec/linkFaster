@@ -6,6 +6,8 @@ import ProfilNavbar from '@/components/ui/profil-navbar'
 import DashboardStats from '@/components/dashboard/dashboard-stats'
 import ProfilePreview from '@/components/dashboard/profile-preview'
 import QuickActions from '@/components/dashboard/quick-actions'
+import PremiumBanner from '@/components/dashboard/premium-banner'
+import ReviewsManagement from '@/components/dashboard/reviews-management'
 import { authClient } from '@/lib/auth-client'
 import { getCurrentUserProfile } from '@/lib/actions/user-actions'
 
@@ -20,6 +22,9 @@ interface UserProfile {
   profileCompleted: boolean
   profilePublic: boolean
   profession: string | null
+  isPremium: boolean
+  stripeCustomerId?: string | null
+  colorTheme?: string
   skillsCount?: number
   repositoriesCount?: number
 }
@@ -34,6 +39,13 @@ const DashboardPage = () => {
     isPending,
     error
   } = authClient.useSession() 
+
+  // Handle authentication and redirection
+  useEffect(() => {
+    if (!isPending && (error || !session)) {
+      router.push('/login')
+    }
+  }, [error, session, isPending, router])
 
   // Fetch user profile data when session is loaded
   useEffect(() => {
@@ -52,6 +64,9 @@ const DashboardPage = () => {
             profileCompleted: profile.profileCompleted,
             profilePublic: profile.profilePublic,
             profession: profile.profession,
+            isPremium: profile.isPremium,
+            stripeCustomerId: profile.stripeCustomerId,
+            colorTheme: profile.colorTheme || 'blue',
             skillsCount: profile.skills?.length || 0,
             repositoriesCount: profile.repositories?.length || 0
           })
@@ -68,6 +83,9 @@ const DashboardPage = () => {
             profileCompleted: false,
             profilePublic: false,
             profession: null,
+            isPremium: false,
+            stripeCustomerId: null,
+            colorTheme: 'blue',
             skillsCount: 0,
             repositoriesCount: 0
           })
@@ -89,9 +107,16 @@ const DashboardPage = () => {
     )
   }
 
-  if (error || !session || !userProfile) {
-    router.push('/login')
+  if (error || !session) {
     return null
+  }
+
+  if (!userProfile) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    )
   }
 
   return (
@@ -99,6 +124,33 @@ const DashboardPage = () => {
       <ProfilNavbar />
       
       <div className="container mx-auto px-4 py-8 max-w-7xl">
+        {/* Premium Banner for non-premium users */}
+        {!userProfile.isPremium && (
+          <PremiumBanner 
+            stripeCustomerId={userProfile.stripeCustomerId}
+            onUpgrade={() => {
+              // Handle upgrade logic - redirect to checkout
+              fetch('/api/create-checkout', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  stripeCustomerId: userProfile.stripeCustomerId
+                })
+              })
+              .then(response => response.json())
+              .then(data => {
+                if (data.url) {
+                  window.location.href = data.url
+                }
+              })
+              .catch(error => {
+                console.error('Error creating checkout:', error)
+              })
+            }} />
+        )}
+
         {/* Header */}
         <div className="mb-8">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
@@ -147,6 +199,12 @@ const DashboardPage = () => {
           {/* Left Column - Stats & Actions */}
           <div className="lg:col-span-2 space-y-8">
             <DashboardStats userId={userProfile.id} />
+            
+            {/* Reviews Management Section */}
+            <ReviewsManagement 
+              userId={userProfile.id}
+              isPremium={userProfile.isPremium}
+            />
           </div>
 
           {/* Right Column - Profile Preview */}

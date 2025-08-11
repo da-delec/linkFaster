@@ -13,11 +13,6 @@ export async function getUserBySlug(slug: string) {
         profileCompleted: true
       },
       include: {
-        skills: {
-          include: {
-            skill: true
-          }
-        },
         repositories: {
           where: {
             isFeatured: true
@@ -57,12 +52,10 @@ export async function getUserBySlug(slug: string) {
       colorTheme: user.colorTheme,
       layoutStyle: user.layoutStyle,
       profileSlug: user.profileSlug,
-      skills: user.skills.map(userSkill => ({
-        id: userSkill.skill.id,
-        name: userSkill.skill.name,
-        category: userSkill.skill.category,
-        level: userSkill.level
-      })),
+      isPremium: user.isPremium,
+      enableReviews: user.enableReviews,
+      stripeCustomerId: user.stripeCustomerId,
+      skills: user.skills,
       repositories: user.repositories,
       createdAt: user.createdAt
     }
@@ -74,9 +67,10 @@ export async function getUserBySlug(slug: string) {
 
 export async function getUserStats(userId: string) {
   try {
-    const [skillsCount, reposCount] = await Promise.all([
-      prisma.userSkill.count({
-        where: { userId }
+    const [user, reposCount] = await Promise.all([
+      prisma.user.findUnique({
+        where: { id: userId },
+        select: { skills: true }
       }),
       prisma.repository.count({
         where: { userId }
@@ -84,7 +78,7 @@ export async function getUserStats(userId: string) {
     ])
 
     return {
-      skillsCount,
+      skillsCount: user?.skills?.length || 0,
       reposCount,
       profileViews: 0, // TODO: Implement view tracking
       lastUpdated: new Date()
@@ -100,11 +94,6 @@ export async function getUserForForm(userId: string) {
     const user = await prisma.user.findUnique({
       where: { id: userId },
       include: {
-        skills: {
-          include: {
-            skill: true
-          }
-        },
         repositories: {
           orderBy: {
             createdAt: 'desc'
@@ -129,7 +118,8 @@ export async function getUserForForm(userId: string) {
       
       // Professional Details
       profession: user.profession || '',
-      skills: user.skills.map(userSkill => userSkill.skill.name),
+      bio: user.bio || '',
+      skills: user.skills,
       portfolioWebsite: user.portfolioWebsite || '',
       
       // GitHub Integration
@@ -153,10 +143,13 @@ export async function getUserForForm(userId: string) {
       // Design Customization
       colorTheme: user.colorTheme || 'default',
       layoutStyle: user.layoutStyle || 'modern',
+      enableReviews: user.enableReviews || false,
       
       // Meta
       profileCompleted: user.profileCompleted,
-      profileSlug: user.profileSlug
+      profileSlug: user.profileSlug,
+      isPremium: user.isPremium || false,
+      stripeCustomerId: user.stripeCustomerId
     }
   } catch (error) {
     console.error('Error fetching user for form:', error)
@@ -169,11 +162,6 @@ export async function getCurrentUserProfile(userId: string) {
     const user = await prisma.user.findUnique({
       where: { id: userId },
       include: {
-        skills: {
-          include: {
-            skill: true
-          }
-        },
         repositories: {
           orderBy: {
             stars: 'desc'
@@ -211,12 +199,10 @@ export async function getCurrentUserProfile(userId: string) {
       profileSlug: user.profileSlug,
       profileCompleted: user.profileCompleted,
       profilePublic: user.profilePublic,
-      skills: user.skills.map(userSkill => ({
-        id: userSkill.skill.id,
-        name: userSkill.skill.name,
-        category: userSkill.skill.category,
-        level: userSkill.level
-      })),
+      isPremium: user.isPremium,
+      enableReviews: user.enableReviews,
+      stripeCustomerId: user.stripeCustomerId,
+      skills: user.skills,
       repositories: user.repositories,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt

@@ -28,6 +28,7 @@ interface FormData {
   
   // Professional Details
   profession: string
+  bio: string
   skills: string[]
   portfolioWebsite: string
   
@@ -52,6 +53,7 @@ interface FormData {
   // Design Customization
   colorTheme: string
   layoutStyle: string
+  enableReviews: boolean
 }
 
 const steps = [
@@ -87,6 +89,8 @@ const CreateProfilePage = () => {
   const [currentStep, setCurrentStep] = useState(1)
   const [isLoadingData, setIsLoadingData] = useState(true)
   const [isEditMode, setIsEditMode] = useState(false)
+  const [isPremium, setIsPremium] = useState(false)
+  const [stripeCustomerId, setStripeCustomerId] = useState<string>('')
   const { submitProfile, isSubmitting } = useProfileForm()
   const { data: session, isPending } = authClient.useSession()
   
@@ -98,6 +102,7 @@ const CreateProfilePage = () => {
     photo: null,
     backgroundImage: null,
     profession: '',
+    bio: '',
     skills: [],
     portfolioWebsite: '',
     githubProfile: '',
@@ -110,7 +115,8 @@ const CreateProfilePage = () => {
     behance: '',
     dribbble: '',
     colorTheme: 'default',
-    layoutStyle: 'modern'
+    layoutStyle: 'modern',
+    enableReviews: false
   })
 
   // Load existing user data when component mounts
@@ -123,6 +129,8 @@ const CreateProfilePage = () => {
         
         if (userData) {
           setIsEditMode(true)
+          setIsPremium(userData.isPremium || false)
+          setStripeCustomerId(userData.stripeCustomerId || '')
           setFormData(prev => ({
             ...prev,
             firstName: userData.firstName,
@@ -130,6 +138,7 @@ const CreateProfilePage = () => {
             age: userData.age,
             email: userData.email,
             profession: userData.profession,
+            bio: userData.bio,
             skills: userData.skills,
             portfolioWebsite: userData.portfolioWebsite,
             githubProfile: userData.githubProfile,
@@ -143,6 +152,7 @@ const CreateProfilePage = () => {
             dribbble: userData.dribbble,
             colorTheme: userData.colorTheme,
             layoutStyle: userData.layoutStyle,
+            enableReviews: userData.enableReviews,
             // Keep existing files as null, they'll need to be re-uploaded if changed
             photo: null,
             backgroundImage: null
@@ -250,6 +260,8 @@ const CreateProfilePage = () => {
           <DesignCustomizationStep
             data={formData}
             onUpdate={updateFormData}
+            isPremium={isPremium}
+            userStripeCustomerId={stripeCustomerId}
           />
         )
       default:

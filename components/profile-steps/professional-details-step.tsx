@@ -5,12 +5,14 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { X, Plus, Briefcase, Globe, Code } from 'lucide-react'
+import { X, Plus, Briefcase, Globe, Code, FileText } from 'lucide-react'
 
 interface ProfessionalDetailsStepProps {
   data: {
     profession: string
+    bio: string
     skills: string[]
     portfolioWebsite: string
   }
@@ -123,6 +125,29 @@ const ProfessionalDetailsStep: React.FC<ProfessionalDetailsStepProps> = ({ data,
               />
             </div>
           )}
+        </div>
+      </div>
+
+      {/* Bio Section */}
+      <div className="space-y-4">
+        <div className="flex items-center space-x-2">
+          <FileText className="w-5 h-5 text-slate-500" />
+          <h3 className="text-lg font-medium">Présentation personnelle</h3>
+        </div>
+        
+        <div className="space-y-2">
+          <Label htmlFor="bio">Décrivez-vous en quelques mots</Label>
+          <Textarea
+            id="bio"
+            value={data.bio}
+            onChange={(e) => onUpdate({ bio: e.target.value })}
+            placeholder="Ex: Développeur Full-Stack passionné par les nouvelles technologies. Spécialisé en React/Node.js avec 5 ans d'expérience..."
+            className="min-h-[100px] resize-none"
+            maxLength={500}
+          />
+          <p className="text-xs text-slate-500">
+            {data.bio.length}/500 caractères. Cette présentation apparaîtra sur votre profil public.
+          </p>
         </div>
       </div>
 

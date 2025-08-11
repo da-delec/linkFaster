@@ -6,12 +6,20 @@ import { useRouter } from 'next/navigation'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu'
-import { User, Settings, LogOut, LayoutDashboard, Palette } from 'lucide-react'
+import { User, Settings, LogOut, LayoutDashboard, Palette, Crown } from 'lucide-react'
 import { authClient } from '@/lib/auth-client'
+import { getCurrentUserProfile } from '@/lib/actions/user-actions'
 
 const ProfilNavbar = () => {
   const router = useRouter()
   const { data: session, isPending } = authClient.useSession()
+  const [userProfile, setUserProfile] = React.useState<any>(null)
+
+  React.useEffect(() => {
+    if (session?.user?.id) {
+      getCurrentUserProfile(session.user.id).then(setUserProfile)
+    }
+  }, [session?.user?.id])
 
   const handleSignOut = () => {
     authClient.signOut({
@@ -32,10 +40,10 @@ const ProfilNavbar = () => {
             <div className="flex items-center space-x-4">
               <Link href="/" className="flex items-center space-x-2">
                 <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                  <span className="text-white text-sm font-bold">CL</span>
+                  <span className="text-white text-sm font-bold">LF</span>
                 </div>
                 <span className="text-xl font-bold text-slate-900 dark:text-slate-100">
-                  CraftLink
+                  LinkFaster
                 </span>
               </Link>
             </div>
@@ -75,12 +83,22 @@ const ProfilNavbar = () => {
           <div className="flex items-center space-x-4">
             <Link href="/" className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                <span className="text-white text-sm font-bold">CL</span>
+                <span className="text-white text-sm font-bold">LF</span>
               </div>
               <span className="text-xl font-bold text-slate-900 dark:text-slate-100">
-                CraftLink
+                LinkFaster
               </span>
             </Link>
+            {userProfile?.isPremium ? (
+              <div className="hidden sm:inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-amber-700 bg-gradient-to-r from-amber-100 to-yellow-100 border border-amber-200 rounded-full">
+                <Crown className="w-3 h-3" />
+                Premium
+              </div>
+            ) : (
+              <div className="hidden sm:inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-slate-600 bg-gradient-to-r from-slate-100 to-gray-100 border border-slate-200 rounded-full">
+                Free
+              </div>
+            )}
           </div>
 
           {/* Navigation Links */}
@@ -129,7 +147,19 @@ const ProfilNavbar = () => {
               <DropdownMenuContent className="w-56" align="end" forceMount>
                 <div className="flex items-center justify-start gap-2 p-2">
                   <div className="flex flex-col space-y-1 leading-none">
-                    <p className="font-medium">{user.name}</p>
+                    <div className="flex items-center gap-2">
+                      <p className="font-medium">{user.name}</p>
+                      {userProfile?.isPremium ? (
+                        <div className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-amber-700 bg-gradient-to-r from-amber-100 to-yellow-100 border border-amber-200 rounded-full">
+                          <Crown className="w-3 h-3" />
+                          Premium
+                        </div>
+                      ) : (
+                        <div className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-slate-600 bg-gradient-to-r from-slate-100 to-gray-100 border border-slate-200 rounded-full">
+                          Free
+                        </div>
+                      )}
+                    </div>
                     <p className="w-[200px] truncate text-sm text-muted-foreground">
                       {user.email}
                     </p>
@@ -146,7 +176,7 @@ const ProfilNavbar = () => {
                 </DropdownMenuItem>
                 
                 <DropdownMenuItem asChild>
-                  <Link href="/profile" className="cursor-pointer">
+                  <Link href="/profil" className="cursor-pointer">
                     <User className="mr-2 h-4 w-4" />
                     <span>Mon profil</span>
                   </Link>

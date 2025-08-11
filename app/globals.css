@@ -241,3 +241,158 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Animations personnalisées pour les thèmes premium */
+@layer utilities {
+  @keyframes gradient-x {
+    0%, 100% {
+      transform: translateX(-100%);
+    }
+    50% {
+      transform: translateX(100%);
+    }
+  }
+  
+  @keyframes gradient-shift {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  .animate-gradient-x {
+    animation: gradient-x 3s ease infinite;
+    background-size: 200% 200%;
+  }
+
+  .animate-gradient-shift {
+    animation: gradient-shift 3s ease infinite;
+    background-size: 200% 200%;
+  }
+
+  /* Effets glassmorphisme améliorés */
+  .glass-effect {
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+  }
+
+  .glass-dark {
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+  }
+
+  .glass-blue-bg {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(147, 197, 253, 0.05));
+  }
+
+  .glass-purple-bg {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(196, 181, 253, 0.05));
+  }
+
+  .glass-emerald-bg {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(167, 243, 208, 0.05));
+  }
+
+  /* Effets bordures gradient */
+  .gradient-border {
+    position: relative;
+  }
+
+  .gradient-border::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    padding: 2px;
+    background: linear-gradient(45deg, #ff0080, #7928ca, #ff8a00);
+    border-radius: inherit;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    -webkit-mask-composite: xor;
+    animation: gradient-shift 3s ease infinite;
+  }
+
+  /* Animations pour les thèmes Aurora et Cosmic */
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+
+  @keyframes aurora-dance {
+    0%, 100% {
+      transform: translateX(-50px) scaleY(0.8);
+      opacity: 0.6;
+    }
+    25% {
+      transform: translateX(0px) scaleY(1.2);
+      opacity: 1;
+    }
+    50% {
+      transform: translateX(30px) scaleY(0.9);
+      opacity: 0.8;
+    }
+    75% {
+      transform: translateX(-20px) scaleY(1.1);
+      opacity: 0.9;
+    }
+  }
+
+  @keyframes cosmic-rotate {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes stardust {
+    0%, 100% {
+      opacity: 0.3;
+      transform: scale(0.8);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.2);
+    }
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-aurora-dance {
+    animation: aurora-dance 8s ease-in-out infinite;
+  }
+
+  .animate-cosmic-rotate {
+    animation: cosmic-rotate 20s linear infinite;
+  }
+
+  .animate-stardust {
+    animation: stardust 3s ease-in-out infinite;
+  }
+
+  /* Gradients personnalisés */
+  .bg-gradient-radial {
+    background: radial-gradient(var(--tw-gradient-stops));
+  }
+
+  .bg-gradient-conic {
+    background: conic-gradient(var(--tw-gradient-stops));
+  }
+}

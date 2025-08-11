@@ -36,9 +36,7 @@ interface ProfilePreviewProps {
 }
 
 const ProfilePreview: React.FC<ProfilePreviewProps> = ({ user }) => {
-  const profileUrl = user.profileSlug 
-    ? `${typeof window !== 'undefined' ? window.location.origin : ''}/${user.profileSlug}`
-    : null
+  const profileUrl = user.profileSlug ? `/${user.profileSlug}` : null
   
   const getProfileStatus = () => {
     if (!user.profileCompleted) {
@@ -106,7 +104,7 @@ const ProfilePreview: React.FC<ProfilePreviewProps> = ({ user }) => {
               <div className="flex items-center space-x-2 p-2 bg-slate-100 dark:bg-slate-800 rounded text-sm">
                 <Globe className="w-4 h-4 text-slate-500" />
                 <span className="text-slate-600 dark:text-slate-400 truncate flex-1">
-                  craftlink.com/{user.profileSlug}
+                  linkfaster.com/{user.profileSlug}
                 </span>
               </div>
             </div>

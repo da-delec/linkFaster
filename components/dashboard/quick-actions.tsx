@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu'
 import { Edit3, Eye, Share2, Settings, MoreVertical, ExternalLink } from 'lucide-react'
+import QrCodeAction from '@/components/dashboard/qr-code-action'
 
 interface User {
   id: string
@@ -13,6 +14,8 @@ interface User {
   profileSlug: string | null
   profileCompleted: boolean
   profilePublic: boolean
+  photoUrl?: string | null
+  colorTheme?: string
 }
 
 interface QuickActionsProps {
@@ -45,7 +48,15 @@ const QuickActions: React.FC<QuickActionsProps> = ({ user }) => {
   const canViewProfile = user.profileSlug && user.profileCompleted
 
   return (
-    <div className="flex items-center space-x-3">
+    <div className="flex flex-wrap items-center gap-3">
+      {/* QR Code Action */}
+      <QrCodeAction 
+        profileSlug={user.profileSlug}
+        isProfilePublic={user.profilePublic}
+        userPhotoUrl={user.photoUrl}
+        colorTheme={user.colorTheme}
+      />
+
       {/* View Profile */}
       {canViewProfile ? (
         <Button asChild variant="outline">
@@ -55,7 +66,7 @@ const QuickActions: React.FC<QuickActionsProps> = ({ user }) => {
             className="flex items-center space-x-2"
           >
             <Eye className="w-4 h-4" />
-            <span>Voir le profil</span>
+            <span>Voir le profil public</span>
             <ExternalLink className="w-3 h-3" />
           </Link>
         </Button>
