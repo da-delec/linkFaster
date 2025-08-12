@@ -14,6 +14,7 @@ import { getUserForForm } from '@/lib/actions/user-actions'
 import PersonalInfoStep from '@/components/profile-steps/personal-info-step'
 import ProfessionalDetailsStep from '@/components/profile-steps/professional-details-step'
 import GitHubIntegrationStep from '@/components/profile-steps/github-integration-step'
+import ProductionProjectsStep from '@/components/profile-steps/production-projects-step'
 import FreelancePlatformsStep from '@/components/profile-steps/freelance-platforms-step'
 import DesignCustomizationStep from '@/components/profile-steps/design-customization-step'
 
@@ -39,6 +40,16 @@ interface FormData {
     url: string
     image: string
     description: string
+  }>
+  
+  // Production Projects
+  projects: Array<{
+    id?: string
+    title: string
+    description: string
+    url: string
+    previewUrl: string
+    technologies: string[]
   }>
   
   // Freelance Platforms
@@ -74,11 +85,16 @@ const steps = [
   },
   {
     id: 4,
+    title: 'Projets en Production',
+    description: 'Ajoutez vos projets déployés'
+  },
+  {
+    id: 5,
     title: 'Plateformes Freelance',
     description: 'Connectez vos profils freelance'
   },
   {
-    id: 5,
+    id: 6,
     title: 'Personnalisation',
     description: 'Customisez votre profil'
   }
@@ -107,6 +123,7 @@ const CreateProfilePage = () => {
     portfolioWebsite: '',
     githubProfile: '',
     selectedRepos: [],
+    projects: [],
     upworkProfile: '',
     fiverProfile: '',
     freelancerProfile: '',
@@ -143,6 +160,7 @@ const CreateProfilePage = () => {
             portfolioWebsite: userData.portfolioWebsite,
             githubProfile: userData.githubProfile,
             selectedRepos: userData.selectedRepos,
+            projects: userData.projects || [],
             upworkProfile: userData.upworkProfile,
             fiverProfile: userData.fiverProfile,
             freelancerProfile: userData.freelancerProfile,
@@ -250,12 +268,19 @@ const CreateProfilePage = () => {
         )
       case 4:
         return (
-          <FreelancePlatformsStep
+          <ProductionProjectsStep
             data={formData}
             onUpdate={updateFormData}
           />
         )
       case 5:
+        return (
+          <FreelancePlatformsStep
+            data={formData}
+            onUpdate={updateFormData}
+          />
+        )
+      case 6:
         return (
           <DesignCustomizationStep
             data={formData}

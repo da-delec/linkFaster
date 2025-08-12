@@ -53,6 +53,27 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'Webhook signature verification failed.' }, { status: 400 });
         }
     switch(event.type) {
+        case 'customer.subscription.deleted':
+         try {
+            const subscription = event.data.object;
+            const customerId = subscription.customer;
+
+            console.log('Processing customer.subscription.deleted:', {
+                subscriptionId: subscription.id,
+                customerId: customerId
+            });
+
+            if (customerId) {
+                await prisma.user.update({
+                    where: { stripeCustomerId: customerId as string },
+                    data: { isPremium: false }
+                });
+            }
+         } catch (error) {
+            console.error('Error processing customer.subscription.deleted:', error);
+            return NextResponse.json({ error: 'Error processing webhook' }, { status: 500 });
+         }
+         break;
         case 'checkout.session.completed':
             try {
                 const session = event.data.object;

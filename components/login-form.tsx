@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { FaGithub } from "react-icons/fa";
+import { useState } from "react"
 
 import { authClient } from "@/lib/auth-client"
 
@@ -14,10 +15,19 @@ export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-
+  const [email, setEmail] = useState("");
   function signinWithProvider (provider:string) {
     authClient.signIn.social({
       provider:provider as "google" | "github" | "apple",
+      callbackURL:"/dashboard",
+      newUserCallbackURL:"/create-profil",
+      errorCallbackURL:"/login",
+    })
+  }
+
+  function magicLinkLogin(mail:string) {
+    authClient.signIn.magicLink({
+      email: mail,
       callbackURL:"/dashboard",
       newUserCallbackURL:"/create-profil",
       errorCallbackURL:"/login",
@@ -48,11 +58,13 @@ export function LoginForm({
               <Input
                 id="email"
                 type="email"
-                placeholder="m@example.com"
+                placeholder="Charlize@example.com"
                 required
+                value={email}
+                onChange={(e)=>setEmail(e.target.value)}
               />
             </div>
-            <Button type="submit" className="w-full">
+            <Button onClick={()=>magicLinkLogin(email)} type="submit" className="w-full">
               Login
             </Button>
           </div>

@@ -113,6 +113,38 @@ export function SubscriptionDetails({ stripeCustomerId, isPremium }: Subscriptio
     }
   }
 
+  const createCheckout = async () => {
+    try {
+      if (!stripeCustomerId) {
+        toast.error('ID client Stripe manquant')
+        return
+      }
+
+      const response = await fetch('/api/create-checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ customerId: stripeCustomerId })
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        if (data.url) {
+          window.location.href = data.url
+        } else {
+          toast.error('URL de checkout non reçue')
+        }
+      } else {
+        const errorData = await response.json()
+        toast.error(errorData.error || 'Erreur lors de la création du checkout')
+      }
+    } catch (error) {
+      console.error('Erreur lors de la création du checkout:', error)
+      toast.error('Erreur lors de la création du checkout')
+    }
+  }
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('fr-FR', {
       year: 'numeric',
@@ -144,7 +176,10 @@ export function SubscriptionDetails({ stripeCustomerId, isPremium }: Subscriptio
           <p>Compte gratuit</p>
         </div>
         
-        <Button className="w-full bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600">
+        <Button 
+          onClick={createCheckout}
+          className="w-full bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600"
+        >
           <Crown className="w-4 h-4 mr-2" />
           Passer au Premium
         </Button>

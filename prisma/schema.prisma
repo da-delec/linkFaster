@@ -65,6 +65,7 @@ model User {
   // Relations
   repositories    Repository[]
   reviews         Review[]
+  projects        Project[]
 
   @@map("user")
 }
@@ -159,4 +160,27 @@ model Review {
   updatedAt   DateTime @updatedAt
 
   @@map("review")
+}
+
+// Production projects
+model Project {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  title       String
+  description String
+  url         String   // URL du projet en production
+  previewUrl  String?  // URL de la preview/image
+  technologies String[] @default([]) // Technologies utilisées
+  
+  // Status et ordre d'affichage
+  isFeatured  Boolean  @default(false)
+  isVisible   Boolean  @default(true)
+  order       Int      @default(0)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("project")
 }

@@ -20,6 +20,14 @@ export async function getUserBySlug(slug: string) {
           orderBy: {
             stars: 'desc'
           }
+        },
+        projects: {
+          where: {
+            isVisible: true
+          },
+          orderBy: {
+            createdAt: 'desc'
+          }
         }
       }
     })
@@ -57,6 +65,7 @@ export async function getUserBySlug(slug: string) {
       stripeCustomerId: user.stripeCustomerId,
       skills: user.skills,
       repositories: user.repositories,
+      projects: user.projects,
       createdAt: user.createdAt
     }
   } catch (error) {
@@ -98,6 +107,11 @@ export async function getUserForForm(userId: string) {
           orderBy: {
             createdAt: 'desc'
           }
+        },
+        projects: {
+          orderBy: {
+            createdAt: 'desc'
+          }
         }
       }
     })
@@ -129,6 +143,16 @@ export async function getUserForForm(userId: string) {
         url: repo.url,
         image: repo.imageUrl || '',
         description: repo.description || ''
+      })),
+      
+      // Production Projects
+      projects: user.projects.map(project => ({
+        id: project.id,
+        title: project.title,
+        description: project.description,
+        url: project.url,
+        previewUrl: project.previewUrl || '',
+        technologies: project.technologies
       })),
       
       // Freelance Platforms
@@ -165,6 +189,11 @@ export async function getCurrentUserProfile(userId: string) {
         repositories: {
           orderBy: {
             stars: 'desc'
+          }
+        },
+        projects: {
+          orderBy: {
+            createdAt: 'desc'
           }
         }
       }
@@ -204,6 +233,7 @@ export async function getCurrentUserProfile(userId: string) {
       stripeCustomerId: user.stripeCustomerId,
       skills: user.skills,
       repositories: user.repositories,
+      projects: user.projects,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt
     }

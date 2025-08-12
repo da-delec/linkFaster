@@ -49,88 +49,33 @@ const colorThemes = [
     category: 'free'
   },
   {
-    id: 'slate',
-    name: 'Gris',
-    description: 'Thème sobre et élégant',
-    colors: ['#475569', '#1E293B', '#F1F5F9'],
-    isPremium: false,
-    category: 'free'
-  },
-  
-  // Thèmes sombres premium
-  {
-    id: 'midnight',
-    name: 'Midnight',
-    description: 'Sombre avec accents bleus',
-    colors: ['#0F172A', '#3B82F6', '#1E40AF'],
-    isPremium: true,
-    category: 'dark'
-  },
-  {
-    id: 'obsidian',
-    name: 'Obsidian',
-    description: 'Noir élégant avec violets',
-    colors: ['#1C1917', '#A855F7', '#7C3AED'],
-    isPremium: true,
-    category: 'dark'
-  },
-  
-  // Thèmes glassmorphisme premium
-  {
-    id: 'aurora',
-    name: 'Aurora',
-    description: 'Glassmorphisme bleu-violet moderne',
-    colors: ['#667eea', '#764ba2', '#a8edea'],
-    isPremium: true,
-    category: 'glass',
-    background: 'bg-gradient-to-br from-blue-400 via-purple-500 to-indigo-600'
-  },
-  {
-    id: 'cosmic',
-    name: 'Cosmic',
-    description: 'Effet verre espace profond',
-    colors: ['#1a202c', '#2d3748', '#4a5568'],
-    isPremium: true,
-    category: 'glass',
-    background: 'bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900'
-  },
-  
-  // Thèmes gradients premium
-  {
-    id: 'sunset',
-    name: 'Sunset',
-    description: 'Gradient chaleureux orange-rose',
-    colors: ['#FF6B6B', '#FF8E53', '#FFE66D'],
-    isPremium: true,
-    category: 'gradient',
-    background: 'bg-gradient-to-br from-orange-400 via-pink-500 to-yellow-400'
-  },
-  {
-    id: 'forest',
-    name: 'Forest',
-    description: 'Gradient nature vert émeraude',
-    colors: ['#134E5E', '#71B280', '#A8E6CF'],
-    isPremium: true,
-    category: 'gradient',
-    background: 'bg-gradient-to-br from-green-700 via-green-500 to-emerald-400'
-  },
-  
-  // Thèmes colorés premium
-  {
     id: 'purple',
     name: 'Violet',
     description: 'Thème créatif et artistique',
     colors: ['#8B5CF6', '#5B21B6', '#EDE9FE'],
-    isPremium: true,
-    category: 'color'
+    isPremium: false,
+    category: 'free'
   },
+  
+  // Thème sombre premium
   {
-    id: 'rose',
-    name: 'Rose',
-    description: 'Thème doux et élégant',
-    colors: ['#EC4899', '#BE185D', '#FCE7F3'],
+    id: 'midnight',
+    name: 'Midnight',
+    description: 'Thème sombre élégant et professionnel',
+    colors: ['#0F172A', '#1E293B', '#475569'],
     isPremium: true,
-    category: 'color'
+    category: 'dark'
+  },
+  
+  // Thème glassmorphisme premium
+  {
+    id: 'glass',
+    name: 'Glass',
+    description: 'Effet verre moderne sur fond sombre élégant',
+    colors: ['#1E293B', '#3B82F6', '#4338CA'],
+    isPremium: true,
+    category: 'glass',
+    background: 'bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900'
   }
 ]
 

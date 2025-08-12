@@ -2,8 +2,11 @@ import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { PrismaClient } from "@prisma/client";
 import { stripe } from "./stripe";
+import {Resend} from "resend";
+import {magicLink} from "better-auth/plugins/magic-link";
 
 const prisma = new PrismaClient();
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
@@ -70,6 +73,18 @@ export const auth = betterAuth({
         },
     },
 },
+plugins: [
+  magicLink({
+    sendMagicLink: async ({ email, url }) => {
+      await resend.emails.send({
+        from: "noreply@linkfaster.link",
+        to: email,
+        subject: "Magic Link",
+        html: `<p>Click <a href="${url}">here</a> to login</p>`,
+      });
+    },
+  }),
+],
   emailAndPassword:{
     enabled:false,
   },

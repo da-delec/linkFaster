@@ -28,6 +28,7 @@ export function useProfileForm() {
       submitFormData.append('portfolioWebsite', formData.portfolioWebsite)
       submitFormData.append('githubProfile', formData.githubProfile)
       submitFormData.append('selectedRepos', JSON.stringify(formData.selectedRepos))
+      submitFormData.append('projects', JSON.stringify(formData.projects))
       submitFormData.append('upworkProfile', formData.upworkProfile)
       submitFormData.append('fiverProfile', formData.fiverProfile)
       submitFormData.append('freelancerProfile', formData.freelancerProfile)

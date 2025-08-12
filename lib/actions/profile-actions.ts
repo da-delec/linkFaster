@@ -35,6 +35,16 @@ export interface ProfileFormData {
     description: string
   }>
   
+  // Production Projects
+  projects: Array<{
+    id?: string
+    title: string
+    description: string
+    url: string
+    previewUrl: string
+    technologies: string[]
+  }>
+  
   // Freelance Platforms
   upworkProfile: string
   fiverProfile: string
@@ -118,6 +128,7 @@ export async function createOrUpdateProfile(formData: FormData) {
       portfolioWebsite: formData.get('portfolioWebsite') as string,
       githubProfile: formData.get('githubProfile') as string,
       selectedRepos: JSON.parse(formData.get('selectedRepos') as string || '[]'),
+      projects: JSON.parse(formData.get('projects') as string || '[]'),
       upworkProfile: formData.get('upworkProfile') as string,
       fiverProfile: formData.get('fiverProfile') as string,
       freelancerProfile: formData.get('freelancerProfile') as string,
@@ -270,6 +281,25 @@ export async function createOrUpdateProfile(formData: FormData) {
           url: repo.url,
           description: repo.description,
           imageUrl: repo.image || null,
+          isFeatured: true
+        }
+      })
+    }
+
+    // Handle projects - clear existing and add new ones
+    await prisma.project.deleteMany({
+      where: { userId: user.id }
+    })
+
+    for (const project of data.projects) {
+      await prisma.project.create({
+        data: {
+          userId: user.id,
+          title: project.title,
+          description: project.description,
+          url: project.url,
+          previewUrl: project.previewUrl || null,
+          technologies: project.technologies,
           isFeatured: true
         }
       })

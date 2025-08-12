@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu'
-import { User, Settings, LogOut, LayoutDashboard, Palette, Crown } from 'lucide-react'
+import { User, Settings, LogOut, LayoutDashboard, Palette, Crown, Link as LinkIcon } from 'lucide-react'
 import { authClient } from '@/lib/auth-client'
 import { getCurrentUserProfile } from '@/lib/actions/user-actions'
 
@@ -40,7 +40,7 @@ const ProfilNavbar = () => {
             <div className="flex items-center space-x-4">
               <Link href="/" className="flex items-center space-x-2">
                 <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                  <span className="text-white text-sm font-bold">LF</span>
+                  <LinkIcon className="w-4 h-4 text-white" />
                 </div>
                 <span className="text-xl font-bold text-slate-900 dark:text-slate-100">
                   LinkFaster
@@ -83,7 +83,7 @@ const ProfilNavbar = () => {
           <div className="flex items-center space-x-4">
             <Link href="/" className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                <span className="text-white text-sm font-bold">LF</span>
+                <LinkIcon className="w-4 h-4 text-white" />
               </div>
               <span className="text-xl font-bold text-slate-900 dark:text-slate-100">
                 LinkFaster
