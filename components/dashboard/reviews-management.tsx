@@ -134,21 +134,21 @@ const ReviewsManagement: React.FC<ReviewsManagementProps> = ({ userId, isPremium
           <div className="mx-auto w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center mb-4">
             <Crown className="w-6 h-6 text-amber-600" />
           </div>
-          <CardTitle className="text-amber-900">Gestion des avis - Premium</CardTitle>
+          <CardTitle className="text-amber-900">Review Management - Premium</CardTitle>
           <CardDescription className="text-amber-700">
-            Gérez les avis clients et suivez votre réputation avec Premium
+            Manage customer reviews and track your reputation with Premium
           </CardDescription>
         </CardHeader>
         <CardContent className="text-center pb-8">
           <ul className="text-sm text-amber-700 space-y-2 mb-6">
-            <li>• Visualisation de tous vos avis</li>
-            <li>• Métriques détaillées et tendances</li>
-            <li>• Gestion de la visibilité des avis</li>
-            <li>• Modération et réponses</li>
+            <li>• View all your reviews</li>
+            <li>• Detailed metrics and trends</li>
+            <li>• Manage review visibility</li>
+            <li>• Moderation and responses</li>
           </ul>
           <Button className="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700">
             <Crown className="w-4 h-4 mr-2" />
-            Passer à Premium
+            Upgrade to Premium
           </Button>
         </CardContent>
       </Card>
@@ -161,7 +161,7 @@ const ReviewsManagement: React.FC<ReviewsManagementProps> = ({ userId, isPremium
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
             <MessageSquare className="w-5 h-5" />
-            <span>Gestion des avis</span>
+            <span>Review Management</span>
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -184,29 +184,29 @@ const ReviewsManagement: React.FC<ReviewsManagementProps> = ({ userId, isPremium
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
             <TrendingUp className="w-5 h-5 text-blue-600" />
-            <span>Statistiques des avis</span>
+            <span>Review Statistics</span>
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="text-center p-4 bg-blue-50 dark:bg-blue-950/20 rounded-lg">
               <div className="text-2xl font-bold text-blue-600">{reviewStats.totalReviews}</div>
-              <div className="text-sm text-gray-600">Total avis</div>
+              <div className="text-sm text-gray-600">Total Reviews</div>
             </div>
             <div className="text-center p-4 bg-yellow-50 dark:bg-yellow-950/20 rounded-lg">
               <div className="text-2xl font-bold text-yellow-600 flex items-center justify-center">
                 {reviewStats.averageRating.toFixed(1)}
                 <Star className="w-5 h-5 ml-1 text-yellow-500 fill-yellow-500" />
               </div>
-              <div className="text-sm text-gray-600">Note moyenne</div>
+              <div className="text-sm text-gray-600">Average Rating</div>
             </div>
             <div className="text-center p-4 bg-green-50 dark:bg-green-950/20 rounded-lg">
               <div className="text-2xl font-bold text-green-600">{reviewStats.totalVisible}</div>
-              <div className="text-sm text-gray-600">Avis visibles</div>
+              <div className="text-sm text-gray-600">Visible Reviews</div>
             </div>
             <div className="text-center p-4 bg-purple-50 dark:bg-purple-950/20 rounded-lg">
               <div className="text-2xl font-bold text-purple-600">{reviewStats.recentReviews}</div>
-              <div className="text-sm text-gray-600">Ce mois</div>
+              <div className="text-sm text-gray-600">This Month</div>
             </div>
           </div>
         </CardContent>
@@ -218,14 +218,14 @@ const ReviewsManagement: React.FC<ReviewsManagementProps> = ({ userId, isPremium
           <CardTitle className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <MessageSquare className="w-5 h-5" />
-              <span>Tous les avis ({reviews.length})</span>
+              <span>All Reviews ({reviews.length})</span>
             </div>
             <Badge variant="secondary" className="text-xs">
-              {reviews.filter(r => r.isVisible).length} visibles
+              {reviews.filter(r => r.isVisible).length} visible
             </Badge>
           </CardTitle>
           <CardDescription>
-            Gérez la visibilité et modérez les avis de vos clients
+            Manage visibility and moderate your customer reviews
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -233,10 +233,10 @@ const ReviewsManagement: React.FC<ReviewsManagementProps> = ({ userId, isPremium
             <div className="text-center py-12">
               <MessageSquare className="w-12 h-12 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
-                Aucun avis pour le moment
+                No reviews yet
               </h3>
               <p className="text-gray-600 dark:text-gray-400">
-                Les avis de vos clients apparaîtront ici une fois que votre profil public sera activé.
+                Your customer reviews will appear here once your public profile is activated.
               </p>
             </div>
           ) : (
@@ -263,7 +263,7 @@ const ReviewsManagement: React.FC<ReviewsManagementProps> = ({ userId, isPremium
                           </p>
                           {review.isVerified && (
                             <Badge variant="secondary" className="text-xs">
-                              Vérifié
+                              Verified
                             </Badge>
                           )}
                           <div className="flex items-center space-x-1">
@@ -306,7 +306,7 @@ const ReviewsManagement: React.FC<ReviewsManagementProps> = ({ userId, isPremium
                         ) : (
                           <>
                             <EyeOff className="w-3 h-3 mr-1" />
-                            Masqué
+                            Hidden
                           </>
                         )}
                       </Badge>
@@ -324,12 +324,12 @@ const ReviewsManagement: React.FC<ReviewsManagementProps> = ({ userId, isPremium
                             {review.isVisible ? (
                               <>
                                 <EyeOff className="w-4 h-4 mr-2" />
-                                Masquer
+                                Hide
                               </>
                             ) : (
                               <>
                                 <Eye className="w-4 h-4 mr-2" />
-                                Afficher
+                                Show
                               </>
                             )}
                           </DropdownMenuItem>
@@ -339,7 +339,7 @@ const ReviewsManagement: React.FC<ReviewsManagementProps> = ({ userId, isPremium
                             className="text-red-600 dark:text-red-400"
                           >
                             <AlertCircle className="w-4 h-4 mr-2" />
-                            Supprimer
+                            Delete
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>

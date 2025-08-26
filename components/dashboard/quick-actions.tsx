@@ -31,8 +31,8 @@ const QuickActions: React.FC<QuickActionsProps> = ({ user }) => {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: `Profil de ${user.name}`,
-          text: `Découvrez mon profil freelance`,
+          title: `${user.name}'s Profile`,
+          text: `Discover my freelance profile`,
           url: profileUrl
         })
       } catch (error) {
@@ -66,14 +66,14 @@ const QuickActions: React.FC<QuickActionsProps> = ({ user }) => {
             className="flex items-center space-x-2"
           >
             <Eye className="w-4 h-4" />
-            <span>Voir le profil public</span>
+            <span>View Public Profile</span>
             <ExternalLink className="w-3 h-3" />
           </Link>
         </Button>
       ) : (
         <Button variant="outline" disabled>
           <Eye className="w-4 h-4 mr-2" />
-          <span>Profil non disponible</span>
+          <span>Profile Unavailable</span>
         </Button>
       )}
 
@@ -84,7 +84,7 @@ const QuickActions: React.FC<QuickActionsProps> = ({ user }) => {
           className="flex items-center space-x-2"
         >
           <Edit3 className="w-4 h-4" />
-          <span>Modifier</span>
+          <span>Edit</span>
         </Link>
       </Button>
 
@@ -103,17 +103,9 @@ const QuickActions: React.FC<QuickActionsProps> = ({ user }) => {
             disabled={!canViewProfile}
           >
             <Share2 className="mr-2 h-4 w-4" />
-            <span>Partager le profil</span>
+            <span>Share Profile</span>
           </DropdownMenuItem>
           
-          <DropdownMenuSeparator />
-          
-          <DropdownMenuItem asChild className="cursor-pointer">
-            <Link href="/settings">
-              <Settings className="mr-2 h-4 w-4" />
-              <span>Paramètres</span>
-            </Link>
-          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

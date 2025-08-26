@@ -14,10 +14,10 @@ export default function NotFound() {
           
           <div className="space-y-2">
             <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
-              Profil introuvable
+              Profile Not Found
             </h1>
             <p className="text-slate-600 dark:text-slate-400">
-              Le profil que vous cherchez n'existe pas ou a été supprimé.
+              The profile you're looking for doesn't exist or has been removed.
             </p>
           </div>
 
@@ -25,14 +25,14 @@ export default function NotFound() {
             <Button asChild variant="outline">
               <Link href="/" className="flex items-center space-x-2">
                 <ArrowLeft className="w-4 h-4" />
-                <span>Retour</span>
+                <span>Go Back</span>
               </Link>
             </Button>
             
             <Button asChild>
               <Link href="/create-profil" className="flex items-center space-x-2">
                 <Home className="w-4 h-4" />
-                <span>Créer mon profil</span>
+                <span>Create Profile</span>
               </Link>
             </Button>
           </div>

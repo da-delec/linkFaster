@@ -5,6 +5,10 @@ import Link from 'next/link'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+import { CiTwitter } from "react-icons/ci";
+
+import { CiMail } from "react-icons/ci";
+import GithubCaldnarIntegration from '@/app/test/page'
 import { Badge } from '@/components/ui/badge'
 import ReviewForm from '@/components/review-form'
 import ReviewMetrics from '@/components/review-metrics'
@@ -43,6 +47,7 @@ interface User {
   portfolioWebsite: string | null
   bio: string | null
   githubProfile: string | null
+  githubCalendar: boolean
   upworkProfile: string | null
   fiverProfile: string | null
   freelancerProfile: string | null
@@ -54,6 +59,7 @@ interface User {
   layoutStyle: string
   profileSlug: string | null
   isPremium: boolean
+
   enableReviews: boolean
   skills: string[]
   repositories: Array<{
@@ -71,7 +77,8 @@ interface User {
     title: string
     description: string
     url: string
-    previewUrl: string | null
+    previewUrl?: string | null // Deprecated - for backward compatibility
+    previewImage?: string | null // New field for base64 image
     technologies: string[]
   }>
   createdAt: Date
@@ -117,7 +124,7 @@ const PublicProfile: React.FC<PublicProfileProps> = ({ user }) => {
         setReviewStats(data.statistics)
       }
     } catch (error) {
-      console.error('Erreur lors du chargement des avis:', error)
+      console.error('Error loading reviews:', error)
     }
   }
 
@@ -133,11 +140,11 @@ const PublicProfile: React.FC<PublicProfileProps> = ({ user }) => {
   }
   const getThemeColors = (theme: string) => {
     switch (theme) {
-      // 3 THÈMES GRATUITS - Design Apple, simple et sobre
+      // 3 FREE THEMES - Apple design, simple and clean
       case 'default':
         return {
           primary: 'bg-blue-600 hover:bg-blue-700 text-white shadow-sm',
-          secondary: 'bg-white border border-slate-200 shadow-sm',
+          secondary: 'bg-gradiant from-white to-blue300 border border-slate-200 shadow-sm',
           accent: 'text-blue-600',
           text: 'text-slate-900',
           textCard: 'text-slate-900',
@@ -168,20 +175,61 @@ const PublicProfile: React.FC<PublicProfileProps> = ({ user }) => {
           cardShadow: 'shadow-sm'
         }
 
-      // 1 THÈME SOMBRE PREMIUM - Design Apple sombre
+      // 1 PREMIUM DARK THEME - Apple dark design with background image
       case 'midnight':
         return {
-          primary: 'bg-slate-800 hover:bg-slate-900 text-white shadow-sm',
-          secondary: 'bg-slate-800 border border-slate-700 shadow-sm',
-          accent: 'text-slate-300',
+          primary: 'bg-sky-500  hover:bg-slate-700/80 backdrop-blur-md border border-slate-600/50 text-white shadow-xl hover:shadow-2xl transition-all duration-300',
+          secondary: 'bg-white/20 backdrop-blur-md border border-slate-600/40 shadow-xl hover:shadow-2xl transition-all duration-300',
+          accent: 'text-sky-500',
           text: 'text-slate-100',
           textCard: 'text-slate-100',
-          background: 'from-slate-900 to-slate-800',
-          cardBorder: 'border-slate-700',
-          cardShadow: 'shadow-sm'
+          background: 'midnight-background',
+          cardBorder: 'border-slate-600/40',
+          cardShadow: 'shadow-xl backdrop-blur-md',
+          glassEffect: 'backdrop-blur-md bg-slate-800/60 border-slate-600/40 shadow-xl',
+          darkBackground: true
         }
 
-      // 1 THÈME GLASSMORPHISME PREMIUM - Design Apple moderne avec orbes abstraites
+      // 3 PREMIUM GLASSMORPHISM THEMES - Modern Apple design with abstract backgrounds
+      case 'glass-aurora':
+        return {
+          primary: 'bg-white/20 hover:bg-white/30 backdrop-blur-md border border-white/30 text-white shadow-lg hover:shadow-xl transition-all duration-300',
+          secondary: 'bg-white/10 backdrop-blur-md border border-white/20 shadow-lg hover:shadow-xl transition-all duration-300',
+          accent: 'text-blue-400/90',
+          text: 'text-white',
+          textCard: 'text-white',
+          background: 'glass-aurora-background',
+          cardBorder: 'border-white/20',
+          cardShadow: 'shadow-lg backdrop-blur-md',
+          glassEffect: 'backdrop-blur-md bg-white/10 border-white/20 shadow-lg',
+          abstractOrbs: true
+        }
+      case 'glass-nebula':
+        return {
+          primary: 'bg-white/20 hover:bg-white/30 backdrop-blur-md border border-white/30 text-white shadow-lg hover:shadow-xl transition-all duration-300',
+          secondary: 'bg-slate-400/25 backdrop-blur-lg border border-white/20 shadow-lg hover:shadow-xl transition-all duration-300',
+          accent: 'text-rose-600/80',
+          text: 'text-slate-800',
+          textCard: 'text-rose-600/80',
+          background: 'glass-nebula-background',
+          cardBorder: 'border-white/20',
+          cardShadow: 'shadow-lg backdrop-blur-md',
+          glassEffect: 'backdrop-blur-md bg-slate-500/10 border-white/20 shadow-lg',
+          abstractOrbs: true
+        }
+      case 'glass-cosmic':
+        return {
+          primary: 'bg-white/20 hover:bg-white/30 backdrop-blur-md border border-white/30 text-white shadow-lg hover:shadow-xl transition-all duration-300',
+          secondary: 'bg-white/10 backdrop-blur-md border border-white/20 shadow-lg hover:shadow-xl transition-all duration-300',
+          accent: 'text-fuchsia-400',
+          text: 'text-white',
+          textCard: 'text-white',
+          background: 'glass-cosmic-background',
+          cardBorder: 'fuchsia-400',
+          cardShadow: 'shadow-lg backdrop-blur-md',
+          glassEffect: 'backdrop-blur-md bg-white/10 border-white/20 shadow-lg',
+          abstractOrbs: true
+        }
       case 'glass':
         return {
           primary: 'bg-white/20 hover:bg-white/30 backdrop-blur-md border border-white/30 text-white shadow-lg hover:shadow-xl transition-all duration-300',
@@ -189,11 +237,39 @@ const PublicProfile: React.FC<PublicProfileProps> = ({ user }) => {
           accent: 'text-blue-300',
           text: 'text-white',
           textCard: 'text-white',
-          background: 'from-slate-900 via-slate-800 to-slate-900',
+          background: 'glass-aurora-background',
           cardBorder: 'border-white/20',
           cardShadow: 'shadow-lg backdrop-blur-md',
           glassEffect: 'backdrop-blur-md bg-white/10 border-white/20 shadow-lg',
           abstractOrbs: true
+        }
+
+      // PREMIUM PRISME THEMES - Modern backgrounds with sophisticated effects
+      case 'prisme-dark':
+        return {
+          primary: 'bg-white/25 hover:bg-white/35 backdrop-blur-md border border-white/30 text-white shadow-xl hover:shadow-2xl transition-all duration-300',
+          secondary: 'bg-white/15 backdrop-blur-md border border-white/25 shadow-xl hover:shadow-2xl transition-all duration-300',
+          accent: 'text-emerald-300/90',
+          text: 'text-white',
+          textCard: 'text-white',
+          background: 'prisme-dark-background',
+          cardBorder: 'border-white/35',
+          cardShadow: 'shadow-xl backdrop-blur-md',
+          glassEffect: 'backdrop-blur-md bg-white/15 border-white/25 shadow-xl',
+          prismeTheme: true
+        }
+      case 'prisme-grey':
+        return {
+          primary: 'bg-slate-800/90 hover:bg-slate-700/90 backdrop-blur-md border border-slate-600/50 text-white shadow-xl hover:shadow-2xl transition-all duration-300',
+          secondary: 'bg-slate-500/30 backdrop-blur-md border border-slate-600/40 shadow-xl hover:shadow-2xl transition-all duration-300',
+          accent: 'text-amber-400',
+          text: 'text-slate-100',
+          textCard: 'text-slate-100',
+          background: 'prisme-grey-background',
+          cardBorder: 'border-slate-600/40',
+          cardShadow: 'shadow-xl backdrop-blur-md',
+          glassEffect: 'backdrop-blur-md bg-slate-800/70 border-slate-600/40 shadow-xl',
+          prismeTheme: true
         }
 
       default:
@@ -215,40 +291,58 @@ const PublicProfile: React.FC<PublicProfileProps> = ({ user }) => {
       case 'creative':
         return {
           container: 'max-w-3xl',
-          linkCard: 'transform hover:scale-105 transition-all duration-300 border-l-8',
-          profileCard: 'transform rotate-1 hover:rotate-0 transition-transform duration-300',
-          spacing: 'space-y-6'
+          linkCard: 'transform hover:scale-110 transition-all duration-500 border-l-8 hover:rotate-2 hover:shadow-2xl relative overflow-hidden',
+          profileCard: 'transform rotate-1 hover:rotate-0 transition-transform duration-300 hover:shadow-xl',
+          spacing: 'space-y-8',
+          headerExtra: 'relative overflow-hidden',
+          cardPattern: 'before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/15 before:to-transparent before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-1000',
+          skillsPattern: 'hover:rotate-6 hover:scale-125 hover:shadow-lg',
+          headerTilt: 'transform hover:-rotate-1 transition-transform duration-300'
         }
       case 'professional':
         return {
-          container: 'max-w-4xl',
-          linkCard: 'border border-slate-200 dark:border-slate-700 hover:shadow-md',
-          profileCard: '',
-          spacing: 'space-y-4'
+          container: 'max-w-5xl',
+          linkCard: 'border border-slate-200 dark:border-slate-700 hover:shadow-lg hover:border-fuchsia-500 dark:hover:border-fuchsia-500 transition-all duration-300',
+          profileCard: 'shadow-lg border-slate-200 dark:border-slate-700',
+          spacing: 'space-y-6',
+          headerExtra: 'bg-gradient-to-b from-slate-50 to-white dark:from-slate-800 dark:to-slate-900 rounded-2xl p-8 shadow-inner',
+          skillsPattern: 'hover:shadow-md hover:scale-105',
+          headerTilt: ''
         }
       case 'minimal':
         return {
-          container: 'max-w-lg',
-          linkCard: 'border-0 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700',
-          profileCard: 'border-0',
-          spacing: 'space-y-3'
+          container: 'max-w-md',
+          linkCard: 'border-0 bg-slate-100/50 dark:bg-slate-800/50 hover:bg-slate-200/80 dark:hover:bg-slate-700/80 rounded-2xl backdrop-blur-sm transition-all duration-200',
+          profileCard: 'border-0 bg-transparent',
+          spacing: 'space-y-4',
+          headerExtra: 'backdrop-blur-sm bg-white/30 dark:bg-slate-900/30 rounded-full p-6',
+          skillsPattern: 'hover:scale-105',
+          headerTilt: ''
         }
       default: // modern
         return {
           container: 'max-w-2xl',
-          linkCard: 'hover:shadow-lg transition-all duration-200 hover:scale-[1.02] cursor-pointer border-l-4 border-l-transparent',
-          profileCard: '',
-          spacing: 'space-y-4'
+          linkCard: 'hover:shadow-xl transition-all duration-300 hover:scale-[1.02] cursor-pointer border-l-4 border-l-transparent hover:border-l-fuchsia-500 bg-gradient-to-r hover:from-fuchsia-50 hover:to-purple-50 dark:hover:from-slate-800 dark:hover:to-slate-700',
+          profileCard: 'hover:shadow-lg transition-all duration-300',
+          spacing: 'space-y-5',
+          headerExtra: '',
+          skillsPattern: 'hover:scale-110 hover:-translate-y-1',
+          headerTilt: ''
         }
     }
   }
 
-  const colors = getThemeColors(user.colorTheme)
-  const layout = getLayoutStyles(user.layoutStyle)
+  const colors = getThemeColors(user.colorTheme || 'default')
+  const layout = getLayoutStyles(user.layoutStyle || 'modern')
   
-  // Détection des thèmes glass pour le texte dans les cards
-  const isGlassTheme = ['glass'].includes(user.colorTheme)
+  // Debug: display the theme used
+  console.log('Theme used:', user.colorTheme, 'Colors:', colors)
+  
+  // Detection of glass and prisme themes for text in cards
+  const isGlassTheme = ['glass', 'glass-aurora', 'glass-nebula', 'glass-cosmic'].includes(user.colorTheme)
+  const isPrismeTheme = ['prisme-dark', 'prisme-grey'].includes(user.colorTheme)
   const isDarkTheme = ['midnight'].includes(user.colorTheme)
+  const isGlassLikeTheme = isGlassTheme || isPrismeTheme || isDarkTheme
   const isGradientTheme = false // No gradient themes in the new design
 
   const platforms = [
@@ -267,8 +361,8 @@ const PublicProfile: React.FC<PublicProfileProps> = ({ user }) => {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: `Profil de ${user.name}`,
-          text: `Découvrez le profil freelance de ${user.name}`,
+          title: `${user.name}'s Profile`,
+          text: `Discover ${user.name}'s freelance profile`,
           url: window.location.href
         })
       } catch (error) {
@@ -280,38 +374,79 @@ const PublicProfile: React.FC<PublicProfileProps> = ({ user }) => {
     }
   }
 
+  // Track profile view when component mounts
+  useEffect(() => {
+    const trackProfileView = async () => {
+      try {
+        await fetch('/api/track-profile-view', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userId: user.id
+          })
+        })
+      } catch (error) {
+        console.error('Failed to track profile view:', error)
+      }
+    }
+
+    trackProfileView()
+  }, [user.id])
+
+  // Function to track link clicks
+  const trackLinkClick = async (linkType: string, linkUrl: string) => {
+    try {
+      await fetch('/api/track-link-click', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: user.id,
+          linkType,
+          linkUrl
+        })
+      })
+    } catch (error) {
+      console.error('Failed to track link click:', error)
+    }
+  }
+
 
 
   return (
-    <div className={`min-h-screen bg-gradient-to-br ${colors.background} ${colors.text} relative overflow-hidden`}>
-      {/* Orbes abstraites pour le thème glass */}
+    <div className={`min-h-screen ${colors.abstractOrbs || colors.darkBackground || colors.prismeTheme ? colors.background : colors.background ? `bg-gradient-to-br ${colors.background}` : 'bg-white'} ${colors.text} relative overflow-hidden`}>
+      {/* Glass theme background overlay */}
       {colors.abstractOrbs && (
-        <>
-          {/* Orbe bleue floutée */}
-          <div className="absolute top-20 left-10 w-96 h-96 bg-blue-400/30 rounded-full blur-3xl animate-pulse"></div>
-          {/* Orbe indigo floutée */}
-          <div className="absolute top-40 right-20 w-80 h-80 bg-indigo-400/40 rounded-full blur-3xl animate-pulse delay-1000"></div>
-          {/* Orbe cyan floutée */}
-          <div className="absolute bottom-40 left-1/4 w-72 h-72 bg-cyan-300/35 rounded-full blur-3xl animate-pulse delay-500"></div>
-        </>
+        <div className={`absolute inset-0 z-0 ${
+          user.colorTheme === 'glass-nebula' ? 'bg-black/10' : 
+          user.colorTheme === 'glass-cosmic' ? 'bg-black/25' : 
+          'bg-black/30'
+        }`}></div>
+      )}
+      
+      {/* Dark theme background overlay */}
+      {colors.darkBackground && (
+        <div className="absolute inset-0 bg-black/20 z-0"></div>
+      )}
+      
+      {/* Prisme theme background overlay */}
+      {colors.prismeTheme && (
+        <div className={`absolute inset-0 z-0 ${
+          user.colorTheme === 'prisme-dark' ? 'bg-black/40' : 
+          'bg-black/30'
+        }`}></div>
       )}
 
-      {/* Background Image */}
-      {user.backgroundImage && (
-        <div 
-          className="h-64 sm:h-80 lg:h-96 bg-cover bg-center relative"
-          style={{ backgroundImage: `url(${user.backgroundImage})` }}
-        >
-          <div className="absolute inset-0 bg-black/20"></div>
-        </div>
-      )}
 
-      <div className={`container mx-auto px-4 py-8 ${layout.container}`}>
+      <div className={`container mx-auto px-4 py-8 ${layout.container} relative z-10`}>
         <div>
         {/* Profile Header */}
-        <div className={`${user.backgroundImage ? '-mt-24 sm:-mt-32 lg:-mt-40' : ''} relative z-10 text-center space-y-6`}>
+        <div className={`relative z-10 text-center space-y-6 mt-16 animate-fade-in`}>
           <div className="flex justify-center">
-            <Avatar className="w-32 h-32 border-4 border-white dark:border-gray-800 shadow-xl">
+            <Avatar className="w-32 h-32 border-2 border-slate-50/70 dark:border-gray-800 shadow-xl transition-all duration-300 hover:scale-105">
               <AvatarImage src={user.photoUrl || undefined} alt={user.name} />
               <AvatarFallback className={`text-2xl font-bold ${colors.primary} text-white`}>
                 {user.name?.split(' ').map(n => n[0]).join('').toUpperCase() || 'U'}
@@ -321,56 +456,87 @@ const PublicProfile: React.FC<PublicProfileProps> = ({ user }) => {
 
           <div className="space-y-3">
             <div className="space-y-1">
-              <h1 className={`text-3xl font-bold ${colors.text}`}>
+              <h1 className={`text-4xl font-medium bg-gradient-to-br from-gray-400 to-gray-200 text-transparent bg-clip-text `}>
                 {user.name}
               </h1>
               {user.profession && (
-                <p className={`text-lg font-medium ${colors.accent}`}>
+                <p className={`text-2xl ${
+                  isDarkTheme || isGlassLikeTheme ? colors.accent : 
+                  user.colorTheme === 'default' ? 'text-blue-700' :
+                  user.colorTheme === 'emerald' ? 'text-emerald-700' :
+                  user.colorTheme === 'purple' ? 'text-purple-700' :
+                  colors.accent
+                }`}>
                   {user.profession}
                 </p>
               )}
             </div>
 
             {user.bio && (
-              <p className={`max-w-md mx-auto ${colors.text} opacity-80`}>
+              <p className={`max-w-md font-light mx-auto ${colors.text} opacity-90`}>
                 {user.bio}
               </p>
             )}
 
-            <div className={`flex items-center justify-center space-x-4 text-sm text-slate-500`}>
+            <div className={`flex items-center justify-center space-x-4 text-sm ${
+              isDarkTheme || isGlassLikeTheme ? 'text-slate-200' : 'text-slate-600'
+            }`}>
               {user.age && (
-                <div className="flex items-center space-x-1">
-                  <Calendar className="w-4 h-4" />
-                  <span>{user.age} ans</span>
+                <div className="flex text-lg items-center space-x-1">
+                  <Calendar className="w-4 h-4 mr-2" />
+                  <span>{user.age} years old</span>
                 </div>
               )}
-              <div className="flex items-center space-x-1">
-                <MapPin className="w-4 h-4" />
+              <div className="flex items-center text-lg space-x-1">
+                <MapPin className="w-4 h-4 mr-1" />
                 <span>Freelance</span>
               </div>
             </div>
 
             {/* Share Button */}
-            <Button
-              onClick={handleShare}
-              variant="outline"
-              size="sm"
-              className={`mt-4 border ${colors.accent} hover:bg-white/10`}
-            >
-              <Share2 className="w-4 h-4 mr-2" />
-              Partager le profil
-            </Button>
+            <div className=' flex justify-center items-center gap-4'>
+           <Link 
+             href={`https://twitter.com/intent/tweet?url=`} 
+             className={`mt-4 hover:scale-110 hover:text-blue-400 transition-all duration-300 `}
+             onClick={(e) => {
+               const currentUrl = window.location.href;
+               const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(currentUrl)}`;
+               trackLinkClick('twitter', twitterUrl);
+               e.currentTarget.href = twitterUrl;
+             }}
+           >
+            <CiTwitter className="w-10 h-10 " />
+           
+           </Link>
+           <Link 
+             href={`mailto:${user.email}`} 
+             className={`mt-4 hover:scale-110 hover:text-blue-400 transition-all duration-300 `}
+             onClick={() => trackLinkClick('email-share', `mailto:${user.email}`)}
+           >
+             <CiMail className="w-10 h-10 " />
+           </Link>
+          </div>
           </div>
         </div>
+        
+        {/* GitHub Calendar Section */}
+        {user.githubCalendar && user.githubProfile && (
+          <div className={`${layout.spacing} p-6 mt-12 rounded-2xl border transition-all duration-300 ${colors.secondary} ${colors.cardBorder} ${colors.cardShadow}`}>
+            <GithubCaldnarIntegration 
+              username={user.githubProfile.split('/').pop() || "da-delec"} 
+              colorTheme={user.colorTheme}
+            />
+          </div>
+        )}
 
 
         {/* Links Section */}
         {platforms.length > 0 && (
           <div className={`mt-8 ${layout.spacing} relative z-10`}>
             <h2 className={`text-xl font-semibold text-center mb-6 ${
-              isDarkTheme ? 'text-slate-100' : colors.text
+              isDarkTheme || isGlassLikeTheme ? 'text-slate-100' : 'text-slate-900'
             }`}>
-              Mes liens
+              My Links
             </h2>
             
             {platforms.map((platform) => {
@@ -382,23 +548,24 @@ const PublicProfile: React.FC<PublicProfileProps> = ({ user }) => {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block"
+                  onClick={() => trackLinkClick(platform.key, platform.url!)}
                 >
-                  <Card className={`${layout.linkCard} ${colors.secondary} ${colors.cardBorder || ''} ${colors.cardShadow || ''} transition-all duration-300 hover:scale-[1.02] ${isGlassTheme ? 'border-white/30 shadow-xl backdrop-blur-md' : ''}`}>
+                  <Card className={`${layout.linkCard} ${colors.secondary} ${colors.cardBorder || ''} ${colors.cardShadow || ''} transition-all duration-200 hover:scale-[1.02] ${isGlassLikeTheme ? 'border-white/30 shadow-2xl backdrop-blur-lg' : ''}`}>
                     <CardContent className="flex items-center justify-between p-4">
                       <div className="flex items-center space-x-3">
-                        <div className={`w-10 h-10 rounded-lg ${platform.color} flex items-center justify-center text-white shadow-lg transition-all duration-200 ${isGlassTheme ? 'shadow-white/20' : ''}`}>
+                        <div className={`w-10 h-10 rounded-lg ${platform.color} flex items-center justify-center text-white shadow-lg transition-all duration-200 ${isGlassLikeTheme ? 'shadow-white/20' : ''}`}>
                           <Icon className="w-5 h-5" />
                         </div>
                         <div>
-                          <h3 className={`font-medium ${isGlassTheme ? colors.textCard : colors.text}`}>
+                          <h3 className={`font-medium ${isGlassLikeTheme ? colors.textCard : colors.text}`}>
                             {platform.name}
                           </h3>
-                          <p className={`text-sm truncate max-w-xs ${isGlassTheme ? colors.textCard : colors.text} opacity-70`}>
+                          <p className={`text-sm truncate max-w-xs ${isGlassLikeTheme ? colors.textCard : colors.text} opacity-70`}>
                             {platform.url?.replace(/^https?:\/\//, '')}
                           </p>
                         </div>
                       </div>
-                      <ExternalLink className={`w-4 h-4 ${isGlassTheme ? colors.textCard : colors.text} opacity-60`} />
+                      <ExternalLink className={`w-4 h-4 ${isGlassLikeTheme ? colors.textCard : colors.text} opacity-60`} />
                     </CardContent>
                   </Card>
                 </Link>
@@ -411,9 +578,9 @@ const PublicProfile: React.FC<PublicProfileProps> = ({ user }) => {
         {user.skills.length > 0 && (
           <div className="mt-8">
             <h2 className={`text-xl font-semibold text-center mb-6 ${
-              isDarkTheme ? 'text-slate-100' : colors.text
+              isDarkTheme || isGlassLikeTheme ? 'text-slate-100' : 'text-slate-900'
             }`}>
-              Compétences
+              Skills
             </h2>
             
             <div className="flex flex-wrap gap-3 justify-center">
@@ -422,10 +589,11 @@ const PublicProfile: React.FC<PublicProfileProps> = ({ user }) => {
                   key={index}
                   variant="secondary"
                   className={`${colors.secondary} ${
-                    isGlassTheme ? colors.textCard : 
+                    isGlassLikeTheme ? colors.textCard : 
                     isDarkTheme ? 'text-slate-100 bg-slate-700/80 border-slate-600' :
                     colors.accent
-                  } border px-4 py-2 text-sm ${colors.cardBorder || ''} ${colors.cardShadow || ''} ${isGlassTheme ? 'border-white/30 shadow-lg backdrop-blur-md' : ''}`}
+                  } border px-4 py-2 text-sm ${colors.cardBorder || ''} ${colors.cardShadow || ''} ${isGlassLikeTheme ? 'border-white/30 shadow-lg backdrop-blur-md' : ''} transition-all duration-300 hover:scale-110 hover:-translate-y-1 cursor-default animate-fade-in`}
+                  style={{ animationDelay: `${0.5 + index * 0.05}s` }}
                 >
                   {skill}
                 </Badge>
@@ -438,9 +606,9 @@ const PublicProfile: React.FC<PublicProfileProps> = ({ user }) => {
         {user.projects && user.projects.length > 0 && (
           <div className="mt-8">
             <h2 className={`text-xl font-semibold text-center mb-6 ${
-              isDarkTheme ? 'text-slate-100' : colors.text
+              isDarkTheme || isGlassLikeTheme ? 'text-slate-100' : 'text-slate-900'
             }`}>
-              Projets en production
+              Production Projects
             </h2>
             
             <div className="grid gap-4">
@@ -450,8 +618,9 @@ const PublicProfile: React.FC<PublicProfileProps> = ({ user }) => {
                   href={project.url}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => trackLinkClick('project', project.url)}
                 >
-                  <Card className={`hover:shadow-lg transition-all duration-200 hover:scale-[1.02] cursor-pointer ${colors.secondary} ${colors.cardBorder || ''} ${colors.cardShadow || ''} ${isGlassTheme ? 'border-white/30 shadow-xl backdrop-blur-md' : ''}`}>
+                  <Card className={`hover:shadow-lg transition-all duration-200 hover:scale-[1.02] cursor-pointer ${colors.secondary} ${colors.cardBorder || ''} ${colors.cardShadow || ''} ${isGlassLikeTheme ? 'border-white/30 shadow-xl backdrop-blur-md' : ''}`}>
                     <CardContent className="p-4">
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
@@ -464,15 +633,15 @@ const PublicProfile: React.FC<PublicProfileProps> = ({ user }) => {
                                 : 'text-slate-500'
                             }`} />
                             <h3 className={`font-medium ${
-                              isGlassTheme ? colors.textCard : colors.text
+                              isGlassLikeTheme ? colors.textCard : colors.text
                             }`}>
                               {project.title}
                             </h3>
                             <Badge 
                               variant="outline" 
-                              className={`text-xs ${isGlassTheme ? 'border-white/30 text-white/90 bg-white/10' : ''}`}
+                              className={`text-xs ${isGlassLikeTheme ? 'border-white/30 text-white/90 bg-white/10' : ' bg-blue-500 border-blue-200'}`}
                             >
-                              En production
+                              In Production
                             </Badge>
                           </div>
                           
@@ -492,7 +661,7 @@ const PublicProfile: React.FC<PublicProfileProps> = ({ user }) => {
                                 <Badge
                                   key={index}
                                   variant="secondary"
-                                  className={`text-xs ${colors.secondary} ${colors.cardBorder || ''}`}
+                                  className={`text-xs border-blue-200/70 bg-gradient-to-br from-blue-500/50 to-purple-600/50 text-white`}
                                 >
                                   {tech}
                                 </Badge>
@@ -512,12 +681,12 @@ const PublicProfile: React.FC<PublicProfileProps> = ({ user }) => {
                           </div>
                         </div>
                         
-                        {project.previewUrl && (
+                        {(project.previewImage || project.previewUrl) && (
                           <div className="ml-4">
                             <img
-                              src={project.previewUrl}
+                              src={project.previewImage || project.previewUrl!}
                               alt={project.title}
-                              className="w-16 h-12 object-cover rounded border"
+                              className="w-32 h-24 object-cover rounded border shadow-sm"
                             />
                           </div>
                         )}
@@ -534,9 +703,9 @@ const PublicProfile: React.FC<PublicProfileProps> = ({ user }) => {
         {user.repositories.length > 0 && (
           <div className="mt-8">
             <h2 className={`text-xl font-semibold text-center mb-6 ${
-              isDarkTheme ? 'text-slate-100' : colors.text
+              isDarkTheme || isGlassLikeTheme ? 'text-slate-100' : 'text-slate-900'
             }`}>
-              Projets GitHub
+              GitHub Projects
             </h2>
             
             <div className="grid gap-4">
@@ -546,8 +715,9 @@ const PublicProfile: React.FC<PublicProfileProps> = ({ user }) => {
                   href={repo.url}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => trackLinkClick('github', repo.url)}
                 >
-                  <Card className={`hover:shadow-lg transition-all duration-200 hover:scale-[1.02] cursor-pointer ${colors.secondary} ${colors.cardBorder || ''} ${colors.cardShadow || ''} ${isGlassTheme ? 'border-white/30 shadow-xl backdrop-blur-md' : ''}`}>
+                  <Card className={`hover:shadow-lg transition-all duration-200 hover:scale-[1.02] cursor-pointer ${colors.secondary} ${colors.cardBorder || ''} ${colors.cardShadow || ''} ${isGlassLikeTheme ? 'border-white/30 shadow-xl backdrop-blur-md' : ''}`}>
                     <CardContent className="p-4">
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
@@ -560,7 +730,7 @@ const PublicProfile: React.FC<PublicProfileProps> = ({ user }) => {
                                 : 'text-slate-500'
                             }`} />
                             <h3 className={`font-medium ${
-                              isGlassTheme ? colors.textCard : colors.text
+                              isGlassLikeTheme ? colors.textCard : colors.text
                             }`}>
                               {repo.name}
                             </h3>
@@ -632,9 +802,9 @@ const PublicProfile: React.FC<PublicProfileProps> = ({ user }) => {
         {user.enableReviews && (
           <div className="mt-8">
             <h2 className={`text-xl font-semibold text-center mb-6 ${
-              isDarkTheme ? 'text-slate-100' : colors.text
+              isDarkTheme || isGlassLikeTheme ? 'text-slate-100' : 'text-slate-900'
             }`}>
-              Avis clients
+              Client Reviews
             </h2>
             
             {reviewStats && (
@@ -643,9 +813,7 @@ const PublicProfile: React.FC<PublicProfileProps> = ({ user }) => {
                 statistics={reviewStats} 
                 theme={{
                   colors,
-                  colorTheme: user.colorTheme,
-                  isDarkTheme,
-                  isGlassTheme
+                  colorTheme: user.colorTheme
                 }}
               />
             )}
@@ -667,7 +835,7 @@ const PublicProfile: React.FC<PublicProfileProps> = ({ user }) => {
                         : ''
                     }`}
                   >
-                    Annuler
+                    Cancel
                   </Button>
                 </div>
               ) : (
@@ -676,7 +844,7 @@ const PublicProfile: React.FC<PublicProfileProps> = ({ user }) => {
                   className={`${colors.primary} shadow-lg hover:shadow-xl transition-shadow`}
                 >
                   <Star className="w-4 h-4 mr-2" />
-                  Laisser un avis
+                  Leave a Review
                 </Button>
               )}
             </div>
@@ -685,19 +853,24 @@ const PublicProfile: React.FC<PublicProfileProps> = ({ user }) => {
 
         {/* Contact Section */}
         <div className="mt-8 text-center">
-          <Card className={`${colors.secondary} border ${layout.profileCard} ${colors.cardBorder || ''} ${colors.cardShadow || ''} ${isGlassTheme ? 'border-white/30 shadow-xl backdrop-blur-md' : ''}`}>
+          <Card className={`${colors.secondary} border ${layout.profileCard} ${colors.cardBorder || ''} ${colors.cardShadow || ''} ${isGlassLikeTheme ? 'border-white/30 shadow-xl backdrop-blur-md' : ''}`}>
             <CardContent className="p-6">
-              <h3 className={`text-lg font-semibold mb-4 ${colors.text}`}>
-                Intéressé par mon profil ?
+              <h3 className={`text-lg font-semibold mb-4 ${
+                isDarkTheme || isGlassLikeTheme ? 'text-slate-100' : 'text-slate-900'
+              }`}>
+                Interested in my profile?
               </h3>
               <Button 
                 asChild 
                 size="lg"
                 className={`${colors.primary} shadow-lg hover:shadow-xl transition-shadow`}
               >
-                <Link href={`mailto:${user.email}`}>
+                <Link 
+                  href={`mailto:${user.email}`}
+                  onClick={() => trackLinkClick('email', `mailto:${user.email}`)}
+                >
                   <Mail className="w-4 h-4 mr-2" />
-                  Me contacter
+                  Contact Me
                 </Link>
               </Button>
               
@@ -711,12 +884,12 @@ const PublicProfile: React.FC<PublicProfileProps> = ({ user }) => {
 
         {/* Footer */}
         <div className="mt-12 text-center text-sm text-slate-500">
-          <p>Profil créé avec <strong>LinkFaster</strong></p>
+          <p>Profile created with <strong>LinkFaster</strong></p>
           <Link 
             href="/create-profil" 
             className={`${colors.accent} hover:underline font-medium`}
           >
-            Créer mon profil gratuitement
+            Create my profile for free
           </Link>
         </div>
         </div>

@@ -7,11 +7,13 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Textarea } from '@/components/ui/textarea'
-import { Github, ExternalLink, Star, GitFork, Upload, X, Plus, Eye } from 'lucide-react'
+import { Switch } from '@/components/ui/switch'
+import { Github, ExternalLink, Star, GitFork, Upload, X, Plus, Eye, Calendar } from 'lucide-react'
 
 interface GitHubIntegrationStepProps {
   data: {
     githubProfile: string
+    githubCalendar: boolean
     selectedRepos: Array<{
       name: string
       url: string
@@ -35,7 +37,7 @@ const GitHubIntegrationStep: React.FC<GitHubIntegrationStepProps> = ({ data, onU
     {
       name: 'awesome-portfolio',
       url: 'https://github.com/username/awesome-portfolio',
-      description: 'Mon portfolio personnel développé avec React et Tailwind CSS',
+      description: 'My personal portfolio developed with React and Tailwind CSS',
       stars: 45,
       forks: 12,
       language: 'TypeScript'
@@ -43,7 +45,7 @@ const GitHubIntegrationStep: React.FC<GitHubIntegrationStepProps> = ({ data, onU
     {
       name: 'e-commerce-app',
       url: 'https://github.com/username/e-commerce-app',
-      description: 'Application e-commerce complète avec Next.js et Stripe',
+      description: 'Complete e-commerce application with Next.js and Stripe',
       stars: 78,
       forks: 23,
       language: 'JavaScript'
@@ -51,7 +53,7 @@ const GitHubIntegrationStep: React.FC<GitHubIntegrationStepProps> = ({ data, onU
     {
       name: 'task-manager-api',
       url: 'https://github.com/username/task-manager-api',
-      description: 'API REST pour la gestion de tâches avec Node.js et MongoDB',
+      description: 'REST API for task management with Node.js and MongoDB',
       stars: 32,
       forks: 8,
       language: 'JavaScript'
@@ -95,22 +97,43 @@ const GitHubIntegrationStep: React.FC<GitHubIntegrationStepProps> = ({ data, onU
       <div className="space-y-4">
         <div className="flex items-center space-x-2">
           <Github className="w-5 h-5 text-slate-500" />
-          <h3 className="text-lg font-medium">Profil GitHub</h3>
+          <h3 className="text-lg font-medium">GitHub Profile</h3>
         </div>
         
         <div className="space-y-2">
-          <Label htmlFor="githubProfile">Lien vers votre profil GitHub</Label>
+          <Label htmlFor="githubProfile">Link to your GitHub profile</Label>
           <Input
             id="githubProfile"
             type="url"
             value={data.githubProfile}
             onChange={(e) => onUpdate({ githubProfile: e.target.value })}
-            placeholder="https://github.com/votre-username"
+            placeholder="https://github.com/your-username"
             className="h-10"
           />
           <p className="text-xs text-slate-500">
-            Votre profil GitHub sera affiché sur votre page de profil freelance
+            Your GitHub profile will be displayed on your freelance profile page
           </p>
+        </div>
+        
+        {/* GitHub Calendar Toggle */}
+        <div className="flex items-center justify-between space-x-3 p-4 border rounded-lg bg-slate-50 dark:bg-slate-800/50">
+          <div className="flex items-center space-x-3">
+            <Calendar className="w-5 h-5 text-green-600" />
+            <div>
+              <Label htmlFor="githubCalendar" className="text-sm font-medium">
+                Display GitHub Activity Calendar
+              </Label>
+              <p className="text-xs text-slate-500 mt-1">
+                Show your GitHub contributions calendar on your public profile
+              </p>
+            </div>
+          </div>
+          <Switch
+            id="githubCalendar"
+            checked={data.githubCalendar}
+            onCheckedChange={(checked) => onUpdate({ githubCalendar: checked })}
+            disabled={!data.githubProfile || data.githubProfile.trim() === ''}
+          />
         </div>
       </div>
 
@@ -118,8 +141,8 @@ const GitHubIntegrationStep: React.FC<GitHubIntegrationStepProps> = ({ data, onU
       {data.selectedRepos.length > 0 && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-medium">Projets sélectionnés ({data.selectedRepos.length})</h3>
-            <Badge variant="secondary">{data.selectedRepos.length}/3 recommandés</Badge>
+            <h3 className="text-lg font-medium">Selected Projects ({data.selectedRepos.length})</h3>
+            <Badge variant="secondary">{data.selectedRepos.length}/3 recommended</Badge>
           </div>
           
           <div className="grid gap-4">
@@ -170,14 +193,14 @@ const GitHubIntegrationStep: React.FC<GitHubIntegrationStepProps> = ({ data, onU
       {/* Add Repository Section */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-medium">Ajouter des projets</h3>
+          <h3 className="text-lg font-medium">Add Projects</h3>
           <Button
             variant="outline"
             size="sm"
             onClick={() => setIsAddingRepo(!isAddingRepo)}
           >
             <Plus className="w-4 h-4 mr-1" />
-            Projet personnalisé
+            Custom project
           </Button>
         </div>
 
@@ -185,21 +208,21 @@ const GitHubIntegrationStep: React.FC<GitHubIntegrationStepProps> = ({ data, onU
         {isAddingRepo && (
           <Card className="border-dashed">
             <CardHeader>
-              <CardTitle className="text-base">Ajouter un projet personnalisé</CardTitle>
+              <CardTitle className="text-base">Add a custom project</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>Nom du projet *</Label>
+                  <Label>Project name *</Label>
                   <Input
                     value={newRepo.name}
                     onChange={(e) => setNewRepo(prev => ({ ...prev, name: e.target.value }))}
-                    placeholder="mon-super-projet"
+                    placeholder="my-awesome-project"
                     className="h-10"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>URL du repository *</Label>
+                  <Label>Repository URL *</Label>
                   <Input
                     type="url"
                     value={newRepo.url}
@@ -215,31 +238,31 @@ const GitHubIntegrationStep: React.FC<GitHubIntegrationStepProps> = ({ data, onU
                 <Textarea
                   value={newRepo.description}
                   onChange={(e) => setNewRepo(prev => ({ ...prev, description: e.target.value }))}
-                  placeholder="Description du projet, technologies utilisées..."
+                  placeholder="Project description, technologies used..."
                   className="min-h-[80px]"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label>URL de l'image de démonstration (optionnel)</Label>
+                <Label>Demo image URL (optional)</Label>
                 <Input
                   type="url"
                   value={newRepo.image}
                   onChange={(e) => setNewRepo(prev => ({ ...prev, image: e.target.value }))}
-                  placeholder="https://exemple.com/screenshot.png"
+                  placeholder="https://example.com/screenshot.png"
                   className="h-10"
                 />
                 <p className="text-xs text-slate-500">
-                  Screenshot, logo ou image représentative du projet
+                  Screenshot, logo or representative image of the project
                 </p>
               </div>
 
               <div className="flex space-x-3 pt-2">
                 <Button onClick={addRepo} disabled={!newRepo.name || !newRepo.url}>
-                  Ajouter le projet
+                  Add project
                 </Button>
                 <Button variant="outline" onClick={() => setIsAddingRepo(false)}>
-                  Annuler
+                  Cancel
                 </Button>
               </div>
             </CardContent>
@@ -249,7 +272,7 @@ const GitHubIntegrationStep: React.FC<GitHubIntegrationStepProps> = ({ data, onU
         {/* Mock GitHub Repositories (Simulation) */}
         <div>
           <h4 className="text-base font-medium mb-3 text-slate-700 dark:text-slate-300">
-            Projets populaires (Simulation)
+            Popular Projects (Simulation)
           </h4>
           <div className="grid gap-3">
             {mockGitHubRepos.map((repo, index) => {
@@ -289,12 +312,12 @@ const GitHubIntegrationStep: React.FC<GitHubIntegrationStepProps> = ({ data, onU
                       <div className="ml-4">
                         {isSelected ? (
                           <Badge className="bg-green-600">
-                            Ajouté
+                            Added
                           </Badge>
                         ) : (
                           <Button size="sm" variant="outline">
                             <Plus className="w-3 h-3 mr-1" />
-                            Ajouter
+                            Add
                           </Button>
                         )}
                       </div>
@@ -315,13 +338,13 @@ const GitHubIntegrationStep: React.FC<GitHubIntegrationStepProps> = ({ data, onU
           </div>
           <div>
             <h4 className="text-sm font-medium text-purple-900 dark:text-purple-200">
-              Optimisez vos projets GitHub
+              Optimize your GitHub projects
             </h4>
             <ul className="text-xs text-purple-700 dark:text-purple-300 mt-1 space-y-1">
-              <li>• Sélectionnez 2-3 de vos meilleurs projets</li>
-              <li>• Assurez-vous que vos READMEs sont complets avec des captures d'écran</li>
-              <li>• Privilégiez des projets récents et représentatifs de vos compétences</li>
-              <li>• Ajoutez des démonstrations live quand c'est possible</li>
+              <li>• Select 2-3 of your best projects</li>
+              <li>• Make sure your READMEs are complete with screenshots</li>
+              <li>• Favor recent projects that represent your skills</li>
+              <li>• Add live demos when possible</li>
             </ul>
           </div>
         </div>

@@ -47,7 +47,7 @@ const QrCodeAction = ({ profileSlug, isProfilePublic, disabled, userPhotoUrl, co
     const colors = getThemeColors(colorTheme)
     
     try {
-      // Générer le QR code de base avec les couleurs du thème
+      // Generate base QR code with theme colors
       const qr = await QRCode.toDataURL(publicUrl, {
         width: 400,
         margin: 2,
@@ -55,10 +55,10 @@ const QrCodeAction = ({ profileSlug, isProfilePublic, disabled, userPhotoUrl, co
           dark: colors.dark,
           light: colors.light
         },
-        errorCorrectionLevel: 'H' // Niveau élevé pour permettre l'ajout d'une image
+        errorCorrectionLevel: 'H' // High level to allow adding an image
       })
       
-      // Si on a une photo de profil, créer un QR code personnalisé
+      // If we have a profile photo, create a custom QR code
       if (userPhotoUrl) {
         const customQr = await createCustomQrWithProfileImage(qr, userPhotoUrl, colors)
         setQrCode(customQr)
@@ -68,7 +68,7 @@ const QrCodeAction = ({ profileSlug, isProfilePublic, disabled, userPhotoUrl, co
       
       setIsQrDialogOpen(true)
     } catch (error) {
-      console.error('Erreur lors de la génération du QR code:', error)
+      console.error('Error generating QR code:', error)
     }
   }
 
@@ -88,31 +88,31 @@ const QrCodeAction = ({ profileSlug, isProfilePublic, disabled, userPhotoUrl, co
         canvas.width = qrImage.width
         canvas.height = qrImage.height
         
-        // Dessiner le QR code
+        // Draw the QR code
         ctx.drawImage(qrImage, 0, 0)
         
-        // Préparer l'image de profil
+        // Prepare profile image
         const profileImage = new Image()
         profileImage.crossOrigin = 'anonymous'
         
         profileImage.onload = () => {
           const centerX = canvas.width / 2
           const centerY = canvas.height / 2
-          const profileSize = canvas.width * 0.15 // 15% de la taille du QR code
+          const profileSize = canvas.width * 0.15 // 15% of QR code size
           
-          // Créer un fond blanc circulaire pour l'image de profil
+          // Create a white circular background for the profile image
           ctx.save()
           ctx.fillStyle = '#ffffff'
           ctx.beginPath()
           ctx.arc(centerX, centerY, profileSize + 8, 0, Math.PI * 2)
           ctx.fill()
           
-          // Créer un masque circulaire pour l'image de profil
+          // Create a circular mask for the profile image
           ctx.beginPath()
           ctx.arc(centerX, centerY, profileSize, 0, Math.PI * 2)
           ctx.clip()
           
-          // Dessiner l'image de profil
+          // Draw the profile image
           ctx.drawImage(
             profileImage,
             centerX - profileSize,
@@ -123,7 +123,7 @@ const QrCodeAction = ({ profileSlug, isProfilePublic, disabled, userPhotoUrl, co
           
           ctx.restore()
           
-          // Ajouter une bordure circulaire
+          // Add a circular border
           ctx.strokeStyle = colors.dark
           ctx.lineWidth = 3
           ctx.beginPath()
@@ -134,7 +134,7 @@ const QrCodeAction = ({ profileSlug, isProfilePublic, disabled, userPhotoUrl, co
         }
         
         profileImage.onerror = () => {
-          // Si l'image de profil ne peut pas être chargée, retourner le QR code simple
+          // If profile image cannot be loaded, return simple QR code
           resolve(qrDataUrl)
         }
         
@@ -160,19 +160,19 @@ const QrCodeAction = ({ profileSlug, isProfilePublic, disabled, userPhotoUrl, co
         className="w-full sm:w-auto"
       >
         <QrCode className="w-5 h-5 mr-2" />
-        Générer QR Code
+        Generate QR Code
       </Button>
 
       <Dialog open={isQrDialogOpen} onOpenChange={setIsQrDialogOpen}>
         <DialogContent className="sm:max-w-lg">
           <DialogHeader>
-            <DialogTitle className="text-center">QR Code Personnalisé</DialogTitle>
+            <DialogTitle className="text-center">Custom QR Code</DialogTitle>
           </DialogHeader>
           <div className="flex flex-col items-center space-y-6 pt-4">
             {qrCode && (
               <div className="relative">
                 <div className="p-6 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl border-2 shadow-lg">
-                  <img src={qrCode} alt="QR Code Personnalisé" className="w-72 h-72 rounded-xl" />
+                  <img src={qrCode} alt="Custom QR Code" className="w-72 h-72 rounded-xl" />
                 </div>
                 {userPhotoUrl && (
                   <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
@@ -185,10 +185,10 @@ const QrCodeAction = ({ profileSlug, isProfilePublic, disabled, userPhotoUrl, co
             )}
             <div className="text-center space-y-2">
               <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                {userPhotoUrl ? 'QR Code avec votre photo de profil' : 'QR Code de votre profil public'}
+                {userPhotoUrl ? 'QR Code with your profile photo' : 'QR Code of your public profile'}
               </p>
               <p className="text-xs text-muted-foreground">
-                Scannez ce code pour accéder à votre profil
+                Scan this code to access your profile
               </p>
             </div>
             {profileSlug && (
@@ -211,7 +211,7 @@ const QrCodeAction = ({ profileSlug, isProfilePublic, disabled, userPhotoUrl, co
                 variant="outline"
                 size="sm"
               >
-                Télécharger
+                Download
               </Button>
               <Button
                 onClick={() => {
@@ -222,8 +222,8 @@ const QrCodeAction = ({ profileSlug, isProfilePublic, disabled, userPhotoUrl, co
                       .then(blob => {
                         const file = new File([blob], `qrcode-${profileSlug}.png`, { type: 'image/png' })
                         navigator.share({
-                          title: 'Mon QR Code LinkFaster',
-                          text: 'Scannez ce QR code pour voir mon profil !',
+                          title: 'My LinkFaster QR Code',
+                          text: 'Scan this QR code to see my profile!',
                           files: [file]
                         })
                       })
@@ -233,7 +233,7 @@ const QrCodeAction = ({ profileSlug, isProfilePublic, disabled, userPhotoUrl, co
                 size="sm"
                 disabled={!navigator.share}
               >
-                Partager
+                Share
               </Button>
             </div>
           </div>

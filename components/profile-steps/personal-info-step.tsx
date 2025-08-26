@@ -14,14 +14,12 @@ interface PersonalInfoStepProps {
     age: string
     email: string
     photo: File | null
-    backgroundImage: File | null
   }
   onUpdate: (data: any) => void
 }
 
 const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({ data, onUpdate }) => {
   const photoInputRef = useRef<HTMLInputElement>(null)
-  const backgroundInputRef = useRef<HTMLInputElement>(null)
 
   const handlePhotoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
@@ -32,14 +30,6 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({ data, onUpdate }) =
     }
   }
 
-  const handleBackgroundUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (file) {
-      // Pour l'instant, on garde le File object pour la preview
-      // L'upload vers Supabase se fera lors de la soumission du formulaire
-      onUpdate({ backgroundImage: file })
-    }
-  }
 
   const removePhoto = () => {
     onUpdate({ photo: null })
@@ -48,12 +38,6 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({ data, onUpdate }) =
     }
   }
 
-  const removeBackground = () => {
-    onUpdate({ backgroundImage: null })
-    if (backgroundInputRef.current) {
-      backgroundInputRef.current.value = ''
-    }
-  }
 
   return (
     <div className="space-y-8">
@@ -92,7 +76,7 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({ data, onUpdate }) =
             className="flex items-center space-x-2"
           >
             <Upload className="w-4 h-4" />
-            <span>{data.photo ? 'Changer la photo' : 'Ajouter une photo'}</span>
+            <span>{data.photo ? 'Change photo' : 'Add a photo'}</span>
           </Button>
           <input
             ref={photoInputRef}
@@ -102,7 +86,7 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({ data, onUpdate }) =
             onChange={handlePhotoUpload}
           />
           <p className="text-xs text-slate-500 mt-2">
-            Format recommandé: JPG, PNG (max 5MB)
+            Recommended format: JPG, PNG (max 5MB)
           </p>
         </div>
       </div>
@@ -110,35 +94,35 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({ data, onUpdate }) =
       {/* Personal Information Form */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">
-          <Label htmlFor="firstName">Prénom *</Label>
+          <Label htmlFor="firstName">First Name *</Label>
           <Input
             id="firstName"
             value={data.firstName}
             onChange={(e) => onUpdate({ firstName: e.target.value })}
-            placeholder="Votre prénom"
+            placeholder="Your first name"
             className="h-10"
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="lastName">Nom *</Label>
+          <Label htmlFor="lastName">Last Name *</Label>
           <Input
             id="lastName"
             value={data.lastName}
             onChange={(e) => onUpdate({ lastName: e.target.value })}
-            placeholder="Votre nom"
+            placeholder="Your last name"
             className="h-10"
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="age">Âge</Label>
+          <Label htmlFor="age">Age</Label>
           <Input
             id="age"
             type="number"
             value={data.age}
             onChange={(e) => onUpdate({ age: e.target.value })}
-            placeholder="Votre âge"
+            placeholder="Your age"
             className="h-10"
             min="16"
             max="100"
@@ -152,64 +136,12 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({ data, onUpdate }) =
             type="email"
             value={data.email}
             onChange={(e) => onUpdate({ email: e.target.value })}
-            placeholder="votre.email@exemple.com"
+            placeholder="your.email@example.com"
             className="h-10"
           />
         </div>
       </div>
 
-      {/* Background Image Upload Section */}
-      <div className="space-y-4 p-6 border border-dashed border-slate-300 dark:border-slate-600 rounded-lg">
-        <div className="flex items-center space-x-2">
-          <Camera className="w-5 h-5 text-slate-500" />
-          <h3 className="text-lg font-medium">Image de fond (Optionnel)</h3>
-        </div>
-        
-        {data.backgroundImage ? (
-          <div className="relative">
-            <div className="h-32 w-full rounded-lg overflow-hidden border">
-              <img
-                src={URL.createObjectURL(data.backgroundImage)}
-                alt="Background preview"
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <Button
-              size="sm"
-              variant="destructive"
-              className="absolute top-2 right-2"
-              onClick={removeBackground}
-            >
-              <X className="w-4 h-4" />
-            </Button>
-          </div>
-        ) : (
-          <div className="text-center py-8">
-            <Upload className="w-12 h-12 mx-auto text-slate-400 mb-4" />
-            <p className="text-slate-600 dark:text-slate-400 mb-4">
-              Ajoutez une image de fond pour personnaliser votre profil
-            </p>
-            <Button
-              variant="outline"
-              onClick={() => backgroundInputRef.current?.click()}
-            >
-              Choisir une image
-            </Button>
-          </div>
-        )}
-        
-        <input
-          ref={backgroundInputRef}
-          type="file"
-          accept="image/*"
-          className="hidden"
-          onChange={handleBackgroundUpload}
-        />
-        
-        <p className="text-xs text-slate-500">
-          Dimension recommandée: 1200x400px - Format: JPG, PNG (max 10MB)
-        </p>
-      </div>
 
       {/* Information Note */}
       <div className="bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
@@ -221,11 +153,11 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({ data, onUpdate }) =
           </div>
           <div>
             <h4 className="text-sm font-medium text-blue-900 dark:text-blue-200">
-              Pourquoi ces informations ?
+              Why this information?
             </h4>
             <p className="text-xs text-blue-700 dark:text-blue-300 mt-1">
-              Ces données permettront aux recruteurs et clients de mieux vous connaître. 
-              Seules les informations marquées d'un * sont obligatoires.
+              This data will help recruiters and clients get to know you better. 
+              Only information marked with * is required.
             </p>
           </div>
         </div>

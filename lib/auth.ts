@@ -4,7 +4,8 @@ import { PrismaClient } from "@prisma/client";
 import { stripe } from "./stripe";
 import {Resend} from "resend";
 import {magicLink} from "better-auth/plugins/magic-link";
-
+import { customSession } from "better-auth/plugins";
+import { profile } from "console";
 const prisma = new PrismaClient();
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -74,6 +75,21 @@ export const auth = betterAuth({
     },
 },
 plugins: [
+  customSession(async ({ user, session }) => {
+    const role = await prisma.user.findUnique({
+        where: {
+            id: user.id
+        }
+    })
+    return {
+        user: {
+            ...user,
+           stripeCustomerId:role?.stripeCustomerId
+         
+        }
+    }
+}),
+
   magicLink({
     sendMagicLink: async ({ email, url }) => {
       await resend.emails.send({
@@ -84,7 +100,10 @@ plugins: [
       });
     },
   }),
+
+ 
 ],
+
   emailAndPassword:{
     enabled:false,
   },
@@ -92,6 +111,7 @@ plugins: [
     github:{
       clientId:process.env.GITHUB_CLIENT_ID as string,
       clientSecret:process.env.GITHUB_CLIENT_SECRET as string,
+    
     },
     google:{
       clientId:process.env.GOOGLE_CLIENT_ID as string,
@@ -99,5 +119,14 @@ plugins: [
     },
    
    
-  }
+  },
+  
+  
 });
+
+
+
+
+
+
+

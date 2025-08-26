@@ -198,13 +198,13 @@ export default async function ProfilPage() {
                               {providerInfo.name}
                             </h4>
                             <p className="text-sm text-gray-600 dark:text-gray-400">
-                              Connecté le {formatDate(provider.connectedAt)}
+                              Connected on {formatDate(provider.connectedAt)}
                             </p>
                           </div>
                         </div>
                         <Badge variant="secondary" className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
                           <CheckCircle className="w-3 h-3 mr-1" />
-                          Connecté
+                          Connected
                         </Badge>
                       </div>
                     )

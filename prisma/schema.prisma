@@ -35,6 +35,7 @@ model User {
 
   // GitHub Integration (Step 3)
   githubProfile   String?
+  githubCalendar  Boolean @default(false)
 
   // Freelance Platforms (Step 4)
   upworkProfile     String?
@@ -66,6 +67,8 @@ model User {
   repositories    Repository[]
   reviews         Review[]
   projects        Project[]
+  linkClicks      LinkClick[]
+  profileViews    ProfileView[]
 
   @@map("user")
 }
@@ -171,7 +174,8 @@ model Project {
   title       String
   description String
   url         String   // URL du projet en production
-  previewUrl  String?  // URL de la preview/image
+  previewUrl  String?  // URL de la preview/image (deprecated)
+  previewImage String? // Image stockée en base64
   technologies String[] @default([]) // Technologies utilisées
   
   // Status et ordre d'affichage
@@ -183,4 +187,38 @@ model Project {
   updatedAt   DateTime @updatedAt
 
   @@map("project")
+}
+
+// Link click tracking
+model LinkClick {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  linkType  String   // 'github', 'linkedin', 'portfolio', 'upwork', etc.
+  linkUrl   String   // URL that was clicked
+  
+  // Visitor info (optional)
+  ipAddress String?
+  userAgent String?
+  
+  createdAt DateTime @default(now())
+
+  @@map("link_click")
+}
+
+// Profile view tracking
+model ProfileView {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Visitor info (optional)
+  ipAddress String?
+  userAgent String?
+  referrer  String?
+  
+  createdAt DateTime @default(now())
+
+  @@map("profile_view")
 }

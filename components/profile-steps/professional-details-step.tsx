@@ -32,20 +32,20 @@ const commonSkills = [
 ]
 
 const professions = [
-  'Développeur Frontend',
-  'Développeur Backend', 
-  'Développeur Full-Stack',
-  'Développeur Mobile',
+  'Frontend Developer',
+  'Backend Developer', 
+  'Full-Stack Developer',
+  'Mobile Developer',
   'DevOps Engineer',
   'Data Scientist',
   'UI/UX Designer',
   'Product Manager',
   'QA Engineer',
-  'Développeur Blockchain',
+  'Blockchain Developer',
   'Consultant IT',
-  'Architecte Logiciel',
-  'Chef de Projet Tech',
-  'Autre'
+  'Software Architect',
+  'Tech Project Manager',
+  'Other'
 ]
 
 const ProfessionalDetailsStep: React.FC<ProfessionalDetailsStepProps> = ({ data, onUpdate }) => {
@@ -87,11 +87,11 @@ const ProfessionalDetailsStep: React.FC<ProfessionalDetailsStepProps> = ({ data,
         
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="profession">Quel est votre métier principal ?</Label>
+            <Label htmlFor="profession">What is your main profession?</Label>
             <Select 
               value={data.profession} 
               onValueChange={(value) => {
-                if (value === 'Autre') {
+                if (value === 'Other') {
                   setShowCustomProfession(true)
                   onUpdate({ profession: '' })
                 } else {
@@ -101,7 +101,7 @@ const ProfessionalDetailsStep: React.FC<ProfessionalDetailsStepProps> = ({ data,
               }}
             >
               <SelectTrigger className="h-10">
-                <SelectValue placeholder="Sélectionnez votre profession" />
+                <SelectValue placeholder="Select your profession" />
               </SelectTrigger>
               <SelectContent>
                 {professions.map((prof) => (
@@ -115,12 +115,12 @@ const ProfessionalDetailsStep: React.FC<ProfessionalDetailsStepProps> = ({ data,
 
           {showCustomProfession && (
             <div className="space-y-2">
-              <Label htmlFor="customProfession">Précisez votre profession</Label>
+              <Label htmlFor="customProfession">Specify your profession</Label>
               <Input
                 id="customProfession"
                 value={data.profession}
                 onChange={(e) => onUpdate({ profession: e.target.value })}
-                placeholder="Ex: Développeur Blockchain spécialisé DeFi"
+                placeholder="e.g. DeFi-specialized Blockchain Developer"
                 className="h-10"
               />
             </div>
@@ -132,21 +132,21 @@ const ProfessionalDetailsStep: React.FC<ProfessionalDetailsStepProps> = ({ data,
       <div className="space-y-4">
         <div className="flex items-center space-x-2">
           <FileText className="w-5 h-5 text-slate-500" />
-          <h3 className="text-lg font-medium">Présentation personnelle</h3>
+          <h3 className="text-lg font-medium">Personal Presentation</h3>
         </div>
         
         <div className="space-y-2">
-          <Label htmlFor="bio">Décrivez-vous en quelques mots</Label>
+          <Label htmlFor="bio">Describe yourself in a few words</Label>
           <Textarea
             id="bio"
             value={data.bio}
             onChange={(e) => onUpdate({ bio: e.target.value })}
-            placeholder="Ex: Développeur Full-Stack passionné par les nouvelles technologies. Spécialisé en React/Node.js avec 5 ans d'expérience..."
+            placeholder="e.g. Full-Stack Developer passionate about new technologies. Specialized in React/Node.js with 5 years of experience..."
             className="min-h-[100px] resize-none"
             maxLength={500}
           />
           <p className="text-xs text-slate-500">
-            {data.bio.length}/500 caractères. Cette présentation apparaîtra sur votre profil public.
+            {data.bio.length}/500 characters. This presentation will appear on your public profile.
           </p>
         </div>
       </div>
@@ -155,13 +155,13 @@ const ProfessionalDetailsStep: React.FC<ProfessionalDetailsStepProps> = ({ data,
       <div className="space-y-4">
         <div className="flex items-center space-x-2">
           <Code className="w-5 h-5 text-slate-500" />
-          <h3 className="text-lg font-medium">Compétences techniques</h3>
+          <h3 className="text-lg font-medium">Technical Skills</h3>
         </div>
 
         {/* Selected Skills */}
         {data.skills.length > 0 && (
           <div className="space-y-2">
-            <Label>Compétences sélectionnées ({data.skills.length})</Label>
+            <Label>Selected Skills ({data.skills.length})</Label>
             <div className="flex flex-wrap gap-2 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border">
               {data.skills.map((skill) => (
                 <Badge
@@ -186,13 +186,13 @@ const ProfessionalDetailsStep: React.FC<ProfessionalDetailsStepProps> = ({ data,
 
         {/* Add Custom Skill */}
         <div className="space-y-2">
-          <Label htmlFor="customSkill">Ajouter une compétence personnalisée</Label>
+          <Label htmlFor="customSkill">Add a custom skill</Label>
           <div className="flex space-x-2">
             <Input
               id="customSkill"
               value={customSkill}
               onChange={(e) => setCustomSkill(e.target.value)}
-              placeholder="Ex: TensorFlow, Figma, etc."
+              placeholder="e.g. TensorFlow, Figma, etc."
               className="h-10"
               onKeyPress={handleKeyPress}
             />
@@ -208,7 +208,7 @@ const ProfessionalDetailsStep: React.FC<ProfessionalDetailsStepProps> = ({ data,
 
         {/* Common Skills Grid */}
         <div className="space-y-2">
-          <Label>Ou sélectionnez parmi les compétences populaires</Label>
+          <Label>Or select from popular skills</Label>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 max-h-64 overflow-y-auto p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border">
             {commonSkills.map((skill) => (
               <Button
@@ -235,21 +235,21 @@ const ProfessionalDetailsStep: React.FC<ProfessionalDetailsStepProps> = ({ data,
       <div className="space-y-4">
         <div className="flex items-center space-x-2">
           <Globe className="w-5 h-5 text-slate-500" />
-          <h3 className="text-lg font-medium">Portfolio & Site Web</h3>
+          <h3 className="text-lg font-medium">Portfolio & Website</h3>
         </div>
         
         <div className="space-y-2">
-          <Label htmlFor="portfolio">Lien vers votre portfolio ou site web</Label>
+          <Label htmlFor="portfolio">Link to your portfolio or website</Label>
           <Input
             id="portfolio"
             type="url"
             value={data.portfolioWebsite}
             onChange={(e) => onUpdate({ portfolioWebsite: e.target.value })}
-            placeholder="https://votre-portfolio.com"
+            placeholder="https://your-portfolio.com"
             className="h-10"
           />
           <p className="text-xs text-slate-500">
-            Partagez le lien de votre portfolio, site personnel, ou profil LinkedIn
+            Share the link to your portfolio, personal website, or LinkedIn profile
           </p>
         </div>
       </div>
@@ -264,12 +264,12 @@ const ProfessionalDetailsStep: React.FC<ProfessionalDetailsStepProps> = ({ data,
           </div>
           <div>
             <h4 className="text-sm font-medium text-amber-900 dark:text-amber-200">
-              Conseils pour optimiser votre profil
+              Tips to optimize your profile
             </h4>
             <ul className="text-xs text-amber-700 dark:text-amber-300 mt-1 space-y-1">
-              <li>• Sélectionnez 5-10 compétences principales plutôt que toutes vos connaissances</li>
-              <li>• Ajoutez un portfolio pour augmenter vos chances de 80%</li>
-              <li>• Soyez précis dans votre profession (ex: "Développeur React" plutôt que "Développeur")</li>
+              <li>• Select 5-10 main skills rather than all your knowledge</li>
+              <li>• Add a portfolio to increase your chances by 80%</li>
+              <li>• Be specific in your profession (e.g. "React Developer" rather than "Developer")</li>
             </ul>
           </div>
         </div>

@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -17,6 +17,7 @@ import {
   AlertCircle,
   Clock
 } from 'lucide-react'
+import { getProfileCompletionDetails, type ProfileCompletionDetail } from '@/lib/actions/profile-completion'
 
 interface User {
   id: string
@@ -37,13 +38,23 @@ interface ProfilePreviewProps {
 
 const ProfilePreview: React.FC<ProfilePreviewProps> = ({ user }) => {
   const profileUrl = user.profileSlug ? `/${user.profileSlug}` : null
+  const [completionDetails, setCompletionDetails] = useState<ProfileCompletionDetail | null>(null)
+
+  useEffect(() => {
+    const fetchCompletionDetails = async () => {
+      const details = await getProfileCompletionDetails(user.id)
+      setCompletionDetails(details)
+    }
+
+    fetchCompletionDetails()
+  }, [user.id])
   
   const getProfileStatus = () => {
     if (!user.profileCompleted) {
       return {
         status: 'incomplete',
-        text: 'Profil incomplet',
-        description: 'Finalisez votre profil pour le rendre public',
+        text: 'Profile Incomplete',
+        description: 'Complete your profile to make it public',
         color: 'text-yellow-600 dark:text-yellow-400',
         bgColor: 'bg-yellow-50 dark:bg-yellow-950/20',
         icon: Clock
@@ -53,8 +64,8 @@ const ProfilePreview: React.FC<ProfilePreviewProps> = ({ user }) => {
     if (!user.profilePublic) {
       return {
         status: 'private',
-        text: 'Profil privé',
-        description: 'Votre profil n\'est visible que par vous',
+        text: 'Private Profile',
+        description: 'Your profile is only visible to you',
         color: 'text-gray-600 dark:text-gray-400',
         bgColor: 'bg-gray-50 dark:bg-gray-950/20',
         icon: AlertCircle
@@ -63,8 +74,8 @@ const ProfilePreview: React.FC<ProfilePreviewProps> = ({ user }) => {
     
     return {
       status: 'public',
-      text: 'Profil public',
-      description: 'Votre profil est visible par tous',
+      text: 'Public Profile',
+      description: 'Your profile is visible to everyone',
       color: 'text-green-600 dark:text-green-400',
       bgColor: 'bg-green-50 dark:bg-green-950/20',
       icon: CheckCircle
@@ -79,7 +90,7 @@ const ProfilePreview: React.FC<ProfilePreviewProps> = ({ user }) => {
       {/* Profile Status Card */}
       <Card>
         <CardHeader className="pb-4">
-          <CardTitle className="text-lg">Statut du profil</CardTitle>
+          <CardTitle className="text-lg">Profile Status</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className={`p-4 rounded-lg ${profileStatus.bgColor} border`}>
@@ -99,7 +110,7 @@ const ProfilePreview: React.FC<ProfilePreviewProps> = ({ user }) => {
           {user.profileCompleted && user.profileSlug && (
             <div className="space-y-2">
               <p className="text-sm font-medium text-slate-700 dark:text-slate-300">
-                Votre lien public :
+                Your public link:
               </p>
               <div className="flex items-center space-x-2 p-2 bg-slate-100 dark:bg-slate-800 rounded text-sm">
                 <Globe className="w-4 h-4 text-slate-500" />
@@ -116,7 +127,7 @@ const ProfilePreview: React.FC<ProfilePreviewProps> = ({ user }) => {
       <Card>
         <CardHeader className="pb-4">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-lg">Aperçu du profil</CardTitle>
+            <CardTitle className="text-lg">Profile Preview</CardTitle>
             {user.profileSlug && user.profileCompleted ? (
               <Button asChild size="sm" variant="outline">
                 <Link 
@@ -125,14 +136,14 @@ const ProfilePreview: React.FC<ProfilePreviewProps> = ({ user }) => {
                   className="flex items-center space-x-1"
                 >
                   <Eye className="w-3 h-3" />
-                  <span>Voir</span>
+                  <span>View</span>
                   <ExternalLink className="w-3 h-3" />
                 </Link>
               </Button>
             ) : (
               <Button size="sm" variant="outline" disabled>
                 <Eye className="w-3 h-3 mr-1" />
-                <span>Indisponible</span>
+                <span>Unavailable</span>
               </Button>
             )}
           </div>
@@ -158,15 +169,15 @@ const ProfilePreview: React.FC<ProfilePreviewProps> = ({ user }) => {
             
             {user.skillsCount && user.skillsCount > 0 ? (
               <div className="flex justify-center space-x-2">
-                <Badge variant="secondary" className="text-xs">{user.skillsCount} compétences</Badge>
+                <Badge variant="secondary" className="text-xs">{user.skillsCount} skills</Badge>
                 {user.repositoriesCount && user.repositoriesCount > 0 && (
-                  <Badge variant="secondary" className="text-xs">{user.repositoriesCount} projets</Badge>
+                  <Badge variant="secondary" className="text-xs">{user.repositoriesCount} projects</Badge>
                 )}
               </div>
             ) : (
               <div className="flex justify-center">
                 <Badge variant="outline" className="text-xs text-slate-400">
-                  Profil à compléter
+                  Profile to complete
                 </Badge>
               </div>
             )}
@@ -178,13 +189,13 @@ const ProfilePreview: React.FC<ProfilePreviewProps> = ({ user }) => {
               <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">
                 {user.skillsCount || 0}
               </p>
-              <p className="text-xs text-slate-600 dark:text-slate-400">Compétences</p>
+              <p className="text-xs text-slate-600 dark:text-slate-400">Skills</p>
             </div>
             <div className="text-center p-3 bg-slate-50 dark:bg-slate-800/50 rounded">
               <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">
                 {user.repositoriesCount || 0}
               </p>
-              <p className="text-xs text-slate-600 dark:text-slate-400">Projets</p>
+              <p className="text-xs text-slate-600 dark:text-slate-400">Projects</p>
             </div>
           </div>
         </CardContent>
@@ -193,26 +204,19 @@ const ProfilePreview: React.FC<ProfilePreviewProps> = ({ user }) => {
       {/* Quick Actions */}
       <Card>
         <CardHeader className="pb-4">
-          <CardTitle className="text-lg">Actions rapides</CardTitle>
+          <CardTitle className="text-lg">Quick Actions</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           <Button asChild className="w-full justify-start" variant="outline">
             <Link href="/create-profil">
               <Edit3 className="w-4 h-4 mr-2" />
-              Modifier le profil
-            </Link>
-          </Button>
-          
-          <Button asChild className="w-full justify-start" variant="outline">
-            <Link href="/settings">
-              <Settings className="w-4 h-4 mr-2" />
-              Paramètres
+              Edit Profile
             </Link>
           </Button>
           
           <Button className="w-full justify-start" variant="outline">
             <Users className="w-4 h-4 mr-2" />
-            Inviter des contacts
+            Invite Contacts
           </Button>
         </CardContent>
       </Card>
@@ -220,53 +224,88 @@ const ProfilePreview: React.FC<ProfilePreviewProps> = ({ user }) => {
       {/* Profile Completion */}
       <Card>
         <CardHeader className="pb-4">
-          <CardTitle className="text-lg">Complétion du profil</CardTitle>
+          <CardTitle className="text-lg">Profile Completion</CardTitle>
           <CardDescription>
-            Optimisez votre visibilité en complétant ces sections
+            Optimize your visibility by completing these sections
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
-          <div className="space-y-2">
-            <div className="flex justify-between items-center text-sm">
-              <span>Progression générale</span>
-              <span className="font-medium">85%</span>
-            </div>
-            <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2">
-              <div className="bg-blue-600 h-2 rounded-full" style={{ width: '85%' }}></div>
-            </div>
-          </div>
-          
-          <div className="space-y-2">
-            <div className="flex items-center justify-between text-sm">
-              <div className="flex items-center space-x-2">
-                <CheckCircle className="w-4 h-4 text-green-600" />
-                <span>Informations de base</span>
+          {completionDetails ? (
+            <>
+              <div className="space-y-2">
+                <div className="flex justify-between items-center text-sm">
+                  <span>Overall Progress</span>
+                  <span className="font-medium">{completionDetails.percentage}%</span>
+                </div>
+                <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2">
+                  <div className="bg-blue-600 h-2 rounded-full" style={{ width: `${completionDetails.percentage}%` }}></div>
+                </div>
               </div>
-              <Badge variant="secondary" className="bg-green-100 text-green-700">
-                Complet
-              </Badge>
-            </div>
-            
-            <div className="flex items-center justify-between text-sm">
-              <div className="flex items-center space-x-2">
-                <CheckCircle className="w-4 h-4 text-green-600" />
-                <span>Compétences & projets</span>
+              
+              <div className="space-y-2">
+                <div className="flex items-center justify-between text-sm">
+                  <div className="flex items-center space-x-2">
+                    {completionDetails.basicInfo ? (
+                      <CheckCircle className="w-4 h-4 text-green-600" />
+                    ) : (
+                      <Clock className="w-4 h-4 text-yellow-600" />
+                    )}
+                    <span>Basic Information</span>
+                  </div>
+                  <Badge variant="secondary" className={completionDetails.basicInfo ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"}>
+                    {completionDetails.basicInfo ? "Complete" : "To Do"}
+                  </Badge>
+                </div>
+                
+                <div className="flex items-center justify-between text-sm">
+                  <div className="flex items-center space-x-2">
+                    {completionDetails.skillsProjects ? (
+                      <CheckCircle className="w-4 h-4 text-green-600" />
+                    ) : (
+                      <Clock className="w-4 h-4 text-yellow-600" />
+                    )}
+                    <span>Skills & Projects</span>
+                  </div>
+                  <Badge variant="secondary" className={completionDetails.skillsProjects ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"}>
+                    {completionDetails.skillsProjects ? "Complete" : "To Do"}
+                  </Badge>
+                </div>
+                
+                <div className="flex items-center justify-between text-sm">
+                  <div className="flex items-center space-x-2">
+                    {completionDetails.customBio ? (
+                      <CheckCircle className="w-4 h-4 text-green-600" />
+                    ) : (
+                      <Clock className="w-4 h-4 text-yellow-600" />
+                    )}
+                    <span>Custom Bio</span>
+                  </div>
+                  <Badge variant="secondary" className={completionDetails.customBio ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"}>
+                    {completionDetails.customBio ? "Complete" : "To Do"}
+                  </Badge>
+                </div>
+
+                <div className="flex items-center justify-between text-sm">
+                  <div className="flex items-center space-x-2">
+                    {completionDetails.platforms ? (
+                      <CheckCircle className="w-4 h-4 text-green-600" />
+                    ) : (
+                      <Clock className="w-4 h-4 text-yellow-600" />
+                    )}
+                    <span>Platforms</span>
+                  </div>
+                  <Badge variant="secondary" className={completionDetails.platforms ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"}>
+                    {completionDetails.platforms ? "Complete" : "To Do"}
+                  </Badge>
+                </div>
               </div>
-              <Badge variant="secondary" className="bg-green-100 text-green-700">
-                Complet
-              </Badge>
+            </>
+          ) : (
+            <div className="space-y-2 animate-pulse">
+              <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded"></div>
+              <div className="h-2 bg-slate-200 dark:bg-slate-700 rounded"></div>
             </div>
-            
-            <div className="flex items-center justify-between text-sm">
-              <div className="flex items-center space-x-2">
-                <Clock className="w-4 h-4 text-yellow-600" />
-                <span>Bio personnalisée</span>
-              </div>
-              <Badge variant="secondary" className="bg-yellow-100 text-yellow-700">
-                À faire
-              </Badge>
-            </div>
-          </div>
+          )}
         </CardContent>
       </Card>
     </div>

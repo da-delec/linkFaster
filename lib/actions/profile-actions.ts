@@ -28,6 +28,7 @@ export interface ProfileFormData {
   
   // GitHub Integration
   githubProfile: string
+  githubCalendar: boolean
   selectedRepos: Array<{
     name: string
     url: string
@@ -41,7 +42,8 @@ export interface ProfileFormData {
     title: string
     description: string
     url: string
-    previewUrl: string
+    previewUrl?: string // Deprecated - for backward compatibility
+    previewImage?: string // New field for base64 image
     technologies: string[]
   }>
   
@@ -58,6 +60,21 @@ export interface ProfileFormData {
   colorTheme: string
   layoutStyle: string
   enableReviews: boolean
+}
+
+// Function to calculate profile completion percentage
+function calculateProfileCompletion(data: ProfileFormData): boolean {
+  const requiredFields = [
+    data.firstName,
+    data.lastName,
+    data.profession,
+    data.bio, // This is the custom bio that was missing
+    data.skills.length > 0
+  ]
+  
+  // At least 4 out of 5 required fields should be filled
+  const completedFields = requiredFields.filter(Boolean).length
+  return completedFields >= 4
 }
 
 async function uploadFileToSupabase(
@@ -127,6 +144,7 @@ export async function createOrUpdateProfile(formData: FormData) {
       skills: JSON.parse(formData.get('skills') as string || '[]'),
       portfolioWebsite: formData.get('portfolioWebsite') as string,
       githubProfile: formData.get('githubProfile') as string,
+      githubCalendar: formData.get('githubCalendar') === 'true',
       selectedRepos: JSON.parse(formData.get('selectedRepos') as string || '[]'),
       projects: JSON.parse(formData.get('projects') as string || '[]'),
       upworkProfile: formData.get('upworkProfile') as string,
@@ -217,6 +235,7 @@ export async function createOrUpdateProfile(formData: FormData) {
         bio: data.bio,
         portfolioWebsite: data.portfolioWebsite,
         githubProfile: data.githubProfile,
+        githubCalendar: data.githubCalendar,
         upworkProfile: data.upworkProfile,
         fiverProfile: data.fiverProfile,
         freelancerProfile: data.freelancerProfile,
@@ -227,8 +246,8 @@ export async function createOrUpdateProfile(formData: FormData) {
         colorTheme: data.colorTheme,
         layoutStyle: data.layoutStyle,
         enableReviews: data.enableReviews,
-        profileCompleted: true,
-        profilePublic: true,
+        profileCompleted: calculateProfileCompletion(data),
+        profilePublic: calculateProfileCompletion(data),
         profileSlug,
       },
       create: {
@@ -244,6 +263,7 @@ export async function createOrUpdateProfile(formData: FormData) {
         bio: data.bio,
         portfolioWebsite: data.portfolioWebsite,
         githubProfile: data.githubProfile,
+        githubCalendar: data.githubCalendar,
         upworkProfile: data.upworkProfile,
         fiverProfile: data.fiverProfile,
         freelancerProfile: data.freelancerProfile,
@@ -254,9 +274,9 @@ export async function createOrUpdateProfile(formData: FormData) {
         colorTheme: data.colorTheme,
         layoutStyle: data.layoutStyle,
         enableReviews: data.enableReviews,
-        profileCompleted: true,
+        profileCompleted: calculateProfileCompletion(data),
         profileSlug,
-        profilePublic: true,
+        profilePublic: calculateProfileCompletion(data),
       },
     })
 
@@ -299,6 +319,7 @@ export async function createOrUpdateProfile(formData: FormData) {
           description: project.description,
           url: project.url,
           previewUrl: project.previewUrl || null,
+          previewImage: project.previewImage || null,
           technologies: project.technologies,
           isFeatured: true
         }

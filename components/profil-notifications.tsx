@@ -21,16 +21,16 @@ export function ProfilNotifications() {
     if (message === 'subscription_cancelled') {
       setNotification({
         type: 'success',
-        message: 'Votre abonnement a été annulé avec succès. Il restera actif jusqu\'à la fin de la période de facturation.'
+        message: 'Your subscription has been cancelled successfully. It will remain active until the end of the billing period.'
       })
     } else if (error === 'cancellation_failed') {
       setNotification({
         type: 'error',
-        message: 'Une erreur s\'est produite lors de l\'annulation de votre abonnement. Veuillez réessayer.'
+        message: 'An error occurred while cancelling your subscription. Please try again.'
       })
     }
 
-    // Nettoyer l'URL
+    // Clean up the URL
     if (message || error) {
       const newUrl = new URL(window.location.href)
       newUrl.searchParams.delete('message')

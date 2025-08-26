@@ -7,7 +7,7 @@ import { toast } from 'sonner'
 export function useProfileForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const submitProfile = async (formData: any, files: { photo: File | null, backgroundImage: File | null }, userId: string) => {
+  const submitProfile = async (formData: any, files: { photo: File | null }, userId: string) => {
     setIsSubmitting(true)
 
     try {
@@ -27,6 +27,7 @@ export function useProfileForm() {
       submitFormData.append('skills', JSON.stringify(formData.skills))
       submitFormData.append('portfolioWebsite', formData.portfolioWebsite)
       submitFormData.append('githubProfile', formData.githubProfile)
+      submitFormData.append('githubCalendar', formData.githubCalendar.toString())
       submitFormData.append('selectedRepos', JSON.stringify(formData.selectedRepos))
       submitFormData.append('projects', JSON.stringify(formData.projects))
       submitFormData.append('upworkProfile', formData.upworkProfile)
@@ -43,9 +44,6 @@ export function useProfileForm() {
       // Add files
       if (files.photo) {
         submitFormData.append('photo', files.photo)
-      }
-      if (files.backgroundImage) {
-        submitFormData.append('backgroundImage', files.backgroundImage)
       }
 
       const result = await createOrUpdateProfile(submitFormData)

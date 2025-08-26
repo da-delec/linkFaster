@@ -41,7 +41,7 @@ const ReviewMetrics = ({ reviews, statistics, theme }: ReviewMetricsProps) => {
   const { totalReviews, averageRating, ratingDistribution } = statistics
 
   const isDarkTheme = colorTheme === 'midnight'
-  const isGlassTheme = colorTheme === 'glass'
+  const isGlassLikeTheme = ['midnight', 'glass', 'glass-aurora', 'glass-nebula', 'glass-cosmic', 'prisme-dark', 'prisme-grey'].includes(colorTheme)
 
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, index) => (
@@ -65,7 +65,7 @@ const ReviewMetrics = ({ reviews, statistics, theme }: ReviewMetricsProps) => {
   }
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('fr-FR', {
+    return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
@@ -86,12 +86,12 @@ const ReviewMetrics = ({ reviews, statistics, theme }: ReviewMetricsProps) => {
           <h3 className={`text-lg font-semibold mb-2 ${
             'text-gray-700'
           }`}>
-            Aucun avis pour le moment
+            No reviews yet
           </h3>
           <p className={`text-sm text-center ${
             'text-gray-500'
           }`}>
-            Soyez le premier à laisser un avis !
+            Be the first to leave a review!
           </p>
         </CardContent>
       </Card>
@@ -107,19 +107,19 @@ const ReviewMetrics = ({ reviews, statistics, theme }: ReviewMetricsProps) => {
           : colorTheme === 'cosmic'
             ? colors.secondary
           : isDarkTheme 
-            ? 'bg-slate-800 border border-slate-700'
+            ? 'bg-white/15 backdrop-blur-2xl border border-white/30 shadow-2xl'
             : colors.secondary
       }`}>
         <CardHeader>
           <CardTitle className={`flex items-center space-x-2 ${
             isDarkTheme 
               ? 'text-slate-100' 
-              : isGlassTheme
+              : isGlassLikeTheme
               ? 'text-white drop-shadow-lg' 
-              : ''
+              : 'text-slate-900'
           }`}>
             <Star className="w-5 h-5 text-yellow-400" />
-            <span>Évaluations</span>
+            <span>Reviews</span>
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -129,9 +129,9 @@ const ReviewMetrics = ({ reviews, statistics, theme }: ReviewMetricsProps) => {
               <div className={`text-4xl font-bold ${
                 isDarkTheme 
                   ? 'text-yellow-400' 
-                  : isGlassTheme
+                  : isGlassLikeTheme
                   ? 'text-white drop-shadow-lg' 
-                  : 'text-yellow-600'
+                  : 'text-yellow-400'
               }`}>
                 {averageRating.toFixed(1)}
               </div>
@@ -141,11 +141,11 @@ const ReviewMetrics = ({ reviews, statistics, theme }: ReviewMetricsProps) => {
               <div className={`text-sm ${
                 isDarkTheme 
                   ? 'text-slate-300' 
-                  : isGlassTheme
+                  : isGlassLikeTheme
                   ? 'text-white/80 drop-shadow' 
-                  : 'text-muted-foreground'
+                  : 'text-slate-600'
               }`}>
-                Basé sur {totalReviews} avis
+                Based on {totalReviews} reviews
               </div>
             </div>
 
@@ -157,14 +157,14 @@ const ReviewMetrics = ({ reviews, statistics, theme }: ReviewMetricsProps) => {
                     <span className={`text-sm ${
                       isDarkTheme 
                         ? 'text-slate-200' 
-                        : isGlassTheme
+                        : isGlassLikeTheme
                         ? 'text-white/90 drop-shadow' 
-                        : ''
+                        : 'text-slate-900'
                     }`}>{rating}</span>
                     <Star className={`w-3 h-3 ${
                       isDarkTheme 
                         ? 'text-yellow-400 fill-yellow-400' 
-                        : isGlassTheme
+                        : isGlassLikeTheme
                         ? 'text-white fill-white' 
                         : 'text-yellow-400 fill-yellow-400'
                     }`} />
@@ -176,9 +176,9 @@ const ReviewMetrics = ({ reviews, statistics, theme }: ReviewMetricsProps) => {
                   <div className={`text-sm w-8 text-right ${
                     isDarkTheme 
                       ? 'text-slate-300' 
-                      : isGlassTheme
+                      : isGlassLikeTheme
                       ? 'text-white/80 drop-shadow' 
-                      : 'text-muted-foreground'
+                      : 'text-slate-600'
                   }`}>
                     {ratingDistribution[rating as keyof typeof ratingDistribution]}
                   </div>
@@ -192,7 +192,7 @@ const ReviewMetrics = ({ reviews, statistics, theme }: ReviewMetricsProps) => {
       {/* Statistics Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <Card className={`${
-          isGlassTheme 
+          isGlassLikeTheme 
             ? 'bg-white/15 backdrop-blur-2xl border border-white/30 shadow-2xl' 
             : isDarkTheme
             ? 'bg-slate-800 border border-slate-700'
@@ -202,7 +202,7 @@ const ReviewMetrics = ({ reviews, statistics, theme }: ReviewMetricsProps) => {
             <Users className={`w-8 h-8 ${
               isDarkTheme 
                 ? 'text-slate-300' 
-                : isGlassTheme
+                : isGlassLikeTheme
                 ? 'text-white drop-shadow' 
                 : colors.accent
             }`} />
@@ -210,23 +210,23 @@ const ReviewMetrics = ({ reviews, statistics, theme }: ReviewMetricsProps) => {
               <div className={`text-2xl font-bold ${
                 isDarkTheme 
                   ? 'text-slate-100' 
-                  : isGlassTheme
+                  : isGlassLikeTheme
                   ? 'text-white drop-shadow-lg' 
-                  : ''
+                  : 'text-slate-900'
               }`}>{totalReviews}</div>
               <div className={`text-sm ${
                 isDarkTheme 
                   ? 'text-slate-300' 
-                  : isGlassTheme
+                  : isGlassLikeTheme
                   ? 'text-white/80 drop-shadow' 
-                  : 'text-muted-foreground'
-              }`}>Avis total</div>
+                  : 'text-slate-600'
+              }`}>Total Reviews</div>
             </div>
           </CardContent>
         </Card>
 
         <Card className={`${
-          isGlassTheme 
+          isGlassLikeTheme 
             ? 'bg-white/15 backdrop-blur-2xl border border-white/30 shadow-2xl' 
             : isDarkTheme
             ? 'bg-slate-800 border border-slate-700'
@@ -236,7 +236,7 @@ const ReviewMetrics = ({ reviews, statistics, theme }: ReviewMetricsProps) => {
             <TrendingUp className={`w-8 h-8 ${
               isDarkTheme 
                 ? 'text-slate-300' 
-                : isGlassTheme
+                : isGlassLikeTheme
                 ? 'text-white drop-shadow' 
                 : colors.accent
             }`} />
@@ -244,23 +244,23 @@ const ReviewMetrics = ({ reviews, statistics, theme }: ReviewMetricsProps) => {
               <div className={`text-2xl font-bold ${
                 isDarkTheme 
                   ? 'text-slate-100' 
-                  : isGlassTheme
+                  : isGlassLikeTheme
                   ? 'text-white drop-shadow-lg' 
-                  : ''
+                  : 'text-slate-900'
               }`}>{averageRating.toFixed(1)}</div>
               <div className={`text-sm ${
                 isDarkTheme 
                   ? 'text-slate-300' 
-                  : isGlassTheme
+                  : isGlassLikeTheme
                   ? 'text-white/80 drop-shadow' 
-                  : 'text-muted-foreground'
-              }`}>Note moyenne</div>
+                  : 'text-slate-600'
+              }`}>Average Rating</div>
             </div>
           </CardContent>
         </Card>
 
         <Card className={`${
-          isGlassTheme 
+          isGlassLikeTheme 
             ? 'bg-white/15 backdrop-blur-2xl border border-white/30 shadow-2xl' 
             : isDarkTheme
             ? 'bg-slate-800 border border-slate-700'
@@ -270,7 +270,7 @@ const ReviewMetrics = ({ reviews, statistics, theme }: ReviewMetricsProps) => {
             <MessageCircle className={`w-8 h-8 ${
               isDarkTheme 
                 ? 'text-slate-300' 
-                : isGlassTheme
+                : isGlassLikeTheme
                 ? 'text-white drop-shadow' 
                 : colors.accent
             }`} />
@@ -278,17 +278,17 @@ const ReviewMetrics = ({ reviews, statistics, theme }: ReviewMetricsProps) => {
               <div className={`text-2xl font-bold ${
                 isDarkTheme 
                   ? 'text-slate-100' 
-                  : isGlassTheme
+                  : isGlassLikeTheme
                   ? 'text-white drop-shadow-lg' 
-                  : ''
+                  : 'text-slate-900'
               }`}>{reviews.filter(r => r.comment && r.comment.trim()).length}</div>
               <div className={`text-sm ${
                 isDarkTheme 
                   ? 'text-slate-300' 
-                  : isGlassTheme
+                  : isGlassLikeTheme
                   ? 'text-white/80 drop-shadow' 
-                  : 'text-muted-foreground'
-              }`}>Avec commentaire</div>
+                  : 'text-slate-600'
+              }`}>With Comment</div>
             </div>
           </CardContent>
         </Card>
@@ -296,7 +296,7 @@ const ReviewMetrics = ({ reviews, statistics, theme }: ReviewMetricsProps) => {
 
       {/* Recent Reviews */}
       <Card className={`${
-        isGlassTheme
+        isGlassLikeTheme
           ? 'bg-white/15 backdrop-blur-2xl border border-white/30 shadow-2xl'
           : isDarkTheme 
             ? 'bg-slate-800 border border-slate-700'
@@ -306,10 +306,10 @@ const ReviewMetrics = ({ reviews, statistics, theme }: ReviewMetricsProps) => {
           <CardTitle className={`${
             isDarkTheme 
               ? 'text-slate-100' 
-              : isGlassTheme
+              : isGlassLikeTheme
               ? 'text-white drop-shadow-lg' 
-              : ''
-          }`}>Avis récents</CardTitle>
+              : 'text-slate-900'
+          }`}>Recent Reviews</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
@@ -317,7 +317,7 @@ const ReviewMetrics = ({ reviews, statistics, theme }: ReviewMetricsProps) => {
               <div key={review.id} className={`border-b pb-4 last:border-b-0 ${
                 isDarkTheme 
                   ? 'border-slate-600' 
-                  : isGlassTheme
+                  : isGlassLikeTheme
                   ? 'border-white/20' 
                   : 'border-gray-200'
               }`}>
@@ -326,22 +326,22 @@ const ReviewMetrics = ({ reviews, statistics, theme }: ReviewMetricsProps) => {
                     <div className={`font-medium ${
                       isDarkTheme 
                         ? 'text-slate-100' 
-                        : isGlassTheme
+                        : isGlassLikeTheme
                         ? 'text-white drop-shadow-md' 
-                        : ''
+                        : 'text-slate-900'
                     }`}>{review.reviewerName}</div>
                     {review.isVerified && (
                       <Badge variant="secondary" className="text-xs">
-                        Vérifié
+                        Verified
                       </Badge>
                     )}
                   </div>
                   <div className={`text-sm ${
                     isDarkTheme 
                       ? 'text-slate-300' 
-                      : isGlassTheme
+                      : isGlassLikeTheme
                       ? 'text-white/80 drop-shadow' 
-                      : 'text-muted-foreground'
+                      : 'text-slate-600'
                   }`}>
                     {formatDate(review.createdAt)}
                   </div>
@@ -351,9 +351,9 @@ const ReviewMetrics = ({ reviews, statistics, theme }: ReviewMetricsProps) => {
                   <span className={`text-sm ml-2 ${
                     isDarkTheme 
                       ? 'text-slate-300' 
-                      : isGlassTheme
+                      : isGlassLikeTheme
                       ? 'text-white/80 drop-shadow' 
-                      : 'text-muted-foreground'
+                      : 'text-slate-600'
                   }`}>
                     {review.rating}/5
                   </span>
@@ -362,9 +362,9 @@ const ReviewMetrics = ({ reviews, statistics, theme }: ReviewMetricsProps) => {
                   <p className={`text-sm ${
                     isDarkTheme 
                       ? 'text-slate-200' 
-                      : isGlassTheme
+                      : isGlassLikeTheme
                       ? 'text-white/90 drop-shadow' 
-                      : 'text-gray-700'
+                      : 'text-slate-700'
                   }`}>
                     {review.comment}
                   </p>

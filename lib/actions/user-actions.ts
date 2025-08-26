@@ -1,8 +1,6 @@
 'use server'
 
-import { PrismaClient } from '@prisma/client'
-
-const prisma = new PrismaClient()
+import { prisma } from '@/lib/prisma'
 
 export async function getUserBySlug(slug: string) {
   try {
@@ -27,6 +25,15 @@ export async function getUserBySlug(slug: string) {
           },
           orderBy: {
             createdAt: 'desc'
+          },
+          select: {
+            id: true,
+            title: true,
+            description: true,
+            url: true,
+            previewUrl: true,
+            previewImage: true,
+            technologies: true
           }
         }
       }
@@ -50,6 +57,7 @@ export async function getUserBySlug(slug: string) {
       portfolioWebsite: user.portfolioWebsite,
       bio: user.bio,
       githubProfile: user.githubProfile,
+      githubCalendar: user.githubCalendar,
       upworkProfile: user.upworkProfile,
       fiverProfile: user.fiverProfile,
       freelancerProfile: user.freelancerProfile,
@@ -76,20 +84,62 @@ export async function getUserBySlug(slug: string) {
 
 export async function getUserStats(userId: string) {
   try {
-    const [user, reposCount] = await Promise.all([
+    const [user, reposCount, linkClicksCount, profileViewsCount] = await Promise.all([
       prisma.user.findUnique({
         where: { id: userId },
         select: { skills: true }
       }),
       prisma.repository.count({
         where: { userId }
+      }),
+      prisma.linkClick.count({
+        where: { userId }
+      }),
+      prisma.profileView.count({
+        where: { userId }
+      })
+    ])
+
+    // Get stats from the current month
+    const startOfMonth = new Date()
+    startOfMonth.setDate(1)
+    startOfMonth.setHours(0, 0, 0, 0)
+
+    const [monthlyViews, monthlyClicks, weeklyClicks] = await Promise.all([
+      prisma.profileView.count({
+        where: {
+          userId,
+          createdAt: {
+            gte: startOfMonth
+          }
+        }
+      }),
+      prisma.linkClick.count({
+        where: {
+          userId,
+          createdAt: {
+            gte: startOfMonth
+          }
+        }
+      }),
+      prisma.linkClick.count({
+        where: {
+          userId,
+          createdAt: {
+            gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) // Last 7 days
+          }
+        }
       })
     ])
 
     return {
       skillsCount: user?.skills?.length || 0,
       reposCount,
-      profileViews: 0, // TODO: Implement view tracking
+      profileViews: profileViewsCount,
+      monthlyViews,
+      linkClicks: linkClicksCount,
+      monthlyClicks,
+      weeklyClicks,
       lastUpdated: new Date()
     }
   } catch (error) {
@@ -100,21 +150,65 @@ export async function getUserStats(userId: string) {
 
 export async function getUserForForm(userId: string) {
   try {
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      include: {
-        repositories: {
-          orderBy: {
-            createdAt: 'desc'
-          }
-        },
-        projects: {
-          orderBy: {
-            createdAt: 'desc'
-          }
+    // Fetch user data and relations in parallel for better performance
+    const [user, repositories, projects] = await Promise.all([
+      prisma.user.findUnique({
+        where: { id: userId },
+        select: {
+          firstName: true,
+          lastName: true,
+          age: true,
+          email: true,
+          photoUrl: true,
+          backgroundImage: true,
+          profession: true,
+          bio: true,
+          skills: true,
+          portfolioWebsite: true,
+          githubProfile: true,
+          githubCalendar: true,
+          upworkProfile: true,
+          fiverProfile: true,
+          freelancerProfile: true,
+          maltProfile: true,
+          linkedin: true,
+          behance: true,
+          dribbble: true,
+          colorTheme: true,
+          layoutStyle: true,
+          enableReviews: true,
+          profileCompleted: true,
+          profileSlug: true,
+          isPremium: true,
+          stripeCustomerId: true
         }
-      }
-    })
+      }),
+      prisma.repository.findMany({
+        where: { userId },
+        select: {
+          name: true,
+          url: true,
+          imageUrl: true,
+          description: true
+        },
+        orderBy: { createdAt: 'desc' },
+        take: 50 // Limit to prevent huge payloads
+      }),
+      prisma.project.findMany({
+        where: { userId },
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          url: true,
+          previewUrl: true,
+          previewImage: true,
+          technologies: true
+        },
+        orderBy: { createdAt: 'desc' },
+        take: 50 // Limit to prevent huge payloads
+      })
+    ])
 
     if (!user) {
       return null
@@ -138,7 +232,8 @@ export async function getUserForForm(userId: string) {
       
       // GitHub Integration
       githubProfile: user.githubProfile || '',
-      selectedRepos: user.repositories.map(repo => ({
+      githubCalendar: user.githubCalendar || false,
+      selectedRepos: repositories.map(repo => ({
         name: repo.name,
         url: repo.url,
         image: repo.imageUrl || '',
@@ -146,12 +241,13 @@ export async function getUserForForm(userId: string) {
       })),
       
       // Production Projects
-      projects: user.projects.map(project => ({
+      projects: projects.map(project => ({
         id: project.id,
         title: project.title,
         description: project.description,
         url: project.url,
         previewUrl: project.previewUrl || '',
+        previewImage: project.previewImage || '',
         technologies: project.technologies
       })),
       
@@ -194,6 +290,20 @@ export async function getCurrentUserProfile(userId: string) {
         projects: {
           orderBy: {
             createdAt: 'desc'
+          },
+          select: {
+            id: true,
+            title: true,
+            description: true,
+            url: true,
+            previewUrl: true,
+            previewImage: true,
+            technologies: true,
+            isFeatured: true,
+            isVisible: true,
+            order: true,
+            createdAt: true,
+            updatedAt: true
           }
         }
       }
@@ -216,6 +326,7 @@ export async function getCurrentUserProfile(userId: string) {
       portfolioWebsite: user.portfolioWebsite,
       bio: user.bio,
       githubProfile: user.githubProfile,
+      githubCalendar: user.githubCalendar,
       upworkProfile: user.upworkProfile,
       fiverProfile: user.fiverProfile,
       freelancerProfile: user.freelancerProfile,

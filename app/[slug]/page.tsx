@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation'
 import { getUserBySlug } from '@/lib/actions/user-actions'
+
 import PublicProfile from '@/components/public-profile'
 
 interface ProfilePageProps {
@@ -21,10 +22,10 @@ export async function generateMetadata({ params }: ProfilePageProps) {
 
   return {
     title: `${user.name} - ${user.profession || 'Freelance Profile'}`,
-    description: `Découvrez le profil de ${user.name}${user.profession ? `, ${user.profession}` : ''}. Portfolio, compétences et projets.`,
+    description: `Discover ${user.name}'s profile${user.profession ? `, ${user.profession}` : ''}. Portfolio, skills and projects.`,
     openGraph: {
       title: `${user.name} - LinkFaster`,
-      description: `Portfolio de ${user.name}${user.profession ? ` - ${user.profession}` : ''}`,
+      description: `${user.name}'s Portfolio${user.profession ? ` - ${user.profession}` : ''}`,
       images: user.photoUrl ? [{ url: user.photoUrl }] : [],
       url: `https://linkfaster.com/${user.profileSlug}`,
       type: 'profile'
@@ -32,7 +33,7 @@ export async function generateMetadata({ params }: ProfilePageProps) {
     twitter: {
       card: 'summary_large_image',
       title: `${user.name} - LinkFaster`,
-      description: `Portfolio de ${user.name}`,
+      description: `${user.name}'s Portfolio`,
       images: user.photoUrl ? [user.photoUrl] : []
     }
   }

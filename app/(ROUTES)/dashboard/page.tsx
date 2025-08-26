@@ -27,6 +27,8 @@ interface UserProfile {
   colorTheme?: string
   skillsCount?: number
   repositoriesCount?: number
+  githubProfile?: string | null
+  githubCalendar?: boolean
 }
 
 const DashboardPage = () => {
@@ -68,13 +70,15 @@ const DashboardPage = () => {
             stripeCustomerId: profile.stripeCustomerId,
             colorTheme: profile.colorTheme || 'blue',
             skillsCount: profile.skills?.length || 0,
-            repositoriesCount: profile.repositories?.length || 0
+            repositoriesCount: profile.repositories?.length || 0,
+            githubProfile: profile.githubProfile || null,
+            githubCalendar: profile.githubCalendar || false
           })
         } else {
           // User doesn't have a profile yet, create basic info from session
           setUserProfile({
             id: session.user.id,
-            name: session.user.name || 'Utilisateur',
+            name: session.user.name || 'User',
             firstName: null,
             lastName: null,
             email: session.user.email,
@@ -87,7 +91,9 @@ const DashboardPage = () => {
             stripeCustomerId: null,
             colorTheme: 'blue',
             skillsCount: 0,
-            repositoriesCount: 0
+            repositoriesCount: 0,
+            githubProfile: null,
+            githubCalendar: false
           })
         }
       }
@@ -159,7 +165,7 @@ const DashboardPage = () => {
                 Dashboard
               </h1>
               <p className="text-slate-600 dark:text-slate-400">
-                Gérez votre profil freelance et suivez vos performances
+                Manage your freelance profile and track your performance
               </p>
             </div>
             
@@ -178,17 +184,17 @@ const DashboardPage = () => {
               </div>
               <div className="flex-1">
                 <h4 className="text-sm font-medium text-yellow-900 dark:text-yellow-200">
-                  Profil incomplet
+                  Incomplete Profile
                 </h4>
                 <p className="text-xs text-yellow-700 dark:text-yellow-300 mt-1">
-                  Complétez votre profil pour le rendre visible au public et commencer à attirer des clients.
+                  Complete your profile to make it visible to the public and start attracting clients.
                 </p>
               </div>
               <a
                 href="/create-profil"
                 className="px-4 py-2 bg-yellow-600 text-white text-sm font-medium rounded-md hover:bg-yellow-700 transition-colors"
               >
-                Compléter mon profil
+                Complete My Profile
               </a>
             </div>
           </div>

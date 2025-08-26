@@ -9,6 +9,9 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { User, Settings, LogOut, LayoutDashboard, Palette, Crown, Link as LinkIcon } from 'lucide-react'
 import { authClient } from '@/lib/auth-client'
 import { getCurrentUserProfile } from '@/lib/actions/user-actions'
+import Image from 'next/image'
+import srcLogo from "@/public/minimalistLogo.png"
+import { AnimatedThemeToggler } from '../magicui/animated-theme-toggler';
 
 const ProfilNavbar = () => {
   const router = useRouter()
@@ -61,7 +64,7 @@ const ProfilNavbar = () => {
   }
 
   const user = {
-    name: session.user.name || 'Utilisateur',
+    name: session.user.name || 'User',
     email: session.user.email,
     avatar: session.user.image
   }
@@ -81,13 +84,9 @@ const ProfilNavbar = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo/Brand */}
           <div className="flex items-center space-x-4">
-            <Link href="/" className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                <LinkIcon className="w-4 h-4 text-white" />
-              </div>
-              <span className="text-xl font-bold text-slate-900 dark:text-slate-100">
-                LinkFaster
-              </span>
+            <Link href="/" className="flex font-semibold items-center space-x-2">
+               <Image  alt='Logo' src={srcLogo} height={50} />
+               LinkFaster
             </Link>
             {userProfile?.isPremium ? (
               <div className="hidden sm:inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-amber-700 bg-gradient-to-r from-amber-100 to-yellow-100 border border-amber-200 rounded-full">
@@ -103,32 +102,24 @@ const ProfilNavbar = () => {
 
           {/* Navigation Links */}
           <div className="hidden md:flex items-center space-x-6">
-            <Link
-              href="/dashboard"
-              className="flex items-center space-x-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors"
-            >
-              <LayoutDashboard className="w-4 h-4" />
-              <span>Dashboard</span>
-            </Link>
+        
             <Link
               href="/create-profil"
               className="flex items-center space-x-2 text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
             >
               <Palette className="w-4 h-4" />
-              <span>Créer profil</span>
+              <span>Create profile</span>
             </Link>
+           
           </div>
 
           {/* User Menu */}
           <div className="flex items-center space-x-4">
             {/* Mobile Navigation Button */}
-            <div className="md:hidden">
-              <Button variant="ghost" size="sm">
-                <LayoutDashboard className="w-4 h-4" />
-              </Button>
-            </div>
+         
 
             {/* User Avatar Dropdown */}
+            <AnimatedThemeToggler />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
@@ -178,14 +169,7 @@ const ProfilNavbar = () => {
                 <DropdownMenuItem asChild>
                   <Link href="/profil" className="cursor-pointer">
                     <User className="mr-2 h-4 w-4" />
-                    <span>Mon profil</span>
-                  </Link>
-                </DropdownMenuItem>
-                
-                <DropdownMenuItem asChild>
-                  <Link href="/settings" className="cursor-pointer">
-                    <Settings className="mr-2 h-4 w-4" />
-                    <span>Paramètres</span>
+                    <span>My profile</span>
                   </Link>
                 </DropdownMenuItem>
                 
@@ -196,7 +180,7 @@ const ProfilNavbar = () => {
                   className="cursor-pointer text-red-600 dark:text-red-400"
                 >
                   <LogOut className="mr-2 h-4 w-4" />
-                  <span>Se déconnecter</span>
+                  <span>Sign out</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

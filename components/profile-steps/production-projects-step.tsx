@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import ImageUpload from '@/components/ui/image-upload'
 import { Plus, X, ExternalLink, Eye } from 'lucide-react'
 
 interface ProjectData {
@@ -14,7 +15,8 @@ interface ProjectData {
   title: string
   description: string
   url: string
-  previewUrl: string
+  previewUrl?: string // Deprecated - for backward compatibility
+  previewImage?: string // New field for base64 image
   technologies: string[]
 }
 
@@ -34,7 +36,7 @@ const ProductionProjectsStep: React.FC<ProductionProjectsStepProps> = ({ data, o
       title: '',
       description: '',
       url: '',
-      previewUrl: '',
+      previewImage: undefined,
       technologies: []
     }
     const updatedProjects = [...projects, newProject]
@@ -86,10 +88,10 @@ const ProductionProjectsStep: React.FC<ProductionProjectsStepProps> = ({ data, o
     <div className="space-y-6">
       <div className="text-center">
         <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-2">
-          Projets en Production
+          Production Projects
         </h3>
         <p className="text-slate-600 dark:text-slate-400">
-          Ajoutez vos projets déjà déployés pour montrer votre travail concret
+          Add your already deployed projects to showcase your concrete work
         </p>
       </div>
 
@@ -99,7 +101,7 @@ const ProductionProjectsStep: React.FC<ProductionProjectsStepProps> = ({ data, o
             <CardHeader className="pb-4">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-base">
-                  Projet {projectIndex + 1}
+                  Project {projectIndex + 1}
                 </CardTitle>
                 <Button
                   variant="ghost"
@@ -115,7 +117,7 @@ const ProductionProjectsStep: React.FC<ProductionProjectsStepProps> = ({ data, o
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor={`title-${projectIndex}`}>Titre du projet</Label>
+                  <Label htmlFor={`title-${projectIndex}`}>Project Title</Label>
                   <Input
                     id={`title-${projectIndex}`}
                     value={project.title}
@@ -125,13 +127,13 @@ const ProductionProjectsStep: React.FC<ProductionProjectsStepProps> = ({ data, o
                 </div>
                 
                 <div>
-                  <Label htmlFor={`url-${projectIndex}`}>URL du projet</Label>
+                  <Label htmlFor={`url-${projectIndex}`}>Project URL</Label>
                   <div className="relative">
                     <Input
                       id={`url-${projectIndex}`}
                       value={project.url}
                       onChange={(e) => updateProject(projectIndex, 'url', e.target.value)}
-                      placeholder="https://monprojet.com"
+                      placeholder="https://myproject.com"
                       className="pr-10"
                     />
                     {project.url && (
@@ -154,39 +156,25 @@ const ProductionProjectsStep: React.FC<ProductionProjectsStepProps> = ({ data, o
                   id={`description-${projectIndex}`}
                   value={project.description}
                   onChange={(e) => updateProject(projectIndex, 'description', e.target.value)}
-                  placeholder="Décrivez votre projet, ses fonctionnalités principales..."
+                  placeholder="Describe your project, its main features..."
                   rows={3}
                 />
               </div>
 
               <div>
-                <Label htmlFor={`preview-${projectIndex}`}>URL de prévisualisation (optionnel)</Label>
-                <div className="relative">
-                  <Input
-                    id={`preview-${projectIndex}`}
-                    value={project.previewUrl}
-                    onChange={(e) => updateProject(projectIndex, 'previewUrl', e.target.value)}
-                    placeholder="https://image-preview.com/screenshot.png"
-                    className="pr-10"
-                  />
-                  {project.previewUrl && (
-                    <a
-                      href={project.previewUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
-                    >
-                      <Eye className="w-4 h-4" />
-                    </a>
-                  )}
-                </div>
+                <Label>Preview Image (optional)</Label>
+                <ImageUpload
+                  value={project.previewImage}
+                  onChange={(value) => updateProject(projectIndex, 'previewImage', value || '')}
+                  maxSizeInMB={2}
+                />
                 <p className="text-sm text-slate-500 mt-1">
-                  Ajoutez un lien vers une capture d'écran ou image de votre projet
+                  Add a screenshot or image of your project (max 2MB)
                 </p>
               </div>
 
               <div>
-                <Label>Technologies utilisées</Label>
+                <Label>Technologies Used</Label>
                 <div className="flex flex-wrap gap-2 mb-2">
                   {project.technologies.map((tech, techIndex) => (
                     <Badge 
@@ -208,7 +196,7 @@ const ProductionProjectsStep: React.FC<ProductionProjectsStepProps> = ({ data, o
                   <Input
                     value={currentTech}
                     onChange={(e) => setCurrentTech(e.target.value)}
-                    placeholder="Ex: React, Node.js, PostgreSQL..."
+                    placeholder="e.g. React, Node.js, PostgreSQL..."
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') {
                         e.preventDefault()
@@ -225,7 +213,7 @@ const ProductionProjectsStep: React.FC<ProductionProjectsStepProps> = ({ data, o
                       setCurrentTech('')
                     }}
                   >
-                    Ajouter
+                    Add
                   </Button>
                 </div>
               </div>
@@ -240,15 +228,15 @@ const ProductionProjectsStep: React.FC<ProductionProjectsStepProps> = ({ data, o
           className="w-full py-8 border-2 border-dashed border-slate-300 dark:border-slate-600 hover:border-primary"
         >
           <Plus className="w-5 h-5 mr-2" />
-          Ajouter un projet en production
+          Add a production project
         </Button>
       </div>
 
       {projects.length > 0 && (
         <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
           <p className="text-sm text-blue-800 dark:text-blue-200">
-            💡 <strong>Conseil:</strong> Ajoutez vos meilleurs projets en production pour montrer 
-            votre expertise concrète aux clients potentiels. N'hésitez pas à inclure des captures d'écran !
+            💡 <strong>Tip:</strong> Add your best production projects to show 
+            your concrete expertise to potential clients. Don't hesitate to include screenshots!
           </p>
         </div>
       )}

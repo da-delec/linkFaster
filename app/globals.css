@@ -1,8 +1,10 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-
-
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
 
 @font-face {
   font-family: 'Satoshi';
@@ -121,7 +123,6 @@
   font-style: italic;
 }
 
-
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -162,6 +163,12 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --animate-gradient: gradient 8s linear infinite;
+  @keyframes gradient {
+  to {
+    background-position: var(--bg-size, 300%) 0;
+    }
+  }
 }
 
 :root {
@@ -172,7 +179,7 @@
   --card-foreground: oklch(0.129 0.042 264.695);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.58 0.17 156);
+  --primary: oklch(0.65 0.22 250);
   --primary-foreground: oklch(1 0 0);
   --secondary: oklch(0.968 0.007 247.896);
   --secondary-foreground: oklch(0.208 0.042 265.755);
@@ -206,7 +213,7 @@
   --card-foreground: oklch(0.984 0.003 247.858);
   --popover: oklch(0.208 0.042 265.755);
   --popover-foreground: oklch(0.984 0.003 247.858);
-  --primary: oklch(0.65 0.18 156);
+  --primary: oklch(0.70 0.25 250);
   --primary-foreground: oklch(0.1 0 0);
   --secondary: oklch(0.279 0.041 260.031);
   --secondary-foreground: oklch(0.984 0.003 247.858);
@@ -252,7 +259,7 @@
       transform: translateX(100%);
     }
   }
-  
+
   @keyframes gradient-shift {
     0% {
       background-position: 0% 50%;
@@ -302,6 +309,73 @@
 
   .glass-emerald-bg {
     background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(167, 243, 208, 0.05));
+  }
+
+  /* Glass theme backgrounds with abstract images */
+  .glass-aurora-background {
+    background-image: url('/background-abstract.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+  }
+
+  .glass-nebula-background {
+    background-image: url('/background-abstract2.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+  }
+
+  .glass-cosmic-background {
+    background-image: url('/background-abstract3.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+  }
+
+  /* Dark theme background with blur effect */
+  .midnight-background {
+    background-image: url('/dark1.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+  }
+
+  .midnight-background::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('/dark1.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    filter: blur(20px);
+    z-index: -1;
+  }
+
+  /* Prisme theme backgrounds */
+  .prisme-dark-background {
+    background-image: url('/prismDark.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+  }
+
+  .prisme-grey-background {
+    background-image: url('/prismeGrey.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
   }
 
   /* Effets bordures gradient */
@@ -387,6 +461,35 @@
     animation: stardust 3s ease-in-out infinite;
   }
 
+  /* Animations pour la page create-profil */
+  @keyframes fade-in {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes spin-slow {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 1s ease-out;
+  }
+
+  .animate-spin-slow {
+    animation: spin-slow 20s linear infinite;
+  }
+
   /* Gradients personnalisés */
   .bg-gradient-radial {
     background: radial-gradient(var(--tw-gradient-stops));
@@ -395,4 +498,8 @@
   .bg-gradient-conic {
     background: conic-gradient(var(--tw-gradient-stops));
   }
+}
+::view-transition-old(root), ::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
 }

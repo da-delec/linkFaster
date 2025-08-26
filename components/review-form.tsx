@@ -17,7 +17,7 @@ interface ReviewFormProps {
 const ReviewForm = ({ userId, onReviewSubmitted, colorTheme = 'default' }: ReviewFormProps) => {
   const getThemeColors = (theme: string) => {
     switch (theme) {
-      // 3 THÈMES GRATUITS - Design Apple, simple et sobre
+      // 3 FREE THEMES - Apple design, simple and refined
       case 'default':
         return {
           primary: 'bg-blue-600 hover:bg-blue-700 text-white shadow-sm',
@@ -46,26 +46,65 @@ const ReviewForm = ({ userId, onReviewSubmitted, colorTheme = 'default' }: Revie
           inputText: 'text-slate-900'
         }
 
-      // 1 THÈME SOMBRE PREMIUM - Design Apple sombre
+      // 1 PREMIUM DARK THEME - Apple dark design with glassmorphism
       case 'midnight':
         return {
-          primary: 'bg-slate-800 hover:bg-slate-900 text-white shadow-sm',
-          secondary: 'bg-slate-800 border border-slate-700 shadow-sm',
-          accent: 'text-slate-300',
+          primary: 'bg-slate-800/80 hover:bg-slate-700/80 backdrop-blur-md border border-slate-600/50 text-white shadow-xl',
+          secondary: 'bg-slate-800/60 backdrop-blur-md border border-slate-600/40 shadow-xl',
+          accent: 'text-blue-400',
           text: 'text-slate-100',
-          inputBg: 'bg-slate-700 border-slate-600',
+          inputBg: 'bg-slate-800/50 border-slate-600/40 backdrop-blur-md',
           inputText: 'text-slate-100'
         }
 
-      // 1 THÈME GLASSMORPHISME PREMIUM - Design Apple moderne
+      // PREMIUM GLASSMORPHISM THEMES - Modern Apple design
       case 'glass':
+      case 'glass-aurora':
         return {
-          primary: 'bg-white/20 hover:bg-white/30 backdrop-blur-md border border-white/30 text-white shadow-sm',
-          secondary: 'bg-white/10 backdrop-blur-md border border-white/20 shadow-sm',
+          primary: 'bg-white/20 hover:bg-white/30 backdrop-blur-md border border-white/30 text-white shadow-xl',
+          secondary: 'bg-white/10 backdrop-blur-md border border-white/20 shadow-xl',
           accent: 'text-blue-300',
           text: 'text-white',
           inputBg: 'bg-white/20 border-white/30 backdrop-blur-md',
           inputText: 'text-white'
+        }
+      case 'glass-nebula':
+        return {
+          primary: 'bg-white/20 hover:bg-white/30 backdrop-blur-md border border-white/30 text-white shadow-xl',
+          secondary: 'bg-white/10 backdrop-blur-md border border-white/20 shadow-xl',
+          accent: 'text-purple-300',
+          text: 'text-white',
+          inputBg: 'bg-white/20 border-white/30 backdrop-blur-md',
+          inputText: 'text-white'
+        }
+      case 'glass-cosmic':
+        return {
+          primary: 'bg-white/20 hover:bg-white/30 backdrop-blur-md border border-white/30 text-white shadow-xl',
+          secondary: 'bg-white/10 backdrop-blur-md border border-white/20 shadow-xl',
+          accent: 'text-fuchsia-300',
+          text: 'text-white',
+          inputBg: 'bg-white/20 border-white/30 backdrop-blur-md',
+          inputText: 'text-white'
+        }
+
+      // PREMIUM PRISME THEMES
+      case 'prisme-dark':
+        return {
+          primary: 'bg-white/25 hover:bg-white/35 backdrop-blur-md border border-white/30 text-white shadow-xl',
+          secondary: 'bg-white/15 backdrop-blur-md border border-white/25 shadow-xl',
+          accent: 'text-emerald-300',
+          text: 'text-white',
+          inputBg: 'bg-white/20 border-white/30 backdrop-blur-md',
+          inputText: 'text-white'
+        }
+      case 'prisme-grey':
+        return {
+          primary: 'bg-slate-800/90 hover:bg-slate-700/90 backdrop-blur-md border border-slate-600/50 text-white shadow-xl',
+          secondary: 'bg-slate-800/70 backdrop-blur-md border border-slate-600/40 shadow-xl',
+          accent: 'text-amber-400',
+          text: 'text-slate-100',
+          inputBg: 'bg-slate-800/50 border-slate-600/40 backdrop-blur-md',
+          inputText: 'text-slate-100'
         }
 
       default:
@@ -93,12 +132,12 @@ const ReviewForm = ({ userId, onReviewSubmitted, colorTheme = 'default' }: Revie
     e.preventDefault()
     
     if (!reviewerName.trim()) {
-      toast.error('Veuillez saisir votre nom')
+      toast.error('Please enter your name')
       return
     }
     
     if (rating === 0) {
-      toast.error('Veuillez donner une note')
+      toast.error('Please provide a rating')
       return
     }
 
@@ -120,10 +159,10 @@ const ReviewForm = ({ userId, onReviewSubmitted, colorTheme = 'default' }: Revie
       })
 
       if (!response.ok) {
-        throw new Error('Erreur lors de l\'envoi de l\'avis')
+        throw new Error('Error sending review')
       }
 
-      toast.success('Votre avis a été envoyé avec succès !')
+      toast.success('Your review has been sent successfully!')
       
       // Reset form
       setRating(0)
@@ -135,8 +174,8 @@ const ReviewForm = ({ userId, onReviewSubmitted, colorTheme = 'default' }: Revie
         onReviewSubmitted()
       }
     } catch (error) {
-      console.error('Erreur lors de l\'envoi de l\'avis:', error)
-      toast.error('Une erreur est survenue lors de l\'envoi de votre avis')
+      console.error('Error sending review:', error)
+      toast.error('An error occurred while sending your review')
     } finally {
       setIsSubmitting(false)
     }
@@ -171,18 +210,18 @@ const ReviewForm = ({ userId, onReviewSubmitted, colorTheme = 'default' }: Revie
       <CardHeader>
         <CardTitle className={`flex items-center space-x-2 ${colors.text}`}>
           <Star className="w-5 h-5 text-yellow-400" />
-          <span>Laisser un avis</span>
+          <span>Leave a Review</span>
         </CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Rating */}
           <div className="space-y-2">
-            <label className={`text-sm font-medium ${colors.text}`}>Note *</label>
+            <label className={`text-sm font-medium ${colors.text}`}>Rating *</label>
             <div className="flex items-center space-x-1">
               {renderStars()}
               <span className={`ml-2 text-sm ${colorTheme === 'midnight' ? 'text-slate-300' : 'text-muted-foreground'}`}>
-                {rating > 0 ? `${rating}/5` : 'Cliquez pour noter'}
+                {rating > 0 ? `${rating}/5` : 'Click to rate'}
               </span>
             </div>
           </div>
@@ -190,7 +229,7 @@ const ReviewForm = ({ userId, onReviewSubmitted, colorTheme = 'default' }: Revie
           {/* Reviewer Name */}
           <div className="space-y-2">
             <label htmlFor="reviewerName" className={`text-sm font-medium ${colors.text}`}>
-              Votre nom *
+              Your Name *
             </label>
             <Input
               id="reviewerName"
@@ -206,7 +245,7 @@ const ReviewForm = ({ userId, onReviewSubmitted, colorTheme = 'default' }: Revie
           {/* Reviewer Email (optional) */}
           <div className="space-y-2">
             <label htmlFor="reviewerEmail" className={`text-sm font-medium ${colors.text}`}>
-              Votre email (optionnel)
+              Your Email (optional)
             </label>
             <Input
               id="reviewerEmail"
@@ -217,18 +256,18 @@ const ReviewForm = ({ userId, onReviewSubmitted, colorTheme = 'default' }: Revie
               className={`${colors.inputBg} ${colors.inputText} placeholder:text-muted-foreground`}
             />
             <p className={`text-xs ${colorTheme === 'midnight' ? 'text-slate-300' : 'text-muted-foreground'}`}>
-              Votre email ne sera pas affiché publiquement
+              Your email will not be displayed publicly
             </p>
           </div>
 
           {/* Comment */}
           <div className="space-y-2">
             <label htmlFor="comment" className={`text-sm font-medium ${colors.text}`}>
-              Commentaire (optionnel)
+              Comment (optional)
             </label>
             <Textarea
               id="comment"
-              placeholder="Partagez votre expérience..."
+              placeholder="Share your experience..."
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               rows={4}
@@ -243,11 +282,11 @@ const ReviewForm = ({ userId, onReviewSubmitted, colorTheme = 'default' }: Revie
             className={`w-full ${colors.primary}`}
           >
             {isSubmitting ? (
-              'Envoi en cours...'
+              'Sending...'
             ) : (
               <>
                 <Send className="w-4 h-4 mr-2" />
-                Envoyer l'avis
+                Send Review
               </>
             )}
           </Button>
