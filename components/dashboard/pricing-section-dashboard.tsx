@@ -1,6 +1,7 @@
 'use client';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import NumberFlow from '@number-flow/react';
+// Temporarily disabled to fix build
+// import NumberFlow from '@number-flow/react';
 import { Badge } from '@/components/ui/badge';
 import { authClient } from '@/lib/auth-client';
 import { Button } from '@/components/ui/button';
@@ -104,7 +105,7 @@ export default function SimplePricingDashboard() {
         }
 
         const { url } = await response.json();
-        if (url) {
+        if (url && typeof window !== 'undefined') {
           window.location.href = url;
         }
       } catch (error) {
@@ -247,22 +248,14 @@ export default function SimplePricingDashboard() {
                         frequency as keyof typeof plan.price
                       ] === 'number' ? (
                         <div className="flex items-baseline">
-                          <NumberFlow
+                          <span
                             className={cn(
                               'text-3xl font-bold',
                               plan.popular ? 'text-primary' : 'text-foreground',
                             )}
-                            format={{
-                              style: 'currency',
-                              currency: 'USD',
-                              maximumFractionDigits: 2,
-                            }}
-                            value={
-                              plan.price[
-                                frequency as keyof typeof plan.price
-                              ] as number
-                            }
-                          />
+                          >
+                            ${plan.price[frequency as keyof typeof plan.price] as number}
+                          </span>
                           <span className="text-muted-foreground ml-1 text-sm">
                             /{frequency === 'yearly' ? 'month' : 'month'}
                           </span>

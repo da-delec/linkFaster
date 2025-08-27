@@ -5,10 +5,11 @@ const prisma = new PrismaClient()
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const reviewId = params.id
+    const { id } = await context.params
+    const reviewId = id
     const { isVisible } = await request.json()
 
     if (typeof isVisible !== 'boolean') {
@@ -43,10 +44,11 @@ export async function PATCH(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const reviewId = params.id
+    const { id } = await context.params
+    const reviewId = id
 
     await prisma.review.delete({
       where: { id: reviewId }

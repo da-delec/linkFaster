@@ -8,7 +8,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { CiTwitter } from "react-icons/ci";
 
 import { CiMail } from "react-icons/ci";
-import GithubCaldnarIntegration from '@/app/test/page'
+import GithubCalendarComponent from '@/components/github-calendar'
 import { Badge } from '@/components/ui/badge'
 import ReviewForm from '@/components/review-form'
 import ReviewMetrics from '@/components/review-metrics'
@@ -363,14 +363,16 @@ const PublicProfile: React.FC<PublicProfileProps> = ({ user }) => {
         await navigator.share({
           title: `${user.name}'s Profile`,
           text: `Discover ${user.name}'s freelance profile`,
-          url: window.location.href
+          url: typeof window !== 'undefined' ? window.location.href : ''
         })
       } catch (error) {
         console.log('Sharing failed:', error)
       }
     } else {
       // Fallback: copy to clipboard
-      navigator.clipboard.writeText(window.location.href)
+      if (typeof window !== 'undefined') {
+        navigator.clipboard.writeText(window.location.href)
+      }
     }
   }
 
@@ -499,7 +501,7 @@ const PublicProfile: React.FC<PublicProfileProps> = ({ user }) => {
              href={`https://twitter.com/intent/tweet?url=`} 
              className={`mt-4 hover:scale-110 hover:text-blue-400 transition-all duration-300 `}
              onClick={(e) => {
-               const currentUrl = window.location.href;
+               const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
                const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(currentUrl)}`;
                trackLinkClick('twitter', twitterUrl);
                e.currentTarget.href = twitterUrl;
@@ -522,7 +524,7 @@ const PublicProfile: React.FC<PublicProfileProps> = ({ user }) => {
         {/* GitHub Calendar Section */}
         {user.githubCalendar && user.githubProfile && (
           <div className={`${layout.spacing} p-6 mt-12 rounded-2xl border transition-all duration-300 ${colors.secondary} ${colors.cardBorder} ${colors.cardShadow}`}>
-            <GithubCaldnarIntegration 
+            <GithubCalendarComponent 
               username={user.githubProfile.split('/').pop() || "da-delec"} 
               colorTheme={user.colorTheme}
             />

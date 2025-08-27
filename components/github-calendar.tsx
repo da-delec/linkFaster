@@ -1,18 +1,18 @@
 'use client'
 
-export const dynamic = 'force-dynamic'
+import dynamic from 'next/dynamic';
 
-import GitHubCalendar from 'react-github-calendar';
+const GitHubCalendar = dynamic(() => import('react-github-calendar'), {
+  ssr: false,
+  loading: () => <div>Loading GitHub activity...</div>
+});
 
 interface GithubCalendarProps {
   username: string;
   colorTheme?: string;
 }
 
-export default function TestPage() {
-  // Valeurs par défaut pour les tests
-  const username = 'octocat';
-  const colorTheme = 'default';
+export default function GithubCalendarComponent({username, colorTheme = 'default'}: GithubCalendarProps) {
   const getTheme = (theme: string) => {
     switch (theme) {
       case 'midnight':
@@ -95,7 +95,6 @@ export default function TestPage() {
           />
         </div>
       </div>
-      
     </div>
   )
 }

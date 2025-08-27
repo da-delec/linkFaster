@@ -186,7 +186,7 @@ const DesignCustomizationStep: React.FC<DesignCustomizationStepProps> = ({ data,
 
       const { url } = await response.json()
       
-      if (url) {
+      if (url && typeof window !== 'undefined') {
         window.location.href = url
       }
     } catch (error) {

@@ -1,9 +1,13 @@
 'use client'
 
+export const dynamic = 'force-dynamic'
+
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Metadata } from 'next'
-import ProfilNavbar from '@/components/ui/profil-navbar'
+import dynamicImport from 'next/dynamic'
+
+const ProfilNavbar = dynamicImport(() => import('@/components/ui/profil-navbar'), { ssr: false })
 import { Progress } from '@/components/ui/progress'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'

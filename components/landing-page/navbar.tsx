@@ -26,6 +26,8 @@ export default function Header2() {
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
     };
@@ -42,10 +44,12 @@ export default function Header2() {
       const navbarHeight = 80; // Approximate navbar height
       const targetPosition = targetSection.offsetTop - navbarHeight;
       
-      window.scrollTo({
-        top: targetPosition,
-        behavior: 'smooth'
-      });
+      if (typeof window !== 'undefined') {
+        window.scrollTo({
+          top: targetPosition,
+          behavior: 'smooth'
+        });
+      }
     }
     
     // Close mobile menu if open
@@ -243,12 +247,6 @@ export default function Header2() {
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     Sign In
-                  </Link>
-                  <Link prefetch={false}                    href="/signup"
-                    className="bg-foreground text-background hover:bg-foreground/90 block w-full rounded-lg py-3 text-center font-medium transition-all duration-200"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    Get Started
                   </Link>
                 </motion.div>
               </div>

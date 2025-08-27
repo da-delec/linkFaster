@@ -99,7 +99,7 @@ export function SubscriptionDetails({ stripeCustomerId, isPremium }: Subscriptio
       if (response.ok) {
         const data = await response.json()
         if (data.url) {
-          window.location.href = data.url
+          if (typeof window !== 'undefined') window.location.href = data.url
         } else {
           toast.error('URL du portail non reçue')
         }
@@ -131,7 +131,7 @@ export function SubscriptionDetails({ stripeCustomerId, isPremium }: Subscriptio
       if (response.ok) {
         const data = await response.json()
         if (data.url) {
-          window.location.href = data.url
+          if (typeof window !== 'undefined') window.location.href = data.url
         } else {
           toast.error('URL de checkout non reçue')
         }

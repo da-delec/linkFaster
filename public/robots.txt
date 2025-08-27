@@ -6,7 +6,7 @@ Allow: /login
 Allow: /create-profil
 
 # Sitemaps
-Sitemap: https://devlink.com/sitemap.xml
+Sitemap: https://linkfaster.link/sitemap.xml
 
 # Block admin areas
 Disallow: /api/

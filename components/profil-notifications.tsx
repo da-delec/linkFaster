@@ -32,7 +32,7 @@ export function ProfilNotifications() {
 
     // Clean up the URL
     if (message || error) {
-      const newUrl = new URL(window.location.href)
+      const newUrl = new URL(typeof window !== 'undefined' ? window.location.href : 'http://localhost:3000')
       newUrl.searchParams.delete('message')
       newUrl.searchParams.delete('error')
       router.replace(newUrl.pathname, { scroll: false })

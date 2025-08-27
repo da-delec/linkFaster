@@ -1,12 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
-import Stripe from 'stripe'
+import {stripe} from '@/lib/stripe'
 import prisma from '@/lib/prisma'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-06-20',
-})
+
 
 export async function GET(request: NextRequest) {
   try {
@@ -57,9 +55,9 @@ export async function GET(request: NextRequest) {
       subscription: {
         id: subscription.id,
         status: subscription.status,
-        currentPeriodStart: new Date(subscription.current_period_start * 1000),
-        currentPeriodEnd: new Date(subscription.current_period_end * 1000),
-        cancelAtPeriodEnd: subscription.cancel_at_period_end,
+        currentPeriodStart: new Date((subscription as any).current_period_start * 1000),
+        currentPeriodEnd: new Date((subscription as any).current_period_end * 1000),
+        cancelAtPeriodEnd: (subscription as any).cancel_at_period_end,
         productName: product.name,
         amount: subscription.items.data[0].price.unit_amount! / 100,
         currency: subscription.items.data[0].price.currency,

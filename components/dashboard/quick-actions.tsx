@@ -26,7 +26,7 @@ const QuickActions: React.FC<QuickActionsProps> = ({ user }) => {
   const handleShare = async () => {
     if (!user.profileSlug) return
     
-    const profileUrl = `${window.location.origin}/${user.profileSlug}`
+    const profileUrl = typeof window !== 'undefined' ? `${window.location.origin}/${user.profileSlug}` : `/${user.profileSlug}`
     
     if (navigator.share) {
       try {

@@ -266,7 +266,7 @@ const ProfilePreview: React.FC<ProfilePreviewProps> = ({
           bg-gradient-to-br ${colors.background} 
           ${isGlassTheme || isPrismeTheme ? colors.textCard : colors.text}
           rounded-lg p-6 border shadow-lg
-          ${colors.special || ''}
+          ${(colors as any).special || ''}
         `}>
           
           <div>

@@ -1,13 +1,18 @@
 'use client'
 
+export const dynamic = 'force-dynamic'
+
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import ProfilNavbar from '@/components/ui/profil-navbar'
-import DashboardStats from '@/components/dashboard/dashboard-stats'
-import ProfilePreview from '@/components/dashboard/profile-preview'
-import QuickActions from '@/components/dashboard/quick-actions'
-import PremiumBanner from '@/components/dashboard/premium-banner'
-import ReviewsManagement from '@/components/dashboard/reviews-management'
+import dynamicImport from 'next/dynamic'
+
+const ProfilNavbar = dynamicImport(() => import('@/components/ui/profil-navbar'), { ssr: false })
+
+const DashboardStats = dynamicImport(() => import('@/components/dashboard/dashboard-stats'), { ssr: false })
+const ProfilePreview = dynamicImport(() => import('@/components/dashboard/profile-preview'), { ssr: false })
+const QuickActions = dynamicImport(() => import('@/components/dashboard/quick-actions'), { ssr: false })
+const PremiumBanner = dynamicImport(() => import('@/components/dashboard/premium-banner'), { ssr: false })
+const ReviewsManagement = dynamicImport(() => import('@/components/dashboard/reviews-management'), { ssr: false })
 import { authClient } from '@/lib/auth-client'
 import { getCurrentUserProfile } from '@/lib/actions/user-actions'
 
@@ -148,7 +153,9 @@ const DashboardPage = () => {
               .then(response => response.json())
               .then(data => {
                 if (data.url) {
-                  window.location.href = data.url
+                  if (typeof window !== 'undefined') {
+                    window.location.href = data.url
+                  }
                 }
               })
               .catch(error => {

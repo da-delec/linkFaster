@@ -158,7 +158,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
             <Button
               variant="secondary"
               size="sm"
-              onClick={() => window.open(value, '_blank')}
+              onClick={() => typeof window !== 'undefined' && window.open(value, '_blank')}
               className="bg-white/90 hover:bg-white"
             >
               <Eye className="w-4 h-4" />

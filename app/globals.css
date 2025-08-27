@@ -503,3 +503,6 @@ html {
     animation: none;
     mix-blend-mode: normal;
 }
+#nextjs-devtools {
+  display: none !important;
+}

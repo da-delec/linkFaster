@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import { GalleryVerticalEnd } from "lucide-react"
 import { Metadata } from "next"
 

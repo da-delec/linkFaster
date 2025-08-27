@@ -27,8 +27,8 @@ export const AnimatedThemeToggler = ({ className }: props) => {
     const y = top + height / 2;
     const x = left + width / 2;
 
-    const right = window.innerWidth - left;
-    const bottom = window.innerHeight - top;
+    const right = typeof window !== 'undefined' ? window.innerWidth - left : 0;
+    const bottom = typeof window !== 'undefined' ? window.innerHeight - top : 0;
     const maxRad = Math.hypot(Math.max(left, right), Math.max(top, bottom));
 
     document.documentElement.animate(

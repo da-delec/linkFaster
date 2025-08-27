@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import { notFound } from 'next/navigation'
 import { getUserBySlug } from '@/lib/actions/user-actions'
 

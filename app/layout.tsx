@@ -15,18 +15,18 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "devLink - Linktr.ee for Developers",
+  title: "LinkFaster",
   description: "Centralize your developer profile with devLink - The ultimate link-in-bio platform for developers and digital creators",
   keywords: ["developer portfolio", "link in bio", "github portfolio", "developer profile", "freelance portfolio", "tech portfolio"],
-  authors: [{ name: "devLink Team" }],
-  creator: "devLink",
-  publisher: "devLink",
+  authors: [{ name: "LinkFaster Team" }],
+  creator: "LinkFaster",
+  publisher: "LinkFaster",
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://devlink.com'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://linkfaster.link'),
   alternates: {
     canonical: '/',
   },
@@ -46,13 +46,7 @@ export const metadata: Metadata = {
       },
     ],
   },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'devLink - Linktr.ee for Developers',
-    description: 'Centralize your developer profile with devLink - The ultimate link-in-bio platform for developers and digital creators',
-    images: ['/mainLogo.png'],
-    creator: '@devlink',
-  },
+ 
   robots: {
     index: true,
     follow: true,
@@ -80,14 +74,14 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "SoftwareApplication",
-              "name": "devLink",
+              "name": "LinkFaster",
               "applicationCategory": "DeveloperApplication",
               "operatingSystem": "Web",
               "description": "Centralize your developer profile with devLink - The ultimate link-in-bio platform for developers and digital creators",
-              "url": process.env.NEXT_PUBLIC_APP_URL || "https://devlink.com",
+              "url": process.env.NEXT_PUBLIC_APP_URL || "https://linkfaster.link",
               "author": {
                 "@type": "Organization",
-                "name": "devLink Team"
+                "name": "LinkFaster Team"
               },
               "offers": {
                 "@type": "Offer",

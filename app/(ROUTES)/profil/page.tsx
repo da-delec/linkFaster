@@ -39,7 +39,7 @@ export default async function ProfilPage() {
   
   const user = session.user
 
-  // Récupérer les données complètes de l'utilisateur
+  // Get complete user data
   const fullUser = await prisma.user.findUnique({
     where: { id: user.id },
     include: {
@@ -57,7 +57,7 @@ export default async function ProfilPage() {
     redirect('/auth/signin')
   }
 
-  // Récupérer les providers OAuth connectés
+  // Get connected OAuth providers
   const connectedProviders = fullUser.accounts.map(account => ({
     provider: account.providerId,
     accountId: account.accountId,
@@ -65,7 +65,7 @@ export default async function ProfilPage() {
   }))
 
   const formatDate = (date: Date) => {
-    return date.toLocaleDateString('fr-FR', {
+    return date.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long', 
       day: 'numeric'
@@ -91,26 +91,26 @@ export default async function ProfilPage() {
       
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
-          Gestion du profil
+          Profile Management
         </h1>
         <p className="text-gray-600 dark:text-gray-400 mt-2">
-          Gérez vos informations personnelles, votre abonnement et vos paramètres de sécurité
+          Manage your personal information, subscription and settings
         </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Colonne principale */}
+        {/* Main column */}
         <div className="lg:col-span-2 space-y-6">
           
-          {/* Informations personnelles */}
+          {/* Personal information */}
           <Card>
             <CardHeader>
               <div className="flex items-center space-x-2">
                 <User className="w-5 h-5" />
-                <CardTitle>Informations personnelles</CardTitle>
+                <CardTitle>Personal Information</CardTitle>
               </div>
               <CardDescription>
-                Vos données de base et informations de contact
+                Your basic data and contact information
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -123,7 +123,7 @@ export default async function ProfilPage() {
                 </Avatar>
                 <div>
                   <h3 className="text-lg font-semibold">{fullUser.name}</h3>
-                  <p className="text-gray-600 dark:text-gray-400">{fullUser.profession || 'Pas de profession définie'}</p>
+                  <p className="text-gray-600 dark:text-gray-400">{fullUser.profession || 'No profession defined'}</p>
                 </div>
               </div>
 
@@ -144,10 +144,10 @@ export default async function ProfilPage() {
                 </div>
                 
                 <div>
-                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Âge</label>
+                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Age</label>
                   <div className="flex items-center space-x-2 mt-1">
                     <Calendar className="w-4 h-4 text-gray-400" />
-                    <span className="text-gray-900 dark:text-gray-100">{fullUser.age ? `${fullUser.age} ans` : 'Non défini'}</span>
+                    <span className="text-gray-900 dark:text-gray-100">{fullUser.age ? `${fullUser.age} years old` : 'Not defined'}</span>
                   </div>
                 </div>
               </div>
@@ -155,7 +155,7 @@ export default async function ProfilPage() {
               <div>
                 <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Bio</label>
                 <p className="text-gray-900 dark:text-gray-100 mt-1 text-sm">
-                  {fullUser.bio || 'Aucune bio définie'}
+                  {fullUser.bio || 'No bio defined'}
                 </p>
               </div>
 
@@ -163,22 +163,22 @@ export default async function ProfilPage() {
                 <Button variant="outline" asChild>
                   <a href="/create-profil">
                     <Settings className="w-4 h-4 mr-2" />
-                    Modifier le profil
+                    Edit Profile
                   </a>
                 </Button>
               </div>
             </CardContent>
           </Card>
 
-          {/* Comptes connectés (OAuth) */}
+          {/* Connected accounts (OAuth) */}
           <Card>
             <CardHeader>
               <div className="flex items-center space-x-2">
                 <LinkIcon className="w-5 h-5" />
-                <CardTitle>Comptes connectés</CardTitle>
+                <CardTitle>Connected Accounts</CardTitle>
               </div>
               <CardDescription>
-                Services externes liés à votre compte
+                External services linked to your account
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -214,17 +214,17 @@ export default async function ProfilPage() {
                 <div className="text-center py-8">
                   <Key className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                   <p className="text-gray-600 dark:text-gray-400">
-                    Aucun compte externe connecté
+                    No external accounts connected
                   </p>
                 </div>
               )}
             </CardContent>
           </Card>
 
-          {/* Statistiques du profil */}
+          {/* Profile statistics */}
           <Card>
             <CardHeader>
-              <CardTitle>Statistiques du profil</CardTitle>
+              <CardTitle>Profile Statistics</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -232,36 +232,36 @@ export default async function ProfilPage() {
                   <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
                     {fullUser._count.repositories}
                   </div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">Projets</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400">Projects</div>
                 </div>
                 
                 <div className="text-center p-4 bg-green-50 dark:bg-green-950/20 rounded-lg">
                   <div className="text-2xl font-bold text-green-600 dark:text-green-400">
                     {fullUser._count.reviews}
                   </div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">Avis reçus</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400">Reviews received</div>
                 </div>
                 
                 <div className="text-center p-4 bg-purple-50 dark:bg-purple-950/20 rounded-lg">
                   <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
                     {fullUser.skills.length}
                   </div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">Compétences</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400">Skills</div>
                 </div>
               </div>
             </CardContent>
           </Card>
         </div>
 
-        {/* Colonne latérale */}
+        {/* Sidebar column */}
         <div className="space-y-6">
           
-          {/* Statut Premium */}
+          {/* Premium status */}
           <Card>
             <CardHeader>
               <div className="flex items-center space-x-2">
                 <Crown className="w-5 h-5" />
-                <CardTitle>Abonnement</CardTitle>
+                <CardTitle>Subscription</CardTitle>
               </div>
             </CardHeader>
             <CardContent>
@@ -272,23 +272,23 @@ export default async function ProfilPage() {
             </CardContent>
           </Card>
 
-          {/* Profil public */}
+          {/* Public profile */}
           <Card>
             <CardHeader>
-              <CardTitle>Profil public</CardTitle>
+              <CardTitle>Public Profile</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">Profil visible</span>
+                <span className="text-sm font-medium">Profile visibility</span>
                 <Badge variant={fullUser.profilePublic ? "default" : "secondary"}>
-                  {fullUser.profilePublic ? 'Public' : 'Privé'}
+                  {fullUser.profilePublic ? 'Public' : 'Private'}
                 </Badge>
               </div>
               
               {fullUser.profileSlug && fullUser.profilePublic && (
                 <div>
                   <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Lien public
+                    Public link
                   </label>
                   <div className="flex items-center space-x-2 mt-1">
                     <code className="flex-1 text-xs bg-gray-100 dark:bg-gray-800 p-2 rounded">
@@ -306,34 +306,12 @@ export default async function ProfilPage() {
               <Button variant="outline" className="w-full" asChild>
                 <a href="/dashboard">
                   <Settings className="w-4 h-4 mr-2" />
-                  Configurer
+                  Configure
                 </a>
               </Button>
             </CardContent>
           </Card>
 
-          {/* Sécurité */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Sécurité</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="text-center text-gray-600 dark:text-gray-400">
-                <Shield className="w-8 h-8 mx-auto mb-2" />
-                <p className="text-sm">
-                  Compte créé le {formatDate(fullUser.createdAt)}
-                </p>
-              </div>
-              
-              <Button variant="outline" className="w-full" disabled>
-                <Key className="w-4 h-4 mr-2" />
-                Changer le mot de passe
-                <Badge variant="secondary" className="ml-2 text-xs">
-                  Bientôt
-                </Badge>
-              </Button>
-            </CardContent>
-          </Card>
         </div>
       </div>
     </div>
