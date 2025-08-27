@@ -120,7 +120,7 @@ const PublicProfile: React.FC<PublicProfileProps> = ({ user }) => {
       const response = await fetch(`/api/reviews?userId=${user.id}`)
       if (response.ok) {
         const data = await response.json()
-        setReviews(data.reviews)
+        setReviews(data.reviews || [])
         setReviewStats(data.statistics)
       }
     } catch (error) {
@@ -459,7 +459,7 @@ const PublicProfile: React.FC<PublicProfileProps> = ({ user }) => {
           <div className="space-y-3">
             <div className="space-y-1">
               <h1 className={`text-4xl font-medium bg-gradient-to-br from-gray-400 to-gray-200 text-transparent bg-clip-text `}>
-                {user.name}
+                {user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.name}
               </h1>
               {user.profession && (
                 <p className={`text-2xl ${

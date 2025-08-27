@@ -9,6 +9,8 @@ import Navbar from "@/components/landing-page/navbar";
 import QuestionSection from "@/components/landing-page/questionSections";
 import FooterGlow from "@/components/landing-page/footer";
 import BentoGrid from "@/components/landing-page/bentoGrid";
+import MockupSection from "@/components/landing-page/mockup-section";
+
 export default function Home() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -21,6 +23,9 @@ export default function Home() {
       </main>
       <section id="features">
        <BentoGrid />
+      </section>
+      <section id="mockup">
+        <MockupSection />
       </section>
       <section id="solutions">
         <QuestionSection />

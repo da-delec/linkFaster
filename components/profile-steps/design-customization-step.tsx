@@ -659,7 +659,6 @@ const DesignCustomizationStep: React.FC<DesignCustomizationStepProps> = ({ data,
             <ul className="text-sm text-amber-700 dark:text-amber-300 space-y-1 mb-4">
               <li>• Access to all premium themes</li>
               <li>• Advanced layouts with animations</li>
-              <li>• Custom domain (your-name.linkfaster.pro)</li>
               <li>• Detailed analytics of your profile</li>
               <li>• Priority support</li>
             </ul>
