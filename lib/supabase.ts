@@ -5,10 +5,25 @@ const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 
 export const supabase = createClient(supabaseUrl, supabaseKey)
 
+// File validation constants
+const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
+const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
+
 // Storage helpers for profile images
 export class SupabaseStorage {
   static async uploadProfileImage(file: File, userId: string): Promise<string | null> {
     try {
+      // File validation
+      if (file.size > MAX_FILE_SIZE) {
+        console.error('File too large:', file.size, 'bytes (max:', MAX_FILE_SIZE, ')')
+        return null
+      }
+      
+      if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+        console.error('Invalid file type:', file.type, '(allowed:', ALLOWED_IMAGE_TYPES, ')')
+        return null
+      }
+
       const fileExt = file.name.split('.').pop()
       const fileName = `${userId}/profile-${Date.now()}.${fileExt}`
       
@@ -38,6 +53,17 @@ export class SupabaseStorage {
 
   static async uploadBackgroundImage(file: File, userId: string): Promise<string | null> {
     try {
+      // File validation
+      if (file.size > MAX_FILE_SIZE) {
+        console.error('File too large:', file.size, 'bytes (max:', MAX_FILE_SIZE, ')')
+        return null
+      }
+      
+      if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+        console.error('Invalid file type:', file.type, '(allowed:', ALLOWED_IMAGE_TYPES, ')')
+        return null
+      }
+
       const fileExt = file.name.split('.').pop()
       const fileName = `${userId}/background-${Date.now()}.${fileExt}`
       

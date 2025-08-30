@@ -13,6 +13,10 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY! // Service role key needed for server uploads
 )
 
+// File validation constants
+const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
+const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
+
 export interface ProfileFormData {
   // Personal Information
   firstName: string
@@ -83,24 +87,23 @@ async function uploadFileToSupabase(
   type: 'profile' | 'background'
 ): Promise<string | null> {
   try {
-    console.log('🔍 [DEBUG] Starting file upload:', {
-      fileName: file.name,
-      fileSize: file.size,
-      fileType: file.type,
-      userId,
-      type
-    })
+    // File validation
+    if (file.size > MAX_FILE_SIZE) {
+      console.error('File too large:', file.size, 'bytes (max:', MAX_FILE_SIZE, ')')
+      return null
+    }
+    
+    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+      console.error('Invalid file type:', file.type, '(allowed:', ALLOWED_IMAGE_TYPES, ')')
+      return null
+    }
 
     const fileExt = file.name.split('.').pop()
     const fileName = `${userId}/${type}-${Date.now()}.${fileExt}`
     
-    console.log('📁 [DEBUG] Generated filename:', fileName)
-    
     // Convert File to ArrayBuffer for server upload
     const arrayBuffer = await file.arrayBuffer()
     const uint8Array = new Uint8Array(arrayBuffer)
-    
-    console.log('💾 [DEBUG] File converted to buffer, size:', uint8Array.length)
     
     const { data, error } = await supabase.storage
       .from('profile-images')
@@ -111,22 +114,18 @@ async function uploadFileToSupabase(
       })
 
     if (error) {
-      console.error('❌ [ERROR] Supabase upload error:', error)
+      console.error('Supabase upload error:', error)
       return null
     }
-
-    console.log('✅ [SUCCESS] File uploaded to Supabase:', data.path)
 
     // Get public URL
     const { data: publicData } = supabase.storage
       .from('profile-images')
       .getPublicUrl(data.path)
 
-    console.log('🔗 [DEBUG] Public URL generated:', publicData.publicUrl)
-
     return publicData.publicUrl
   } catch (error) {
-    console.error('💥 [ERROR] Upload function failed:', error)
+    console.error('Upload function failed:', error)
     return null
   }
 }
@@ -163,10 +162,6 @@ export async function createOrUpdateProfile(formData: FormData) {
     const photoFile = formData.get('photo') as File | null
     const backgroundFile = formData.get('backgroundImage') as File | null
 
-    console.log('📤 [DEBUG] Files received:', {
-      photoFile: photoFile ? { name: photoFile.name, size: photoFile.size, type: photoFile.type } : null,
-      backgroundFile: backgroundFile ? { name: backgroundFile.name, size: backgroundFile.size, type: backgroundFile.type } : null
-    })
 
     // Get user ID from form data (passed by the hook)
     const userId = formData.get('userId') as string
@@ -177,26 +172,17 @@ export async function createOrUpdateProfile(formData: FormData) {
       }
     }
 
-    console.log('👤 [DEBUG] User ID:', userId)
 
     let photoUrl = null
     let backgroundImageUrl = null
 
     // Upload files if they exist
     if (photoFile && photoFile.size > 0) {
-      console.log('🖼️ [DEBUG] Uploading profile photo...')
       photoUrl = await uploadFileToSupabase(photoFile, userId, 'profile')
-      console.log('🖼️ [DEBUG] Profile photo result:', photoUrl)
-    } else {
-      console.log('⚠️ [DEBUG] No profile photo to upload')
     }
 
     if (backgroundFile && backgroundFile.size > 0) {
-      console.log('🌄 [DEBUG] Uploading background image...')
       backgroundImageUrl = await uploadFileToSupabase(backgroundFile, userId, 'background')
-      console.log('🌄 [DEBUG] Background image result:', backgroundImageUrl)
-    } else {
-      console.log('⚠️ [DEBUG] No background image to upload')
     }
 
     // Check if user already exists

@@ -143,7 +143,7 @@ const FreelancePlatformsStep: React.FC<FreelancePlatformsStepProps> = ({ data, o
         <Badge variant="outline" className="mt-2">
           {getFilledPlatformsCount()}/{isPremium ? platforms.length : 2} platforms connected
           {!isPremium && getFilledPlatformsCount() >= 2 && (
-            <span className="ml-2 text-orange-600">• Limite atteinte</span>
+            <span className="ml-2 text-orange-600">• Limit reached</span>
           )}
         </Badge>
       </div>
@@ -158,10 +158,10 @@ const FreelancePlatformsStep: React.FC<FreelancePlatformsStepProps> = ({ data, o
               </div>
               <div className="flex-1">
                 <h4 className="font-semibold text-orange-900 dark:text-orange-200 mb-1">
-                  Débloquez plus de plateformes avec Premium
+                  Unlock more platforms with Premium
                 </h4>
                 <p className="text-sm text-orange-700 dark:text-orange-300">
-                  Vous avez atteint la limite de 2 plateformes. Passez à Premium pour connecter toutes vos plateformes freelance.
+                  You've reached the limit of 2 platforms. Upgrade to Premium to connect all your freelance platforms.
                 </p>
               </div>
               <Link href="/dashboard/pricing">
@@ -213,7 +213,7 @@ const FreelancePlatformsStep: React.FC<FreelancePlatformsStepProps> = ({ data, o
                         )}
                       </CardTitle>
                       <CardDescription className={`text-sm ${isDisabled ? 'opacity-60' : ''}`}>
-                        {isDisabled ? 'Nécessite Premium pour débloquer' : platform.description}
+                        {isDisabled ? 'Requires Premium to unlock' : platform.description}
                       </CardDescription>
                     </div>
                   </div>
@@ -245,7 +245,7 @@ const FreelancePlatformsStep: React.FC<FreelancePlatformsStepProps> = ({ data, o
                     <div className="flex items-start space-x-2">
                       <Crown className="w-4 h-4 text-orange-600 dark:text-orange-400 mt-0.5" />
                       <p className="text-xs text-orange-700 dark:text-orange-300">
-                        <strong>Premium requis:</strong> Passez à Premium pour connecter plus de 2 plateformes freelance.
+                        <strong>Premium required:</strong> Upgrade to Premium to connect more than 2 freelance platforms.
                       </p>
                     </div>
                   </div>
@@ -339,7 +339,7 @@ const FreelancePlatformsStep: React.FC<FreelancePlatformsStepProps> = ({ data, o
         <p className="text-xs text-slate-600 dark:text-slate-400 text-center">
           💡 <strong>Tip:</strong> {isPremium 
             ? "You don't have to fill out all platforms. Focus on those where you are most active and where you have the best profile."
-            : "En version gratuite, vous pouvez connecter jusqu'à 2 plateformes. Choisissez celles où vous êtes le plus actif."
+            : "In the free version, you can connect up to 2 platforms. Choose the ones where you are most active."
           }
         </p>
       </div>

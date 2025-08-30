@@ -458,11 +458,11 @@ const PublicProfile: React.FC<PublicProfileProps> = ({ user }) => {
 
           <div className="space-y-3">
             <div className="space-y-1">
-              <h1 className={`text-4xl font-medium bg-gradient-to-br from-gray-400 to-gray-200 text-transparent bg-clip-text `}>
+              <h1 className={`text-4xl mt-8 tracking-wide font-bold bg-gradient-to-br from-gray-400 to-gray-200 text-transparent bg-clip-text `}>
                 {user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.name}
               </h1>
               {user.profession && (
-                <p className={`text-2xl ${
+                <p className={`text-2xl tracking-wide mt-3 font-semibold ${
                   isDarkTheme || isGlassLikeTheme ? colors.accent : 
                   user.colorTheme === 'default' ? 'text-blue-700' :
                   user.colorTheme === 'emerald' ? 'text-emerald-700' :
@@ -475,21 +475,22 @@ const PublicProfile: React.FC<PublicProfileProps> = ({ user }) => {
             </div>
 
             {user.bio && (
-              <p className={`max-w-md font-light mx-auto ${colors.text} opacity-90`}>
+              <p className={`max-w-md mt-3 mx-auto ${colors.text} opacity-90`}>
                 {user.bio}
               </p>
             )}
 
-            <div className={`flex items-center justify-center space-x-4 text-sm ${
+            <div className={`flex items-center mt-8 justify-center space-x-4 text-sm ${
               isDarkTheme || isGlassLikeTheme ? 'text-slate-200' : 'text-slate-600'
             }`}>
               {user.age && (
-                <div className="flex text-lg items-center space-x-1">
+                
+                <div className="flex  items-center space-x-1">
                   <Calendar className="w-4 h-4 mr-2" />
                   <span>{user.age} years old</span>
                 </div>
               )}
-              <div className="flex items-center text-lg space-x-1">
+              <div className="flex items-center   space-x-1">
                 <MapPin className="w-4 h-4 mr-1" />
                 <span>Freelance</span>
               </div>

@@ -21,7 +21,8 @@ import {
   Settings,
   CheckCircle,
   AlertCircle,
-  Link as LinkIcon
+  Link as LinkIcon,
+  ArrowLeft
 } from 'lucide-react'
 import prisma from '@/lib/prisma'
 import { ProfilNotifications } from '@/components/profil-notifications'
@@ -90,6 +91,19 @@ export default async function ProfilPage() {
       </Suspense>
       
       <div className="mb-8">
+        <div className="flex items-center justify-between mb-4">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            asChild
+            className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+          >
+            <a href="/dashboard" className="flex items-center space-x-2">
+              <ArrowLeft className="w-4 h-4" />
+              <span>Back to Dashboard</span>
+            </a>
+          </Button>
+        </div>
         <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
           Profile Management
         </h1>

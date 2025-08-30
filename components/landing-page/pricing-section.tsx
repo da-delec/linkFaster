@@ -131,7 +131,7 @@ export default function SimplePricing() {
                   variant="secondary"
                   className="bg-primary/10 text-primary hover:bg-primary/15 ml-2"
                 >
-                  Save $12
+                  Save $26
                 </Badge>
               </TabsTrigger>
             </TabsList>
@@ -216,7 +216,7 @@ export default function SimplePricing() {
                           {frequency === 'yearly' && plan.id === 'pro' && (
                             <div className="ml-2">
                               <Badge variant="secondary" className="bg-green-100 text-green-800 text-xs">
-                                Save $12/year
+                                Save $26/year
                               </Badge>
                             </div>
                           )}

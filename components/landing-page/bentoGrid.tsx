@@ -1,7 +1,7 @@
 'use client';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
-import { ArrowRight, Code, Users, Zap, Globe, Star, Calendar } from 'lucide-react';
+import { Code, Users, Zap, Globe, Star, Calendar } from 'lucide-react';
 
 interface BentoGridItemProps {
   title: string;
@@ -47,10 +47,6 @@ const BentoGridItem = ({
           </div>
           <h3 className="mb-2 text-xl font-semibold tracking-tight">{title}</h3>
           <p className="text-muted-foreground text-sm">{description}</p>
-        </div>
-        <div className="text-primary mt-4 flex items-center text-sm">
-          <span className="mr-1">Learn more</span>
-          <ArrowRight className="size-4 transition-all duration-500 group-hover:translate-x-2" />
         </div>
       </div>
       <div className="from-primary to-primary/30 absolute bottom-0 left-0 h-1 w-full bg-gradient-to-r blur-2xl transition-all duration-500 group-hover:blur-lg" />

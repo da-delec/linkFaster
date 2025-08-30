@@ -647,12 +647,12 @@ const DesignCustomizationStep: React.FC<DesignCustomizationStepProps> = ({ data,
       </div>
 
       {/* Upgrade to Pro Section */}
-      <div className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20 border border-amber-200 dark:border-amber-800 rounded-lg p-6">
-        <div className="flex items-start space-x-3">
-          <div className="text-amber-600 dark:text-amber-400">
+      <div className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4 sm:p-6">
+        <div className="flex flex-col sm:flex-row sm:items-start space-y-4 sm:space-y-0 sm:space-x-3">
+          <div className="text-amber-600 dark:text-amber-400 flex-shrink-0">
             <Sparkles className="w-6 h-6" />
           </div>
-          <div className="flex-1">
+          <div className="flex-1 min-w-0">
             <h4 className="text-base font-medium text-amber-900 dark:text-amber-200 mb-2">
               Unlock More Possibilities with Pro
             </h4>
@@ -662,16 +662,16 @@ const DesignCustomizationStep: React.FC<DesignCustomizationStepProps> = ({ data,
               <li>• Detailed analytics of your profile</li>
               <li>• Priority support</li>
             </ul>
-            <div className="flex items-center space-x-3">
+            <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-3">
               <Button 
-                className="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700"
+                className="w-full sm:w-auto bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-sm sm:text-base px-4 py-2"
                 onClick={handleUpgrade}
                 disabled={!userStripeCustomerId}
               >
                 <Crown className="w-4 h-4 mr-1" />
-                Upgrade to Pro - €7.99/month
+                <span className="truncate">Upgrade to Pro - €7.99/month</span>
               </Button>
-              <span className="text-xs text-amber-600 dark:text-amber-400">
+              <span className="text-xs text-amber-600 dark:text-amber-400 text-center sm:text-left">
                 7-day free trial
               </span>
             </div>

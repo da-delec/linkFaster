@@ -55,7 +55,7 @@ const plans = [
     },
     annualPrice:{
       monthly:95.88,
-      yearly:69.99},
+      yearly:69.96},
     description: 'Everything you need for your professional freelance profile.',
     features: [
       'Unlimited freelance platform links',
@@ -185,7 +185,7 @@ export default function SimplePricingDashboard() {
                   variant="secondary"
                   className="bg-primary/10 text-primary hover:bg-primary/15 ml-2"
                 >
-                  Save $12
+                  Save $26
                 </Badge>
               </TabsTrigger>
             </TabsList>
@@ -263,7 +263,7 @@ export default function SimplePricingDashboard() {
                           {frequency === 'yearly' && plan.id === 'pro' && (
                             <div className="ml-2">
                               <Badge variant="secondary" className="bg-green-100 text-green-800 text-xs">
-                                Save $12/year
+                                Save $26/year
                               </Badge>
                             </div>
                           )}
