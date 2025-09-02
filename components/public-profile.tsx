@@ -113,6 +113,11 @@ const PublicProfile: React.FC<PublicProfileProps> = ({ user }) => {
   const [reviews, setReviews] = useState<Review[]>([])
   const [reviewStats, setReviewStats] = useState<ReviewStatistics | null>(null)
   const [showReviewForm, setShowReviewForm] = useState(false)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
 
   const fetchReviews = async () => {
@@ -129,10 +134,10 @@ const PublicProfile: React.FC<PublicProfileProps> = ({ user }) => {
   }
 
   useEffect(() => {
-    if (user.enableReviews) {
+    if (mounted && user.enableReviews) {
       fetchReviews()
     }
-  }, [user.id, user.enableReviews])
+  }, [mounted, user.id, user.enableReviews])
 
   const handleReviewSubmitted = () => {
     setShowReviewForm(false)
@@ -378,6 +383,8 @@ const PublicProfile: React.FC<PublicProfileProps> = ({ user }) => {
 
   // Track profile view when component mounts
   useEffect(() => {
+    if (!mounted) return
+    
     const trackProfileView = async () => {
       try {
         await fetch('/api/track-profile-view', {
@@ -395,7 +402,7 @@ const PublicProfile: React.FC<PublicProfileProps> = ({ user }) => {
     }
 
     trackProfileView()
-  }, [user.id])
+  }, [mounted, user.id])
 
   // Function to track link clicks
   const trackLinkClick = async (linkType: string, linkUrl: string) => {
@@ -416,7 +423,7 @@ const PublicProfile: React.FC<PublicProfileProps> = ({ user }) => {
     }
   }
 
-
+  if (!mounted) return null
 
   return (
     <div className={`min-h-screen ${colors.abstractOrbs || colors.darkBackground || colors.prismeTheme ? colors.background : colors.background ? `bg-gradient-to-br ${colors.background}` : 'bg-white'} ${colors.text} relative overflow-hidden`}>
@@ -446,79 +453,35 @@ const PublicProfile: React.FC<PublicProfileProps> = ({ user }) => {
       <div className={`container mx-auto px-4 py-8 ${layout.container} relative z-10`}>
         <div>
         {/* Profile Header */}
-        <div className={`relative z-10 text-center space-y-6 mt-16 animate-fade-in`}>
+        <div className={`relative z-10 text-center space-y-6 mt-8 animate-fade-in`}>
           <div className="flex justify-center">
-            <Avatar className="w-32 h-32 border-2 border-slate-50/70 dark:border-gray-800 shadow-xl transition-all duration-300 hover:scale-105">
+            <Avatar className="w-32 h-32 border border-slate-200/80 shadow-lg">
               <AvatarImage src={user.photoUrl || undefined} alt={user.name} />
-              <AvatarFallback className={`text-2xl font-bold ${colors.primary} text-white`}>
+              <AvatarFallback className={`text-lg font-semibold ${colors.primary} text-white`}>
                 {user.name?.split(' ').map(n => n[0]).join('').toUpperCase() || 'U'}
               </AvatarFallback>
             </Avatar>
           </div>
 
           <div className="space-y-3">
-            <div className="space-y-1">
-              <h1 className={`text-4xl mt-8 tracking-wide font-bold bg-gradient-to-br from-gray-400 to-gray-200 text-transparent bg-clip-text `}>
-                {user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.name}
-              </h1>
-              {user.profession && (
-                <p className={`text-2xl tracking-wide mt-3 font-semibold ${
-                  isDarkTheme || isGlassLikeTheme ? colors.accent : 
-                  user.colorTheme === 'default' ? 'text-blue-700' :
-                  user.colorTheme === 'emerald' ? 'text-emerald-700' :
-                  user.colorTheme === 'purple' ? 'text-purple-700' :
-                  colors.accent
-                }`}>
-                  {user.profession}
-                </p>
-              )}
-            </div>
-
+            {user.profession && (
+              <Badge
+                variant="secondary"
+                className={`${colors.secondary} ${
+                  isGlassLikeTheme ? colors.textCard : colors.text
+                } border px-3 py-1 text-sm ${colors.cardBorder || ''} ${colors.cardShadow || ''} ${isGlassLikeTheme ? 'border-white/30 shadow-lg backdrop-blur-md' : ''}`}
+              >
+                {user.profession}
+              </Badge>
+            )}
+            <h1 className={`text-3xl font-bold ${colors.text}`}>
+              {user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.name}
+            </h1>
             {user.bio && (
-              <p className={`max-w-md mt-3 mx-auto ${colors.text} opacity-90`}>
+              <p className={`max-w-sm mx-auto text-sm ${colors.text} opacity-70 mt-4`}>
                 {user.bio}
               </p>
             )}
-
-            <div className={`flex items-center mt-8 justify-center space-x-4 text-sm ${
-              isDarkTheme || isGlassLikeTheme ? 'text-slate-200' : 'text-slate-600'
-            }`}>
-              {user.age && (
-                
-                <div className="flex  items-center space-x-1">
-                  <Calendar className="w-4 h-4 mr-2" />
-                  <span>{user.age} years old</span>
-                </div>
-              )}
-              <div className="flex items-center   space-x-1">
-                <MapPin className="w-4 h-4 mr-1" />
-                <span>Freelance</span>
-              </div>
-            </div>
-
-            {/* Share Button */}
-            <div className=' flex justify-center items-center gap-4'>
-           <Link 
-             href={`https://twitter.com/intent/tweet?url=`} 
-             className={`mt-4 hover:scale-110 hover:text-blue-400 transition-all duration-300 `}
-             onClick={(e) => {
-               const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
-               const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(currentUrl)}`;
-               trackLinkClick('twitter', twitterUrl);
-               e.currentTarget.href = twitterUrl;
-             }}
-           >
-            <CiTwitter className="w-10 h-10 " />
-           
-           </Link>
-           <Link 
-             href={`mailto:${user.email}`} 
-             className={`mt-4 hover:scale-110 hover:text-blue-400 transition-all duration-300 `}
-             onClick={() => trackLinkClick('email-share', `mailto:${user.email}`)}
-           >
-             <CiMail className="w-10 h-10 " />
-           </Link>
-          </div>
           </div>
         </div>
         
@@ -554,10 +517,10 @@ const PublicProfile: React.FC<PublicProfileProps> = ({ user }) => {
                   onClick={() => trackLinkClick(platform.key, platform.url!)}
                 >
                   <Card className={`${layout.linkCard} ${colors.secondary} ${colors.cardBorder || ''} ${colors.cardShadow || ''} transition-all duration-200 hover:scale-[1.02] ${isGlassLikeTheme ? 'border-white/30 shadow-2xl backdrop-blur-lg' : ''}`}>
-                    <CardContent className="flex items-center justify-between p-4">
-                      <div className="flex items-center space-x-3">
-                        <div className={`w-10 h-10 rounded-lg ${platform.color} flex items-center justify-center text-white shadow-lg transition-all duration-200 ${isGlassLikeTheme ? 'shadow-white/20' : ''}`}>
-                          <Icon className="w-5 h-5" />
+                    <CardContent className="flex items-center justify-between p-3">
+                      <div className="flex items-center space-x-2">
+                        <div className={`w-8 h-8 rounded-lg ${platform.color} flex items-center justify-center text-white shadow-lg transition-all duration-200 ${isGlassLikeTheme ? 'shadow-white/20' : ''}`}>
+                          <Icon className="w-4 h-4" />
                         </div>
                         <div>
                           <h3 className={`font-medium ${isGlassLikeTheme ? colors.textCard : colors.text}`}>

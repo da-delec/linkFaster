@@ -84,62 +84,28 @@ export async function getUserBySlug(slug: string) {
 
 export async function getUserStats(userId: string) {
   try {
-    const [user, reposCount, linkClicksCount, profileViewsCount] = await Promise.all([
+    const [user, reposCount] = await Promise.all([
       prisma.user.findUnique({
         where: { id: userId },
-        select: { skills: true }
+        select: { 
+          skills: true,
+          profileViewCount: true,
+          totalLinkClicks: true,
+          weeklyClicks: true
+        }
       }),
       prisma.repository.count({
         where: { userId }
-      }),
-      prisma.linkClick.count({
-        where: { userId }
-      }),
-      prisma.profileView.count({
-        where: { userId }
-      })
-    ])
-
-    // Get stats from the current month
-    const startOfMonth = new Date()
-    startOfMonth.setDate(1)
-    startOfMonth.setHours(0, 0, 0, 0)
-
-    const [monthlyViews, monthlyClicks, weeklyClicks] = await Promise.all([
-      prisma.profileView.count({
-        where: {
-          userId,
-          createdAt: {
-            gte: startOfMonth
-          }
-        }
-      }),
-      prisma.linkClick.count({
-        where: {
-          userId,
-          createdAt: {
-            gte: startOfMonth
-          }
-        }
-      }),
-      prisma.linkClick.count({
-        where: {
-          userId,
-          createdAt: {
-            gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) // Last 7 days
-          }
-        }
       })
     ])
 
     return {
       skillsCount: user?.skills?.length || 0,
       reposCount,
-      profileViews: profileViewsCount,
-      monthlyViews,
-      linkClicks: linkClicksCount,
-      monthlyClicks,
-      weeklyClicks,
+      profileViews: user?.profileViewCount || 0,
+      linkClicks: user?.totalLinkClicks || 0,
+      monthlyClicks: user?.totalLinkClicks || 0,
+      weeklyClicks: user?.weeklyClicks || 0,
       lastUpdated: new Date()
     }
   } catch (error) {

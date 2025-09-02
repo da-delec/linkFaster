@@ -198,18 +198,19 @@ export default function Faq3() {
           <p className="text-muted-foreground mb-4 text-xs">
             We're here to help
           </p>
-          <button
-            type="button"
+          <a
+            href="mailto:delesallecorentin3@gmail.com?subject=SUPPORT LINKFASTER"
             className={cn(
               'rounded-md px-4 py-2 text-sm',
               'bg-primary text-primary-foreground',
               'hover:bg-primary/90',
               'transition-colors duration-200',
               'font-medium',
+              'inline-block'
             )}
           >
             Contact Us
-          </button>
+          </a>
         </motion.div>
       </div>
     </section>

@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -15,6 +15,7 @@ interface ReviewFormProps {
 }
 
 const ReviewForm = ({ userId, onReviewSubmitted, colorTheme = 'default' }: ReviewFormProps) => {
+  const isGlassLikeTheme = ['midnight', 'glass', 'glass-aurora', 'glass-nebula', 'glass-cosmic', 'prisme-dark', 'prisme-grey'].includes(colorTheme)
   const getThemeColors = (theme: string) => {
     switch (theme) {
       // 3 FREE THEMES - Apple design, simple and refined
@@ -49,9 +50,9 @@ const ReviewForm = ({ userId, onReviewSubmitted, colorTheme = 'default' }: Revie
       // 1 PREMIUM DARK THEME - Apple dark design with glassmorphism
       case 'midnight':
         return {
-          primary: 'bg-slate-800/80 hover:bg-slate-700/80 backdrop-blur-md border border-slate-600/50 text-white shadow-xl',
-          secondary: 'bg-slate-800/60 backdrop-blur-md border border-slate-600/40 shadow-xl',
-          accent: 'text-blue-400',
+          primary: 'bg-sky-500 hover:bg-slate-700/80 backdrop-blur-md border border-slate-600/50 text-white shadow-xl hover:shadow-2xl transition-all duration-300',
+          secondary: 'bg-white/20 backdrop-blur-md border border-slate-600/40 shadow-xl hover:shadow-2xl transition-all duration-300',
+          accent: 'text-sky-500',
           text: 'text-slate-100',
           inputBg: 'bg-slate-800/50 border-slate-600/40 backdrop-blur-md',
           inputText: 'text-slate-100'
@@ -220,7 +221,7 @@ const ReviewForm = ({ userId, onReviewSubmitted, colorTheme = 'default' }: Revie
             <label className={`text-sm font-medium ${colors.text}`}>Rating *</label>
             <div className="flex items-center space-x-1">
               {renderStars()}
-              <span className={`ml-2 text-sm ${colorTheme === 'midnight' ? 'text-slate-300' : 'text-muted-foreground'}`}>
+              <span className={`ml-2 text-sm ${colors.text} opacity-70`}>
                 {rating > 0 ? `${rating}/5` : 'Click to rate'}
               </span>
             </div>
@@ -238,7 +239,7 @@ const ReviewForm = ({ userId, onReviewSubmitted, colorTheme = 'default' }: Revie
               value={reviewerName}
               onChange={(e) => setReviewerName(e.target.value)}
               required
-              className={`${colors.inputBg} ${colors.inputText} placeholder:text-muted-foreground`}
+              className={`${colors.inputBg} ${colors.inputText} placeholder:opacity-50`}
             />
           </div>
 
@@ -253,9 +254,9 @@ const ReviewForm = ({ userId, onReviewSubmitted, colorTheme = 'default' }: Revie
               placeholder="john@example.com"
               value={reviewerEmail}
               onChange={(e) => setReviewerEmail(e.target.value)}
-              className={`${colors.inputBg} ${colors.inputText} placeholder:text-muted-foreground`}
+              className={`${colors.inputBg} ${colors.inputText} placeholder:opacity-50`}
             />
-            <p className={`text-xs ${colorTheme === 'midnight' ? 'text-slate-300' : 'text-muted-foreground'}`}>
+            <p className={`text-xs ${colors.text} opacity-60`}>
               Your email will not be displayed publicly
             </p>
           </div>
@@ -271,7 +272,7 @@ const ReviewForm = ({ userId, onReviewSubmitted, colorTheme = 'default' }: Revie
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               rows={4}
-              className={`${colors.inputBg} ${colors.inputText} placeholder:text-muted-foreground`}
+              className={`${colors.inputBg} ${colors.inputText} placeholder:opacity-50`}
             />
           </div>
 

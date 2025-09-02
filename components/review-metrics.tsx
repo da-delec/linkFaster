@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import { } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { Star, MessageCircle, Users, TrendingUp } from 'lucide-react'
@@ -74,22 +74,18 @@ const ReviewMetrics = ({ reviews, statistics, theme }: ReviewMetricsProps) => {
 
   if (totalReviews === 0) {
     return (
-      <Card className={`w-full ${
-        isDarkTheme 
-          ? 'bg-slate-800 border border-slate-700'
-          : colors.secondary
-      }`}>
+      <Card className={`w-full ${colors.secondary} ${colors.cardBorder || ''} ${colors.cardShadow || ''} ${isGlassLikeTheme ? 'border-white/30 shadow-xl backdrop-blur-md' : ''}`}>
         <CardContent className="flex flex-col items-center justify-center py-12">
           <MessageCircle className={`w-16 h-16 mb-4 ${
-            'text-gray-500'
+            isGlassLikeTheme ? colors.textCard : 'text-gray-500'
           }`} />
           <h3 className={`text-lg font-semibold mb-2 ${
-            'text-gray-700'
+            isGlassLikeTheme ? colors.textCard : 'text-gray-700'
           }`}>
             No reviews yet
           </h3>
           <p className={`text-sm text-center ${
-            'text-gray-500'
+            isGlassLikeTheme ? colors.textCard + ' opacity-70' : 'text-gray-500'
           }`}>
             Be the first to leave a review!
           </p>
@@ -101,15 +97,7 @@ const ReviewMetrics = ({ reviews, statistics, theme }: ReviewMetricsProps) => {
   return (
     <div className="w-full space-y-6">
       {/* Overall Rating Card */}
-      <Card className={`${
-        colorTheme === 'aurora'
-          ? 'bg-white/15 backdrop-blur-2xl border border-white/30 shadow-2xl'
-          : colorTheme === 'cosmic'
-            ? colors.secondary
-          : isDarkTheme 
-            ? 'bg-white/15 backdrop-blur-2xl border border-white/30 shadow-2xl'
-            : colors.secondary
-      }`}>
+      <Card className={`${colors.secondary}`}>
         <CardHeader>
           <CardTitle className={`flex items-center space-x-2 ${
             isDarkTheme 
@@ -191,13 +179,7 @@ const ReviewMetrics = ({ reviews, statistics, theme }: ReviewMetricsProps) => {
 
       {/* Statistics Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Card className={`${
-          isGlassLikeTheme 
-            ? 'bg-white/15 backdrop-blur-2xl border border-white/30 shadow-2xl' 
-            : isDarkTheme
-            ? 'bg-slate-800 border border-slate-700'
-            : colors.secondary
-        } `}>
+        <Card className={`${colors.secondary}`}>
           <CardContent className="flex items-center space-x-4 pt-6">
             <Users className={`w-8 h-8 ${
               isDarkTheme 
@@ -225,13 +207,7 @@ const ReviewMetrics = ({ reviews, statistics, theme }: ReviewMetricsProps) => {
           </CardContent>
         </Card>
 
-        <Card className={`${
-          isGlassLikeTheme 
-            ? 'bg-white/15 backdrop-blur-2xl border border-white/30 shadow-2xl' 
-            : isDarkTheme
-            ? 'bg-slate-800 border border-slate-700'
-            : colors.secondary
-        } `}>
+        <Card className={`${colors.secondary}`}>
           <CardContent className="flex items-center space-x-4 pt-6">
             <TrendingUp className={`w-8 h-8 ${
               isDarkTheme 
@@ -259,13 +235,7 @@ const ReviewMetrics = ({ reviews, statistics, theme }: ReviewMetricsProps) => {
           </CardContent>
         </Card>
 
-        <Card className={`${
-          isGlassLikeTheme 
-            ? 'bg-white/15 backdrop-blur-2xl border border-white/30 shadow-2xl' 
-            : isDarkTheme
-            ? 'bg-slate-800 border border-slate-700'
-            : colors.secondary
-        } `}>
+        <Card className={`${colors.secondary}`}>
           <CardContent className="flex items-center space-x-4 pt-6">
             <MessageCircle className={`w-8 h-8 ${
               isDarkTheme 
@@ -295,13 +265,7 @@ const ReviewMetrics = ({ reviews, statistics, theme }: ReviewMetricsProps) => {
       </div>
 
       {/* Recent Reviews */}
-      <Card className={`${
-        isGlassLikeTheme
-          ? 'bg-white/15 backdrop-blur-2xl border border-white/30 shadow-2xl'
-          : isDarkTheme 
-            ? 'bg-slate-800 border border-slate-700'
-            : colors.secondary
-      } `}>
+      <Card className={`${colors.secondary}`}>
         <CardHeader>
           <CardTitle className={`${
             isDarkTheme 

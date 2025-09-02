@@ -219,8 +219,9 @@ export default function HeroGeometric({
               size="lg"
               variant="outline"
               className="border-primary/30 hover:bg-primary/5 rounded-lg shadow-sm"
+              onClick={() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })}
             >
-              View Components
+              View Price
             </Button>
           </motion.div>
         </div>

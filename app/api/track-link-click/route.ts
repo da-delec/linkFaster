@@ -1,32 +1,49 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { headers } from 'next/headers'
+
+function getWeekStart(date: Date): Date {
+  const d = new Date(date)
+  const day = d.getDay()
+  const diff = d.getDate() - day + (day === 0 ? -6 : 1)
+  d.setDate(diff)
+  d.setHours(0, 0, 0, 0)
+  return d
+}
 
 export async function POST(request: NextRequest) {
   try {
-    const { userId, linkType, linkUrl } = await request.json()
+    const { userId } = await request.json()
 
-    if (!userId || !linkType || !linkUrl) {
+    if (!userId) {
       return NextResponse.json(
-        { error: 'Missing required fields' },
+        { error: 'Missing userId' },
         { status: 400 }
       )
     }
 
-    // Get visitor info
-    const headersList = await headers()
-    const ipAddress = headersList.get('x-forwarded-for') || headersList.get('x-real-ip') || null
-    const userAgent = headersList.get('user-agent') || null
+    const now = new Date()
+    const currentWeekStart = getWeekStart(now)
 
-    // Record the link click
-    await prisma.linkClick.create({
-      data: {
-        userId,
-        linkType,
-        linkUrl,
-        ipAddress,
-        userAgent
+    await prisma.$transaction(async (tx) => {
+      const user = await tx.user.findUnique({
+        where: { id: userId },
+        select: { weekStart: true }
+      })
+
+      if (!user) {
+        throw new Error('User not found')
       }
+
+      const shouldResetWeekly = !user.weekStart || user.weekStart.getTime() !== currentWeekStart.getTime()
+
+      await tx.user.update({
+        where: { id: userId },
+        data: {
+          totalLinkClicks: { increment: 1 },
+          weeklyClicks: shouldResetWeekly ? 1 : { increment: 1 },
+          weekStart: shouldResetWeekly ? currentWeekStart : undefined
+        }
+      })
     })
 
     return NextResponse.json({ success: true })

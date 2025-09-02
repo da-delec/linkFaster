@@ -28,7 +28,6 @@ interface Stats {
   skillsCount: number
   reposCount: number
   profileViews: number
-  monthlyViews: number
   linkClicks: number
   monthlyClicks: number
   weeklyClicks: number
@@ -74,14 +73,6 @@ const DashboardStats: React.FC<DashboardStatsProps> = ({ userId }) => {
   }
 
   const statCards = [
-    {
-      title: 'Profile Views',
-      value: stats?.monthlyViews || 0,
-      description: 'This month',
-      icon: Eye,
-      color: 'text-blue-600 dark:text-blue-400',
-      bgColor: 'bg-blue-50 dark:bg-blue-950/20'
-    },
     {
       title: 'Skills',
       value: stats?.skillsCount || 0,

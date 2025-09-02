@@ -63,12 +63,16 @@ model User {
   // Simple skills array
   skills          String[]  @default([])
   
+  // Analytics
+  profileViewCount Int @default(0)
+  totalLinkClicks  Int @default(0)
+  weeklyClicks     Int @default(0)
+  weekStart        DateTime? // Monday of current week
+  
   // Relations
   repositories    Repository[]
   reviews         Review[]
   projects        Project[]
-  linkClicks      LinkClick[]
-  profileViews    ProfileView[]
 
   @@map("user")
 }
@@ -189,36 +193,6 @@ model Project {
   @@map("project")
 }
 
-// Link click tracking
-model LinkClick {
-  id        String   @id @default(uuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  linkType  String   // 'github', 'linkedin', 'portfolio', 'upwork', etc.
-  linkUrl   String   // URL that was clicked
-  
-  // Visitor info (optional)
-  ipAddress String?
-  userAgent String?
-  
-  createdAt DateTime @default(now())
 
-  @@map("link_click")
-}
 
-// Profile view tracking
-model ProfileView {
-  id        String   @id @default(uuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  // Visitor info (optional)
-  ipAddress String?
-  userAgent String?
-  referrer  String?
-  
-  createdAt DateTime @default(now())
 
-  @@map("profile_view")
-}
