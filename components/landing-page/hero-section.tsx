@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import { Pacifico } from 'next/font/google';
 import { cn } from '@/lib/utils';
+import Link from 'next/link';
 
 const pacifico = Pacifico({
   subsets: ['latin'],
@@ -211,9 +212,12 @@ export default function HeroGeometric({
             <Button
               size="lg"
               className="from-primary shadow-primary/10 hover:from-primary/90 rounded-lg border-none bg-gradient-to-r to-rose-500 shadow-md hover:to-rose-500/90"
+              asChild
             >
-              Get Started
-              <ArrowRight className="ml-2 h-4 w-4" />
+              <Link href="/login">
+                Get Started
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
             </Button>
             <Button
               size="lg"
