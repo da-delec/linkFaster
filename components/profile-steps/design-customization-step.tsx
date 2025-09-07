@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Palette, Layout, Crown, Eye, Sparkles, Monitor, MessageSquare, Moon, Zap, Flame, Droplets } from 'lucide-react'
 import ProfilePreview from '@/components/profile-preview'
+import Link from 'next/link'
 
 interface DesignCustomizationStepProps {
   data: {
@@ -663,14 +664,12 @@ const DesignCustomizationStep: React.FC<DesignCustomizationStepProps> = ({ data,
               <li>• Priority support</li>
             </ul>
             <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-3">
-              <Button 
-                className="w-full sm:w-auto bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-sm sm:text-base px-4 py-2"
-                onClick={handleUpgrade}
-                disabled={!userStripeCustomerId}
-              >
-                <Crown className="w-4 h-4 mr-1" />
-                <span className="truncate">Upgrade to Pro - €7.99/month</span>
-              </Button>
+              <Link href="/dashboard/pricing">
+                <Button className="w-full sm:w-auto bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-sm sm:text-base px-4 py-2">
+                  <Crown className="w-4 h-4 mr-1" />
+                  <span className="truncate">Upgrade to Pro - €7.99/month</span>
+                </Button>
+              </Link>
               <span className="text-xs text-amber-600 dark:text-amber-400 text-center sm:text-left">
                 7-day free trial
               </span>
@@ -721,15 +720,15 @@ const DesignCustomizationStep: React.FC<DesignCustomizationStepProps> = ({ data,
                       Client review management is an exclusive feature for Premium accounts. 
                       Upgrade to Premium to allow your clients to leave reviews on your profile.
                     </p>
-                    <Button 
-                      size="sm" 
-                      className="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700"
-                      onClick={handleUpgrade}
-                      disabled={!userStripeCustomerId}
-                    >
-                      <Crown className="w-4 h-4 mr-1" />
-                      Upgrade to Premium
-                    </Button>
+                    <Link href="/dashboard/pricing">
+                      <Button 
+                        size="sm" 
+                        className="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700"
+                      >
+                        <Crown className="w-4 h-4 mr-1" />
+                        Upgrade to Premium
+                      </Button>
+                    </Link>
                   </div>
                 </div>
               </div>

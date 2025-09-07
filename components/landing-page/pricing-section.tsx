@@ -29,7 +29,8 @@ const plans = [
     description:
       'Perfect for getting started with your developer profile.',
     features: [
-      '2 Freelance platform links',
+      '1 Freelance platform link',
+      '1 Production project',
       'Basic themes only',
       'QR code generation',
       'Community support',
@@ -47,7 +48,8 @@ const plans = [
     },
     description: 'Everything you need for your professional freelance profile.',
     features: [
-      'Max freelance platform links',
+      'Up to 8 freelance platform links',
+      'Unlimited production projects',
       'Custom themes & personalization',
       'Client review form integration',
       'Advanced analytics & insights',

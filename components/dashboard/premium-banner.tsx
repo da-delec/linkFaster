@@ -30,7 +30,7 @@ const PremiumBanner: React.FC<PremiumBannerProps> = () => {
               <Sparkles className="w-4 h-4 text-yellow-300" />
             </div>
             <p className="text-purple-100 text-xs sm:text-sm pr-2 sm:pr-0">
-              Unlock customer reviews, advanced analytics and much more for only <span className="font-semibold text-yellow-300">€7.99/month</span>
+              Unlock customer reviews, advanced analytics and much more for only <span className="font-semibold text-yellow-300">$7.99/month</span>
             </p>
             
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2 sm:mt-3 text-xs text-purple-200">

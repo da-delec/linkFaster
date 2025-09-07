@@ -17,6 +17,7 @@ interface FreelancePlatformsStepProps {
     linkedin: string
     behance: string
     dribbble: string
+    
   }
   onUpdate: (data: any) => void
   isPremium?: boolean
@@ -92,7 +93,8 @@ const platforms = [
     placeholder: 'https://dribbble.com/your-username',
     category: 'Design',
     tips: 'Premium showcase for UI/UX designers'
-  }
+  },
+
 ]
 
 const FreelancePlatformsStep: React.FC<FreelancePlatformsStepProps> = ({ data, onUpdate, isPremium = false }) => {
@@ -113,7 +115,7 @@ const FreelancePlatformsStep: React.FC<FreelancePlatformsStepProps> = ({ data, o
     
     const currentFieldFilled = data[platforms[platformIndex].id as keyof typeof data]?.trim()
     
-    return filledFields.length >= 2 && !currentFieldFilled
+    return filledFields.length >= 1 && !currentFieldFilled
   }
 
   const getCategoryIcon = (category: string) => {
@@ -123,6 +125,7 @@ const FreelancePlatformsStep: React.FC<FreelancePlatformsStepProps> = ({ data, o
       case 'France': return <Award className="w-4 h-4" />
       case 'Network': return <TrendingUp className="w-4 h-4" />
       case 'Design': return <Palette className="w-4 h-4" />
+      case 'Premium': return <Crown className="w-4 h-4" />
       default: return <ExternalLink className="w-4 h-4" />
     }
   }
@@ -141,15 +144,15 @@ const FreelancePlatformsStep: React.FC<FreelancePlatformsStepProps> = ({ data, o
           Centralize all your profiles to maximize your visibility
         </p>
         <Badge variant="outline" className="mt-2">
-          {getFilledPlatformsCount()}/{isPremium ? platforms.length : 2} platforms connected
-          {!isPremium && getFilledPlatformsCount() >= 2 && (
+          {getFilledPlatformsCount()}/{isPremium ? platforms.length : 1} platforms connected
+          {!isPremium && getFilledPlatformsCount() >= 1 && (
             <span className="ml-2 text-orange-600">• Limit reached</span>
           )}
         </Badge>
       </div>
 
       {/* Premium Limitation Warning */}
-      {!isPremium && getFilledPlatformsCount() >= 2 && (
+      {!isPremium && getFilledPlatformsCount() >= 1 && (
         <Card className="border-orange-200 bg-gradient-to-r from-orange-50 to-amber-50 dark:from-orange-950/20 dark:to-amber-950/20 dark:border-orange-800">
           <CardContent className="p-6">
             <div className="flex items-center space-x-3">
@@ -161,7 +164,7 @@ const FreelancePlatformsStep: React.FC<FreelancePlatformsStepProps> = ({ data, o
                   Unlock more platforms with Premium
                 </h4>
                 <p className="text-sm text-orange-700 dark:text-orange-300">
-                  You've reached the limit of 2 platforms. Upgrade to Premium to connect all your freelance platforms.
+                  You've reached the limit of 1 platform. Upgrade to Premium to connect all your freelance platforms.
                 </p>
               </div>
               <Link href="/dashboard/pricing">
@@ -245,7 +248,7 @@ const FreelancePlatformsStep: React.FC<FreelancePlatformsStepProps> = ({ data, o
                     <div className="flex items-start space-x-2">
                       <Crown className="w-4 h-4 text-orange-600 dark:text-orange-400 mt-0.5" />
                       <p className="text-xs text-orange-700 dark:text-orange-300">
-                        <strong>Premium required:</strong> Upgrade to Premium to connect more than 2 freelance platforms.
+                        <strong>Premium required:</strong> Upgrade to Premium to connect more than 1 freelance platform.
                       </p>
                     </div>
                   </div>
@@ -339,7 +342,7 @@ const FreelancePlatformsStep: React.FC<FreelancePlatformsStepProps> = ({ data, o
         <p className="text-xs text-slate-600 dark:text-slate-400 text-center">
           💡 <strong>Tip:</strong> {isPremium 
             ? "You don't have to fill out all platforms. Focus on those where you are most active and where you have the best profile."
-            : "In the free version, you can connect up to 2 platforms. Choose the ones where you are most active."
+            : "In the free version, you can connect up to 1 platform. Choose the one where you are most active."
           }
         </p>
       </div>

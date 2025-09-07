@@ -7,6 +7,7 @@ import { Separator } from '@/components/ui/separator'
 import { Crown, CreditCard, Trash2, Loader2 } from 'lucide-react'
 import { useFormStatus } from 'react-dom'
 import { toast } from 'sonner'
+import Link from 'next/link'
 
 interface SubscriptionData {
   isPremium: boolean
@@ -176,13 +177,12 @@ export function SubscriptionDetails({ stripeCustomerId, isPremium }: Subscriptio
           <p>Compte gratuit</p>
         </div>
         
-        <Button 
-          onClick={createCheckout}
-          className="w-full bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600"
-        >
-          <Crown className="w-4 h-4 mr-2" />
-          Passer au Premium
-        </Button>
+        <Link href="/dashboard/pricing">
+          <Button className="w-full bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600">
+            <Crown className="w-4 h-4 mr-2" />
+            Passer au Premium
+          </Button>
+        </Link>
       </div>
     )
   }

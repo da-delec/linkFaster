@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Star, MessageSquare, Eye, EyeOff, Crown, TrendingUp, Users, MoreHorizontal, AlertCircle } from 'lucide-react'
+import Link from 'next/link'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -146,10 +147,12 @@ const ReviewsManagement: React.FC<ReviewsManagementProps> = ({ userId, isPremium
             <li>• Manage review visibility</li>
             <li>• Moderation and responses</li>
           </ul>
-          <Button className="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700">
-            <Crown className="w-4 h-4 mr-2" />
-            Upgrade to Premium
-          </Button>
+          <Link href="/dashboard/pricing">
+            <Button className="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700">
+              <Crown className="w-4 h-4 mr-2" />
+              Upgrade to Premium
+            </Button>
+          </Link>
         </CardContent>
       </Card>
     )

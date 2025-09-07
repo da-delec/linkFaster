@@ -8,7 +8,8 @@ import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import ImageUpload from '@/components/ui/image-upload'
-import { Plus, X, ExternalLink, Eye } from 'lucide-react'
+import { Plus, X, ExternalLink, Eye, Crown, Lock } from 'lucide-react'
+import Link from 'next/link'
 
 interface ProjectData {
   id?: string
@@ -25,13 +26,16 @@ interface ProductionProjectsStepProps {
     projects?: ProjectData[]
   }
   onUpdate: (data: any) => void
+  isPremium?: boolean
 }
 
-const ProductionProjectsStep: React.FC<ProductionProjectsStepProps> = ({ data, onUpdate }) => {
+const ProductionProjectsStep: React.FC<ProductionProjectsStepProps> = ({ data, onUpdate, isPremium = false }) => {
   const [projects, setProjects] = useState<ProjectData[]>(data.projects || [])
   const [currentTech, setCurrentTech] = useState('')
 
   const addProject = () => {
+    if (!isPremium && projects.length >= 1) return
+    
     const newProject: ProjectData = {
       title: '',
       description: '',
@@ -86,14 +90,46 @@ const ProductionProjectsStep: React.FC<ProductionProjectsStepProps> = ({ data, o
 
   return (
     <div className="space-y-6">
-      <div className="text-center">
+      <div className="text-center space-y-2">
         <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-2">
           Production Projects
         </h3>
         <p className="text-slate-600 dark:text-slate-400">
           Add your already deployed projects to showcase your concrete work
         </p>
+        <Badge variant="outline" className="mt-2">
+          {projects.length}/{isPremium ? '∞' : '1'} projects added
+          {!isPremium && projects.length >= 1 && (
+            <span className="ml-2 text-orange-600">• Limit reached</span>
+          )}
+        </Badge>
       </div>
+
+      {/* Premium Limitation Warning */}
+      {!isPremium && projects.length >= 1 && (
+        <Card className="border-orange-200 bg-gradient-to-r from-orange-50 to-amber-50 dark:from-orange-950/20 dark:to-amber-950/20 dark:border-orange-800">
+          <CardContent className="p-6">
+            <div className="flex items-center space-x-3">
+              <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-amber-500 rounded-full flex items-center justify-center">
+                <Crown className="w-6 h-6 text-white" />
+              </div>
+              <div className="flex-1">
+                <h4 className="font-semibold text-orange-900 dark:text-orange-200 mb-1">
+                  Unlock more projects with Premium
+                </h4>
+                <p className="text-sm text-orange-700 dark:text-orange-300">
+                  You've reached the limit of 1 project. Upgrade to Premium to add unlimited projects.
+                </p>
+              </div>
+              <Link href="/dashboard/pricing">
+                <Button className="px-4 py-2 bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-lg font-medium hover:from-orange-600 hover:to-amber-600 transition-all">
+                  Upgrade
+                </Button>
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <div className="space-y-4">
         {projects.map((project, projectIndex) => (
@@ -225,18 +261,34 @@ const ProductionProjectsStep: React.FC<ProductionProjectsStepProps> = ({ data, o
           type="button"
           variant="outline"
           onClick={addProject}
-          className="w-full py-8 border-2 border-dashed border-slate-300 dark:border-slate-600 hover:border-primary"
+          disabled={!isPremium && projects.length >= 1}
+          className={`w-full py-8 border-2 border-dashed ${
+            !isPremium && projects.length >= 1
+              ? 'border-orange-300 bg-orange-50/30 dark:bg-orange-950/10 opacity-60 cursor-not-allowed'
+              : 'border-slate-300 dark:border-slate-600 hover:border-primary'
+          }`}
         >
-          <Plus className="w-5 h-5 mr-2" />
-          Add a production project
+          {!isPremium && projects.length >= 1 ? (
+            <>
+              <Lock className="w-5 h-5 mr-2" />
+              Premium required to add more projects
+            </>
+          ) : (
+            <>
+              <Plus className="w-5 h-5 mr-2" />
+              Add a production project
+            </>
+          )}
         </Button>
       </div>
 
       {projects.length > 0 && (
         <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
           <p className="text-sm text-blue-800 dark:text-blue-200">
-            💡 <strong>Tip:</strong> Add your best production projects to show 
-            your concrete expertise to potential clients. Don't hesitate to include screenshots!
+            💡 <strong>Tip:</strong> {isPremium 
+              ? "Add your best production projects to show your concrete expertise to potential clients. Don't hesitate to include screenshots!"
+              : "In the free version, you can add 1 project. Choose your best one to showcase your expertise to potential clients."
+            }
           </p>
         </div>
       )}
