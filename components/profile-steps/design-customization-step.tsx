@@ -210,9 +210,32 @@ const DesignCustomizationStep: React.FC<DesignCustomizationStepProps> = ({ data,
   }, [data.photo])
 
   const ColorPreview = ({ theme }: { theme: any }) => {
+    // Glass themes with background images
+    if (theme.category === 'glass' && theme.background) {
+      return (
+        <div className="w-12 h-8 rounded-md relative overflow-hidden">
+          <div className={`absolute inset-0 ${theme.background}`} style={{ backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}></div>
+          <div className="absolute inset-0 backdrop-blur-sm bg-white/20 dark:bg-slate-900/20 border border-white/30"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
+        </div>
+      )
+    }
+    
+    // Prisme themes with background images
+    if (theme.category === 'prisme' && theme.background) {
+      return (
+        <div className="w-12 h-8 rounded-md relative overflow-hidden">
+          <div className={`absolute inset-0 ${theme.background}`} style={{ backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-black/30 to-black/50"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-transparent to-white/10"></div>
+        </div>
+      )
+    }
+
+    // Other themes with background classes
     if (theme.background) {
       return (
-        <div className={`w-12 h-8 rounded-md ${theme.background}`} />
+        <div className={`w-12 h-8 rounded-md overflow-hidden ${theme.background}`} style={{ backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }} />
       )
     }
     
@@ -390,58 +413,6 @@ const DesignCustomizationStep: React.FC<DesignCustomizationStepProps> = ({ data,
                         {theme.description}
                       </CardDescription>
                     </div>
-                    <div className="w-12 h-8 rounded-md backdrop-blur-sm bg-gradient-to-r from-white/30 to-white/10 border border-white/20"></div>
-                  </div>
-                </CardHeader>
-                <CardContent className="pt-0">
-                  {data.colorTheme === theme.id && (
-                    <Badge className="bg-green-600 text-xs">Selected</Badge>
-                  )}
-                  {!isPremium && theme.isPremium && (
-                    <p className="text-xs text-slate-500 mt-2">Requires Premium</p>
-                  )}
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-
-
-        {/* Premium gradient themes */}
-        <div className="mb-6">
-          <h4 className="text-sm font-medium text-slate-600 dark:text-slate-400 mb-3 flex items-center">
-            <Flame className="w-4 h-4 mr-2" />
-            Premium gradients
-          </h4>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {colorThemes.filter(theme => theme.category === 'gradient').map((theme) => (
-              <Card
-                key={theme.id}
-                className={`cursor-pointer transition-all hover:shadow-lg ${
-                  data.colorTheme === theme.id
-                    ? 'ring-2 ring-primary border-primary'
-                    : 'hover:border-slate-300'
-                } ${!isPremium ? 'opacity-75' : ''}`}
-                onClick={() => {
-                  if (isPremium || !theme.isPremium) {
-                    onUpdate({ colorTheme: theme.id })
-                  }
-                }}
-              >
-                <CardHeader className="pb-2">
-                  <div className="flex justify-between items-start">
-                    <div className="flex-1">
-                      <CardTitle className="text-sm flex items-center space-x-1">
-                        <span>{theme.name}</span>
-                        <Badge className="text-xs bg-gradient-to-r from-orange-500 to-red-500">
-                          <Flame className="w-3 h-3 mr-1" />
-                          Gradient
-                        </Badge>
-                      </CardTitle>
-                      <CardDescription className="text-xs">
-                        {theme.description}
-                      </CardDescription>
-                    </div>
                     <ColorPreview theme={theme} />
                   </div>
                 </CardHeader>
@@ -457,6 +428,8 @@ const DesignCustomizationStep: React.FC<DesignCustomizationStepProps> = ({ data,
             ))}
           </div>
         </div>
+
+
 
         {/* Premium prisme themes */}
         <div className="mb-6">
@@ -496,7 +469,24 @@ const DesignCustomizationStep: React.FC<DesignCustomizationStepProps> = ({ data,
                     <ColorPreview theme={theme} />
                   </div>
                 </CardHeader>
-                <CardContent className="pt-0">
+                <CardContent className="pt-0 space-y-3">
+                  {theme.background && (
+                    <div className="h-16 rounded-lg overflow-hidden relative">
+                      <div 
+                        className="absolute inset-0" 
+                        style={{ 
+                          backgroundImage: theme.id === 'prisme-dark' ? 'url(/prismDark.png)' :
+                                         theme.id === 'prisme-grey' ? 'url(/prismeGrey.png)' : 'none',
+                          backgroundSize: 'cover', 
+                          backgroundPosition: 'center', 
+                          backgroundRepeat: 'no-repeat',
+                          backgroundAttachment: 'scroll'
+                        }}
+                      ></div>
+                      <div className="absolute inset-0 bg-gradient-to-br from-black/30 to-black/50"></div>
+                      <div className="absolute inset-0 bg-gradient-to-t from-transparent to-white/10"></div>
+                    </div>
+                  )}
                   {data.colorTheme === theme.id && (
                     <Badge className="bg-green-600 text-xs">Selected</Badge>
                   )}
@@ -509,56 +499,6 @@ const DesignCustomizationStep: React.FC<DesignCustomizationStepProps> = ({ data,
           </div>
         </div>
 
-        {/* Premium colored themes */}
-        <div className="mb-6">
-          <h4 className="text-sm font-medium text-slate-600 dark:text-slate-400 mb-3 flex items-center">
-            <Crown className="w-4 h-4 mr-2" />
-            Premium colors
-          </h4>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-3">
-            {colorThemes.filter(theme => theme.category === 'color').map((theme) => (
-              <Card
-                key={theme.id}
-                className={`cursor-pointer transition-all hover:shadow-lg ${
-                  data.colorTheme === theme.id
-                    ? 'ring-2 ring-primary border-primary'
-                    : 'hover:border-slate-300'
-                } ${!isPremium ? 'opacity-75' : ''}`}
-                onClick={() => {
-                  if (isPremium || !theme.isPremium) {
-                    onUpdate({ colorTheme: theme.id })
-                  }
-                }}
-              >
-                <CardHeader className="pb-2">
-                  <div className="flex justify-between items-start">
-                    <div className="flex-1">
-                      <CardTitle className="text-sm flex items-center space-x-1">
-                        <span>{theme.name}</span>
-                        <Badge className="text-xs bg-gradient-to-r from-purple-500 to-pink-500">
-                          <Crown className="w-3 h-3 mr-1" />
-                          Pro
-                        </Badge>
-                      </CardTitle>
-                      <CardDescription className="text-xs">
-                        {theme.description}
-                      </CardDescription>
-                    </div>
-                    <ColorPreview theme={theme} />
-                  </div>
-                </CardHeader>
-                <CardContent className="pt-0">
-                  {data.colorTheme === theme.id && (
-                    <Badge className="bg-green-600 text-xs">Selected</Badge>
-                  )}
-                  {!isPremium && theme.isPremium && (
-                    <p className="text-xs text-slate-500 mt-2">Requires Premium</p>
-                  )}
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
       </div>
 
       {/* Layout Style Section */}
